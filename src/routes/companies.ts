@@ -8,13 +8,50 @@ const router = express.Router();
 router.use(authenticate);
 
 // Rutas para empresas
-router.get('/', CompanyController.getAllCompanies);
-router.get('/:id', CompanyController.getCompanyById);
-router.get('/:id/stats', CompanyController.getCompanyStats);
+router.get('/', async (req, res, next) => {
+  try {
+    await CompanyController.getAllCompanies(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+router.get('/:id', async (req, res, next) => {
+  try {
+    await CompanyController.getCompanyById(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+router.get('/:id/stats', async (req, res, next) => {
+  try {
+    await CompanyController.getCompanyStats(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Solo operadores pueden crear, actualizar y eliminar empresas
-router.post('/', authorize(['OPERATOR', 'ADMIN']), CompanyController.createCompany);
-router.put('/:id', authorize(['OPERATOR', 'ADMIN']), CompanyController.updateCompany);
-router.delete('/:id', authorize(['OPERATOR', 'ADMIN']), CompanyController.deleteCompany);
+router.post('/', authorize(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+  try {
+    await CompanyController.createCompany(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+router.put('/:id', authorize(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+  try {
+    await CompanyController.updateCompany(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+router.delete('/:id', authorize(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+  try {
+    await CompanyController.deleteCompany(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 export default router;

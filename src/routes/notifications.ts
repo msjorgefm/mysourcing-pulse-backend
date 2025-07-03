@@ -7,8 +7,26 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get('/', NotificationController.getNotifications);
-router.patch('/:id/read', NotificationController.markAsRead);
-router.patch('/mark-all-read', NotificationController.markAllAsRead);
-router.delete('/:id', NotificationController.deleteNotification);
+router.patch('/:id/read', async (req, res, next) => {
+  try {
+    await NotificationController.markAsRead(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+router.patch('/mark-all-read', async (req, res, next) => {
+  try {
+    await NotificationController.markAllAsRead(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+router.delete('/:id', async (req, res, next) => {
+  try {
+    await NotificationController.deleteNotification(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default router;

@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { LoginRequest, AuthResponse, User } from '../types';
+import type { StringValue } from 'ms';
 
 const prisma = new PrismaClient();
 
@@ -118,12 +119,16 @@ export class AuthService {
   }
   
   private static generateAccessToken(userId: number): string {
-    return jwt.sign(
-      { userId },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
-    );
-  }
+  const secret = process.env.JWT_SECRET!;
+  const raw = process.env.JWT_EXPIRES_IN ?? '1h';
+  const expiresIn = raw as StringValue;
+
+  return jwt.sign(
+    { userId },
+    secret,
+    { expiresIn }  // TS ve ahora un StringValue válido
+  );
+}
   
   private static generateRefreshToken(userId: number): string {
     return jwt.sign(

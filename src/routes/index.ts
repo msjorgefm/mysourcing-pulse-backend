@@ -2,7 +2,7 @@ import { Router } from 'express';
 import employeeRoutes from './employees';
 import incidenceRoutes from './incidences';
 import calendarRoutes from './calendars';
-import { authMiddleware } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.get('/health', (req, res) => {
 });
 
 // Aplicar autenticación a todas las rutas
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Rutas principales
 router.use('/employees', employeeRoutes);

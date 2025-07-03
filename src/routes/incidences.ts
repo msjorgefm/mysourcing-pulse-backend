@@ -4,27 +4,46 @@ import { validateIncidenceParams } from '../middleware/validation';
 
 const router = Router();
 
-// GET /api/incidences?companyId=&periodStart=&periodEnd=
 router.get('/', 
   validateIncidenceParams,
-  incidenceController.getIncidencesByPeriod
+  (req, res) => incidenceController.getIncidencesByPeriod(req, res)
 );
 
-// POST /api/incidences
-router.post('/', incidenceController.createIncidence);
+router.post('/', async (req, res, next) => {
+  try {
+    await incidenceController.createIncidence(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
-// PUT /api/incidences/:id
-router.put('/:id', incidenceController.updateIncidence);
+router.put('/:id', async (req, res, next) => {
+  try {
+    await incidenceController.updateIncidence(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
-// DELETE /api/incidences/:id
-router.delete('/:id', incidenceController.deleteIncidence);
+router.delete('/:id', async (req, res, next) => {
+  try {
+    await incidenceController.deleteIncidence(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
-// GET /api/incidences/stats
-router.get('/stats', incidenceController.getIncidenceStats);
+router.get('/stats', async (req, res, next) => {
+  try {
+    await incidenceController.getIncidenceStats(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
-// GET /api/incidences/export
 router.get('/export', async (req, res) => {
   // Implementar exportación de incidencias
 });
+
 
 export default router;

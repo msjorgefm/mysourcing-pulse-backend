@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { User } from '../types';
@@ -9,15 +9,22 @@ interface AuthRequest extends Request {
   user?: User;
 }
 
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticate: RequestHandler = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (!token) {
-      return res.status(401).json({ error: 'Access token required' });
+       res.status(401).json({ error: 'Access token required' });
+       return;
     }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+       res.status(500).json({ error: 'JWT configuration error' });
+       return;
+    }
+
+    const decoded = jwt.verify(token, secret) as any;
     
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -28,7 +35,8 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     });
     
     if (!user || !user.isActive) {
-      return res.status(401).json({ error: 'Invalid or inactive user' });
+       res.status(401).json({ error: 'Invalid or inactive user' });
+       return;
     }
     
     req.user = {
@@ -44,18 +52,21 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     next();
   } catch (error) {
     console.error('Authentication error:', error);
-    return res.status(401).json({ error: 'Invalid token' });
+     res.status(401).json({ error: 'Invalid token' });
+    return;
   }
 };
 
-export const authorize = (roles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authorize = (roles: string[]): RequestHandler => {
+  return async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     if (!req.user) {
-      return res.status(401).json({ error: 'Authentication required' });
+      res.status(401).json({ error: 'Authentication required' });
+      return;
     }
     
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ error: 'Insufficient privileges' });
+      res.status(403).json({ error: 'Insufficient privileges' });
+      return;
     }
     
     next();

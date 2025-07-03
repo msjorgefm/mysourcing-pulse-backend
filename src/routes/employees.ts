@@ -11,17 +11,41 @@ router.get('/company/:companyId',
 );
 
 // POST /api/employees
-router.post('/', employeeController.createEmployee);
+router.post('/', async (req, res, next) => {
+  try {
+    await employeeController.createEmployee(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // PUT /api/employees/:id
-router.put('/:id', employeeController.updateEmployee);
+router.put('/:id', async (req, res, next) => {
+  try {
+    await employeeController.updateEmployee(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // DELETE /api/employees/:id
-router.delete('/:id', employeeController.deleteEmployee);
+router.delete('/:id', async (req, res, next) => {
+  try {
+    await employeeController.deleteEmployee(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // GET /api/employees/:id/incidences
-router.get('/:id/incidences', async (req, res) => {
-  // Implementar obtener incidencias de un empleado específico
+router.get('/:id/incidences', async (req, res, next) => {
+  try {
+    // Implementar obtener incidencias de un empleado específico
+    //await employeeController.getEmployeeIncidences(req, res);
+  } catch (err) {
+    next(err);
+  }
 });
+
 
 export default router;

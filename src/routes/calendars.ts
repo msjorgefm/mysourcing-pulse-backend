@@ -1,65 +1,141 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { calendarController } from '../controllers/calendarController';
-import { validateCalendarParams, validatePeriodParams } from '../middleware/validation';
+import {
+  validateCalendarParams,
+  validateCalendarQuery,
+  validatePeriodParams,
+  validateGeneratePeriods,
+} from '../middleware/validation';
 
 const router = Router();
 
-// GET /api/calendars/company/:companyId
-router.get('/company/:companyId', 
+// Calendar routes
+router.get(
+  '/company/:companyId',
   validateCalendarParams,
   calendarController.getCalendarsByCompany
 );
 
-// POST /api/calendars
-router.post('/', calendarController.createCalendar);
+router.post(
+  '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.createCalendar(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
-// PUT /api/calendars/:id
-router.put('/:id', calendarController.updateCalendar);
+router.get(
+  '/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.getCalendarById(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
-// DELETE /api/calendars/:id
-router.delete('/:id', calendarController.deleteCalendar);
+router.put(
+  '/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.updateCalendar(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
-// GET /api/calendars/:id
-router.get('/:id', calendarController.getCalendarById);
+router.delete(
+  '/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.deleteCalendar(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
-// GET /api/calendars/:calendarId/periods
-router.get('/:calendarId/periods', 
+// Period routes
+router.get(
+  '/:calendarId/periods',
   validateCalendarParams,
+  validateCalendarQuery,
   calendarController.getCalendarPeriods
 );
 
-// GET /api/calendars/:calendarId/periods/active
-router.get('/:calendarId/periods/active', 
+router.get(
+  '/:calendarId/periods/active',
   validateCalendarParams,
   calendarController.getActivePeriods
 );
 
-// POST /api/calendars/:calendarId/periods
-router.post('/:calendarId/periods', 
-  validatePeriodParams,
-  calendarController.createPeriod
-);
-
-// PUT /api/calendars/:calendarId/periods/:periodId
-router.put('/:calendarId/periods/:periodId', 
-  validatePeriodParams,
-  calendarController.updatePeriod
-);
-
-// DELETE /api/calendars/:calendarId/periods/:periodId
-router.delete('/:calendarId/periods/:periodId', 
-  calendarController.deletePeriod
-);
-
-// GET /api/calendars/:calendarId/periods/current
-router.get('/:calendarId/periods/current', 
+router.get(
+  '/:calendarId/periods/current',
   validateCalendarParams,
-  calendarController.getCurrentPeriod
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.getCurrentPeriod(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
 );
 
-// POST /api/calendars/:calendarId/generate-periods
-router.post('/:calendarId/generate-periods', 
-  calendarController.generatePeriods
+router.post(
+  '/:calendarId/periods',
+  validateCalendarParams,
+  validatePeriodParams,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.createPeriod(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.put(
+  '/:calendarId/periods/:periodId',
+  validateCalendarParams,
+  validatePeriodParams,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.updatePeriod(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.delete(
+  '/:calendarId/periods/:periodId',
+  validateCalendarParams,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.deletePeriod(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Generate periods
+router.post(
+  '/:calendarId/generate-periods',
+  validateCalendarParams,
+  validateGeneratePeriods,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.generatePeriods(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
 );
 
 export default router;
