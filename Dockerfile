@@ -1,49 +1,41 @@
-# Imagen base
+# Usar imagen Alpine que maneja mejor las redes corporativas
 FROM node:18-alpine
 
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Instalar dependencias del sistema
-RUN apk add --no-cache dumb-init
+# Configurar npm para manejar certificados
+RUN npm config set strict-ssl false && \
+    npm config set registry https://registry.npmjs.org/
 
-# Crear usuario no root
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S mysourcing -u 1001
+# Usar usuario node existente
+USER node
 
-# Copiar archivos de dependencias
-COPY package*.json ./
-COPY prisma ./prisma/
+# Copiar archivos necesarios
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node prisma ./prisma/
 
-# Instalar dependencias
-RUN npm ci --only=production && npm cache clean --force
+# Configurar Prisma para Alpine
+ENV PRISMA_CLI_BINARY_TARGETS="native,linux-musl-openssl-3.0.x,linux-musl-arm64-openssl-3.0.x"
+
+# Instalar dependencias con configuración de red relajada
+RUN npm ci --only=production --unsafe-perm && npm cache clean --force
 
 # Copiar código fuente
-COPY --chown=mysourcing:nodejs . .
+COPY --chown=node:node . .
 
 # Generar Prisma client
 RUN npx prisma generate
 
-# Compilar TypeScript
+# Compilar aplicación
 RUN npm run build
 
-# Crear directorios necesarios
-RUN mkdir -p logs && chown -R mysourcing:nodejs logs
-
-# Cambiar a usuario no root
-USER mysourcing
+# Configurar variables de entorno
+ENV NODE_ENV=production
+ENV PORT=3001
 
 # Exponer puerto
 EXPOSE 3001
 
-# Configurar variables de entorno por defecto
-ENV NODE_ENV=production
-ENV PORT=3001
-
-# Comando de salud
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node healthcheck.js
-
-# Comando por defecto usando dumb-init
-ENTRYPOINT ["dumb-init", "--"]
+# Comando simple
 CMD ["npm", "start"]

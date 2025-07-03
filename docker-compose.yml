@@ -17,8 +17,13 @@ services:
       - ./postgres-init:/docker-entrypoint-initdb.d
     networks:
       - mysourcing-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mysourcing_pulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Redis para caché (opcional)
+  # Redis para caché
   redis:
     image: redis:7-alpine
     container_name: mysourcing-redis
@@ -29,7 +34,10 @@ services:
 
   # Aplicación backend
   backend:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      # NOTA: platform se maneja por comando, no aquí
     container_name: mysourcing-backend
     environment:
       NODE_ENV: development
@@ -37,17 +45,26 @@ services:
       JWT_SECRET: your-super-secret-jwt-key-here
       JWT_REFRESH_SECRET: your-super-secret-refresh-key-here
       FRONTEND_URL: http://localhost:3000
+      # Variables para Prisma
+      PRISMA_CLI_BINARY_TARGETS: "native,debian-openssl-3.0.x,linux-musl-openssl-3.0.x"
+      # Configuración de red
+      NPM_CONFIG_STRICT_SSL: "false"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
     ports:
       - "3001:3001"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/dist
     networks:
       - mysourcing-network
     command: npm run dev
+    restart: unless-stopped
 
 volumes:
   postgres_data:
