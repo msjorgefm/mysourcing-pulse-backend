@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: mysourcing-db
+    environment:
+      POSTGRES_DB: mysourcing_pulse
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    networks:
+      - mysourcing-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mysourcing_pulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis para caché
+  redis:
+    image: redis:7-alpine
+    container_name: mysourcing-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - mysourcing-network
+
+  # Aplicación backend
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      # NOTA: platform se maneja por comando, no aquí
+    container_name: mysourcing-backend
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:password123@postgres:5432/mysourcing_pulse?schema=public
+      JWT_SECRET: your-super-secret-jwt-key-here
+      JWT_REFRESH_SECRET: your-super-secret-refresh-key-here
+      FRONTEND_URL: http://localhost:3000
+      # Variables para Prisma
+      PRISMA_CLI_BINARY_TARGETS: "native,debian-openssl-3.0.x,linux-musl-openssl-3.0.x"
+      # Configuración de red
+      NPM_CONFIG_STRICT_SSL: "false"
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+    networks:
+      - mysourcing-network
+    command: npm run dev
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  mysourcing-network:
+    driver: bridge

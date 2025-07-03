@@ -1,0 +1,1 @@
+{"version":3,"file":"employeeController.d.ts","sourceRoot":"","sources":["../../src/controllers/employeeController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAO5C,eAAO,MAAM,kBAAkB;+BAEI,OAAO,OAAO,QAAQ;wBA4B7B,OAAO,OAAO,QAAQ;wBAiCtB,OAAO,OAAO,QAAQ;wBAmCtB,OAAO,OAAO,QAAQ;CAoBjD,CAAC"}
