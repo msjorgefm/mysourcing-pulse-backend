@@ -6,10 +6,359 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+// ================================
+// USUARIOS Y AUTENTICACIÓN
+// ================================
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  name        String
+  role        UserRole
+  isActive    Boolean  @default(true)
+  
+  // Relación con empresa (para clientes)
+  companyId   Int?
+  company     Company? @relation(fields: [companyId], references: [id])
+  
+  // Relación con empleado (para trabajadores)
+  employeeId  Int?     @unique
+  employee    Employee? @relation(fields: [employeeId], references: [id])
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastLoginAt DateTime?
+  
+  // Sesiones y tokens
+  refreshTokens RefreshToken[]
+  
+  @@map("users")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@map("refresh_tokens")
+}
+
+enum UserRole {
+  OPERATOR
+  CLIENT
+  EMPLOYEE
+  ADMIN
+}
+
+// ================================
+// EMPRESAS
+// ================================
+model Company {
+  id            Int      @id @default(autoincrement())
+  name          String
+  rfc           String   @unique
+  legalName     String
+  address       String
+  email         String
+  phone         String?
+  status        CompanyStatus @default(IN_SETUP)
+  employeesCount Int     @default(0)
+  
+  // Configuración de nómina
+  paymentMethod String?
+  bankAccount   String?
+  
+  // Relaciones
+  employees     Employee[]
+  payrolls      Payroll[]
+  calendars     PayrollCalendar[]
+  incidences    Incidence[]
+  notifications Notification[]
+  users         User[]  // Usuarios cliente de esta empresa
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("companies")
+}
+
+enum CompanyStatus {
+  IN_SETUP      // En Configuración
+  CONFIGURED    // Configurada
+  ACTIVE        // Activa
+  INACTIVE      // Inactiva
+  SUSPENDED     // Suspendida
+}
+
+// ================================
+// EMPLEADOS
+// ================================
+model Employee {
+  id               Int      @id @default(autoincrement())
+  employeeNumber   String   @unique
+  name             String
+  email            String   @unique
+  rfc              String   @unique
+  position         String
+  department       String
+  salary           Float
+  hireDate         DateTime
+  status           EmployeeStatus @default(ACTIVE)
+  
+  // Información bancaria
+  bankName         String?
+  accountNumber    String?
+  clabe            String?
+  
+  // Relación con empresa
+  companyId        Int
+  company          Company  @relation(fields: [companyId], references: [id])
+  
+  // Relaciones
+  incidences       Incidence[]
+  payrollDetails   PayrollDetail[]
+  user             User?    // Usuario del empleado para portal
+  
+  // Timestamps
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@map("employees")
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+  ON_LEAVE
+}
+
+// ================================
+// CALENDARIOS DE NÓMINA
+// ================================
+model PayrollCalendar {
+  id              Int      @id @default(autoincrement())
+  name            String
+  payFrequency    PayFrequency
+  daysBeforeClose Int      @default(0)
+  startDate       DateTime
+  periodNumber    Int      @default(1)
+  payNaturalDays  Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  
+  // Relación con empresa
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id])
+  
+  // Relaciones
+  payrolls        Payroll[]
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("payroll_calendars")
+}
+
+enum PayFrequency {
+  WEEKLY    // semanal
+  BIWEEKLY  // quincenal
+  MONTHLY   // mensual
+  BIMONTHLY // decenal
+  OTHER     // catorcenal, etc
+}
+
+// ================================
+// NÓMINAS
+// ================================
+model Payroll {
+  id                Int            @id @default(autoincrement())
+  period            String         // "2025-06-01 a 2025-06-15"
+  periodStart       DateTime
+  periodEnd         DateTime
+  amount            Float
+  employees         Int            // Número de empleados
+  status            PayrollStatus  @default(CALCULATING)
+  
+  // Cálculos de nómina (JSON)
+  calculations      Json?          // Totales generales
+  detailedCalculations Json?       // Detalles por empleado
+  
+  // Información de autorización
+  submittedAt       DateTime?
+  submittedBy       String?
+  authorizedAt      DateTime?
+  authorizedBy      String?
+  comments          String?
+  
+  // Información de timbrado
+  timberedAt        DateTime?
+  cfdiFiles         Json?          // URLs de archivos CFDI
+  
+  // Relación con empresa y calendario
+  companyId         Int
+  company           Company        @relation(fields: [companyId], references: [id])
+  
+  calendarId        Int?
+  calendar          PayrollCalendar? @relation(fields: [calendarId], references: [id])
+  
+  // Relaciones
+  incidences        Incidence[]
+  details           PayrollDetail[]
+  notifications     Notification[]
+  
+  // Timestamps
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  
+  @@map("payrolls")
+}
+
+enum PayrollStatus {
+  CALCULATING           // calculando
+  PENDING_AUTHORIZATION // pending_authorization  
+  APPROVED              // approved
+  REJECTED              // rejected
+  TIMBERED              // timbered
+  DISPERSED             // dispersed
+  CANCELLED             // cancelled
+}
+
+// ================================
+// DETALLES DE NÓMINA POR EMPLEADO
+// ================================
+model PayrollDetail {
+  id           Int      @id @default(autoincrement())
+  
+  // Relaciones
+  payrollId    Int
+  payroll      Payroll  @relation(fields: [payrollId], references: [id])
+  
+  employeeId   Int
+  employee     Employee @relation(fields: [employeeId], references: [id])
+  
+  // Cálculos individuales
+  perceptions  Json     // Percepciones detalladas
+  deductions   Json     // Deducciones detalladas
+  provisions   Json     // Provisiones patronales
+  netPay       Float    // Neto a pagar
+  
+  // Información CFDI
+  cfdiUuid     String?  // UUID del timbrado
+  cfdiXml      String?  // Ruta del XML
+  cfdiPdf      String?  // Ruta del PDF
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  @@unique([payrollId, employeeId])
+  @@map("payroll_details")
+}
+
+// ================================
+// INCIDENCIAS
+// ================================
+model Incidence {
+  id          Int            @id @default(autoincrement())
+  type        IncidenceType
+  quantity    Float
+  amount      Float
+  date        DateTime
+  comments    String?
+  
+  // Relaciones
+  employeeId  Int
+  employee    Employee       @relation(fields: [employeeId], references: [id])
+  
+  companyId   Int
+  company     Company        @relation(fields: [companyId], references: [id])
+  
+  payrollId   Int?
+  payroll     Payroll?       @relation(fields: [payrollId], references: [id])
+  
+  // Timestamps
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  @@map("incidences")
+}
+
+enum IncidenceType {
+  FALTAS        // faltas
+  PERMISOS      // permisos
+  VACACIONES    // vacaciones
+  TIEMPO_EXTRA  // tiempo_extra
+  BONOS         // bonos
+}
+
+// ================================
+// NOTIFICACIONES
+// ================================
+model Notification {
+  id        Int              @id @default(autoincrement())
+  type      NotificationType
+  title     String
+  message   String
+  priority  NotificationPriority @default(NORMAL)
+  read      Boolean          @default(false)
+  
+  // Metadata adicional (JSON)
+  metadata  Json?
+  
+  // Relaciones
+  companyId Int?
+  company   Company?         @relation(fields: [companyId], references: [id])
+  
+  payrollId Int?
+  payroll   Payroll?         @relation(fields: [payrollId], references: [id])
+  
+  // Timestamps
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+  
+  @@map("notifications")
+}
+
+enum NotificationType {
+  PAYROLL_PENDING_AUTHORIZATION
+  PAYROLL_APPROVED
+  PAYROLL_REJECTED
+  PAYROLL_TIMBERED
+  SYSTEM_ALERT
+  REMINDER
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ================================
+// ÍNDICES PARA PERFORMANCE
+// ================================
+
+// Índices para búsquedas comunes
+@@index([Company.status])
+@@index([Employee.companyId, Employee.status])
+@@index([Payroll.companyId, Payroll.status])
+@@index([Payroll.periodStart, Payroll.periodEnd])
+@@index([Incidence.companyId, Incidence.date])
+@@index([Incidence.employeeId, Incidence.type])
+@@index([Notification.companyId, Notification.read])
+@@index([User.email, User.isActive])
