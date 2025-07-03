@@ -31,15 +31,14 @@ export class CompanyService {
           select: { 
             id: true, 
             status: true, 
-            amount: true,
+            totalNet: true,
             createdAt: true 
           },
           orderBy: { createdAt: 'desc' },
           take: 5
         },
         calendars: {
-          where: { isActive: true },
-          select: { id: true, name: true, payFrequency: true }
+          select: { id: true, name: true, year: true }
         },
         _count: {
           select: {
@@ -62,7 +61,7 @@ export class CompanyService {
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
-      employeesCount: company._count.employees,
+      employeesCount: company._count?.employees || 0,
       payrollsCount: company._count.payrolls,
       incidencesCount: company._count.incidences,
       calendarsCount: company.calendars.length,
@@ -95,9 +94,7 @@ export class CompanyService {
         orderBy: { createdAt: 'desc' },
         take: 10
       };
-      include.calendars = {
-        where: { isActive: true }
-      };
+      include.calendars = true;
     }
     
     const company = await prisma.company.findUnique({
@@ -118,13 +115,13 @@ export class CompanyService {
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
-      employeesCount: company._count.employees,
+      employeesCount: (company as any)._count?.employees || 0,
       paymentMethod: company.paymentMethod,
       bankAccount: company.bankAccount,
       ...(includeDetails && {
-        employees: company.employees,
-        payrolls: company.payrolls,
-        calendars: company.calendars
+        employees: (company as any).employees || [],
+        payrolls: (company as any).payrolls || [],
+        calendars: (company as any).calendars || []
       }),
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
@@ -149,7 +146,7 @@ export class CompanyService {
         address: data.address,
         email: data.email,
         phone: data.phone,
-        status: this.mapStatusFromFrontend(data.status || 'En Configuración'),
+        status: (data.status ? this.mapStatusFromFrontend(data.status) : 'IN_SETUP') as any,
         paymentMethod: data.paymentMethod,
         bankAccount: data.bankAccount,
         employeesCount: 0
@@ -199,7 +196,7 @@ export class CompanyService {
       data: {
         ...updateData,
         ...(updateData.status && { 
-          status: this.mapStatusFromFrontend(updateData.status) 
+          status: this.mapStatusFromFrontend(updateData.status) as any
         })
       }
     });
@@ -239,7 +236,7 @@ export class CompanyService {
       where: {
         companyId: id,
         status: {
-          in: ['CALCULATING', 'PENDING_AUTHORIZATION']
+          in: ['CALCULATED', 'PENDING_AUTHORIZATION']
         }
       }
     });
@@ -269,12 +266,12 @@ export class CompanyService {
             employees: { where: { status: 'ACTIVE' } },
             payrolls: true,
             incidences: true,
-            calendars: { where: { isActive: true } }
+            calendars: true
           }
         },
         payrolls: {
           select: {
-            amount: true,
+            totalNet: true,
             status: true,
             createdAt: true
           },
@@ -305,23 +302,23 @@ export class CompanyService {
     
     // Calcular estadísticas
     const totalPayrollAmount = stats.payrolls.reduce(
-      (sum: number, p: { amount: number; status: string; createdAt: Date }) => sum + p.amount,
+      (sum: number, p: any) => sum + Number(p.totalNet),
       0
     );
     const avgPayrollAmount = stats.payrolls.length > 0 ? totalPayrollAmount / stats.payrolls.length : 0;
     
-    const payrollsByStatus = stats.payrolls.reduce((acc: any, p: { amount: number; status: string; createdAt: Date }) => {
+    const payrollsByStatus = stats.payrolls.reduce((acc: any, p: any) => {
       acc[p.status] = (acc[p.status] || 0) + 1;
       return acc;
     }, {});
     
-    const incidencesByType = stats.incidences.reduce((acc: any, inc: { amount: number; type: string; createdAt: Date }) => {
+    const incidencesByType = stats.incidences.reduce((acc: any, inc: any) => {
       acc[inc.type] = (acc[inc.type] || 0) + 1;
       return acc;
     }, {});
     
     const totalIncidenceAmount = stats.incidences.reduce(
-      (sum: number, inc: { amount: number; type: string; createdAt: Date }) => sum + inc.amount,
+      (sum: number, inc: any) => sum + (Number(inc.amount) || 0),
       0
     );
     

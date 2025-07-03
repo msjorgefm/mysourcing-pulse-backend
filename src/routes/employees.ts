@@ -4,6 +4,15 @@ import { validateEmployeeParams } from '../middleware/validation';
 
 const router = Router();
 
+// GET /api/employees
+router.get('/', async (req, res, next) => {
+  try {
+    await employeeController.getAllEmployees(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/employees/company/:companyId
 router.get('/company/:companyId', 
   validateEmployeeParams,

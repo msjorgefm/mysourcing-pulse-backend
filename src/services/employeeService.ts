@@ -9,11 +9,11 @@ export interface CreateEmployeeRequest {
   rfc: string;
   position: string;
   department: string;
-  salary: number;
+  baseSalary: number;
   hireDate: string;
   companyId: number;
   bankName?: string;
-  accountNumber?: string;
+  bankAccount?: string;
   clabe?: string;
 }
 
@@ -38,7 +38,7 @@ export class EmployeeService {
         _count: {
           select: {
             incidences: true,
-            payrollDetails: true
+            payrollItems: true
           }
         }
       },
@@ -53,16 +53,16 @@ export class EmployeeService {
       rfc: employee.rfc,
       position: employee.position,
       department: employee.department,
-      salary: employee.salary,
+      salary: Number(employee.baseSalary),
       hireDate: employee.hireDate.toISOString().split('T')[0],
       status: this.mapStatusToFrontend(employee.status),
       companyId: employee.companyId,
       companyName: employee.company.name,
       bankName: employee.bankName,
-      accountNumber: employee.accountNumber ? `****${employee.accountNumber.slice(-4)}` : null,
+      accountNumber: employee.bankAccount ? `****${employee.bankAccount.slice(-4)}` : null,
       clabe: employee.clabe ? `****${employee.clabe.slice(-4)}` : null,
       incidencesCount: employee._count.incidences,
-      payrollsCount: employee._count.payrollDetails,
+      payrollsCount: employee._count.payrollItems,
       createdAt: employee.createdAt,
       updatedAt: employee.updatedAt
     }));
@@ -79,7 +79,7 @@ export class EmployeeService {
           orderBy: { createdAt: 'desc' },
           take: 10
         },
-        payrollDetails: {
+        payrollItems: {
           include: {
             payroll: {
               select: { id: true, period: true, status: true, createdAt: true }
@@ -103,16 +103,16 @@ export class EmployeeService {
       rfc: employee.rfc,
       position: employee.position,
       department: employee.department,
-      salary: employee.salary,
+      salary: Number(employee.baseSalary),
       hireDate: employee.hireDate.toISOString().split('T')[0],
       status: this.mapStatusToFrontend(employee.status),
       companyId: employee.companyId,
       companyName: employee.company.name,
       bankName: employee.bankName,
-      accountNumber: employee.accountNumber,
+      accountNumber: employee.bankAccount,
       clabe: employee.clabe,
       incidences: employee.incidences,
-      payrollDetails: employee.payrollDetails,
+      payrollItems: employee.payrollItems,
       createdAt: employee.createdAt,
       updatedAt: employee.updatedAt
     };
@@ -138,12 +138,14 @@ export class EmployeeService {
     }
     
     // Verificar email único
-    const existingEmail = await prisma.employee.findUnique({
-      where: { email: data.email }
-    });
-    
-    if (existingEmail) {
-      throw new Error('Email already exists');
+    if (data.email) {
+      const existingEmail = await prisma.employee.findFirst({
+        where: { email: data.email }
+      });
+      
+      if (existingEmail) {
+        throw new Error('Email already exists');
+      }
     }
     
     // Verificar número de empleado único
@@ -157,9 +159,20 @@ export class EmployeeService {
     
     const employee = await prisma.employee.create({
       data: {
-        ...data,
+        employeeNumber: data.employeeNumber,
+        name: data.name,
+        email: data.email,
+        rfc: data.rfc,
+        position: data.position,
+        department: data.department,
+        baseSalary: data.baseSalary,
         hireDate: new Date(data.hireDate),
-        status: 'ACTIVE'
+        contractType: 'INDEFINITE', // Default value
+        status: 'ACTIVE',
+        companyId: data.companyId,
+        bankName: data.bankName,
+        bankAccount: data.bankAccount,
+        clabe: data.clabe
       }
     });
     
@@ -181,7 +194,7 @@ export class EmployeeService {
       rfc: employee.rfc,
       position: employee.position,
       department: employee.department,
-      salary: employee.salary,
+      salary: Number(employee.baseSalary),
       hireDate: employee.hireDate.toISOString().split('T')[0],
       status: this.mapStatusToFrontend(employee.status),
       companyId: employee.companyId,
@@ -214,7 +227,7 @@ export class EmployeeService {
     
     // Verificar email único si se está actualizando
     if (updateData.email && updateData.email !== existingEmployee.email) {
-      const emailExists = await prisma.employee.findUnique({
+      const emailExists = await prisma.employee.findFirst({
         where: { email: updateData.email }
       });
       
@@ -227,7 +240,9 @@ export class EmployeeService {
       where: { id },
       data: {
         ...updateData,
-        ...(updateData.hireDate && { hireDate: new Date(updateData.hireDate) })
+        ...(updateData.hireDate && { hireDate: new Date(updateData.hireDate) }),
+        ...(updateData.baseSalary && { baseSalary: updateData.baseSalary }),
+        ...(updateData.bankAccount && { bankAccount: updateData.bankAccount })
       }
     });
     
@@ -239,12 +254,12 @@ export class EmployeeService {
       rfc: employee.rfc,
       position: employee.position,
       department: employee.department,
-      salary: employee.salary,
+      salary: Number(employee.baseSalary),
       hireDate: employee.hireDate.toISOString().split('T')[0],
       status: this.mapStatusToFrontend(employee.status),
       companyId: employee.companyId,
       bankName: employee.bankName,
-      accountNumber: employee.accountNumber,
+      accountNumber: employee.bankAccount,
       clabe: employee.clabe,
       createdAt: employee.createdAt,
       updatedAt: employee.updatedAt
@@ -261,12 +276,12 @@ export class EmployeeService {
     }
     
     // Verificar si tiene nóminas activas
-    const activePayrolls = await prisma.payrollDetail.count({
+    const activePayrolls = await prisma.payrollItem.count({
       where: {
         employeeId: id,
         payroll: {
           status: {
-            in: ['CALCULATING', 'PENDING_AUTHORIZATION']
+            in: ['CALCULATED', 'PENDING_AUTHORIZATION']
           }
         }
       }
@@ -306,32 +321,32 @@ export class EmployeeService {
       by: ['status', 'department'],
       where,
       _count: { id: true },
-      _avg: { salary: true }
+      _avg: { baseSalary: true }
     });
     
     const totalStats = await prisma.employee.aggregate({
       where,
       _count: { id: true },
-      _avg: { salary: true },
-      _min: { salary: true },
-      _max: { salary: true }
+      _avg: { baseSalary: true },
+      _min: { baseSalary: true },
+      _max: { baseSalary: true }
     });
     
     return {
-      total: totalStats._count.id,
-      averageSalary: totalStats._avg.salary || 0,
-      minSalary: totalStats._min.salary || 0,
-      maxSalary: totalStats._max.salary || 0,
-      byStatus: stats.reduce((acc: any, stat: { status: string; department: string; _count: { id: number }; _avg: { salary: number | null } }) => {
-        acc[stat.status] = (acc[stat.status] || 0) + stat._count.id;
+      total: totalStats._count?.id || 0,
+      averageSalary: Number(totalStats._avg?.baseSalary) || 0,
+      minSalary: Number(totalStats._min?.baseSalary) || 0,
+      maxSalary: Number(totalStats._max?.baseSalary) || 0,
+      byStatus: stats.reduce((acc: any, stat: any) => {
+        acc[stat.status] = (acc[stat.status] || 0) + (stat._count?.id || 0);
         return acc;
       }, {}),
-      byDepartment: stats.reduce((acc: any, stat: { status: string; department: string; _count: { id: number }; _avg: { salary: number | null } }) => {
+      byDepartment: stats.reduce((acc: any, stat: any) => {
         if (!acc[stat.department]) {
           acc[stat.department] = { count: 0, avgSalary: 0 };
         }
-        acc[stat.department].count += stat._count.id;
-        acc[stat.department].avgSalary = stat._avg.salary || 0;
+        acc[stat.department].count += (stat._count?.id || 0);
+        acc[stat.department].avgSalary = Number(stat._avg?.baseSalary) || 0;
         return acc;
       }, {})
     };

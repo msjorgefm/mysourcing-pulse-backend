@@ -1,0 +1,77 @@
+2025-07-03 16:44:01 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+2025-07-03 16:46:20 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+2025-07-03 16:50:13 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+2025-07-03 16:53:22 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+2025-07-03 16:53:31 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+2025-07-03 16:55:08 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+2025-07-03 16:55:22 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:193:12)

@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   # Base de datos PostgreSQL
   postgres:
@@ -17,8 +16,12 @@ services:
       - ./postgres-init:/docker-entrypoint-initdb.d
     networks:
       - mysourcing-network
-
-  # Redis para caché (opcional)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mysourcing_pulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  # Redis para caché
   redis:
     image: redis:7-alpine
     container_name: mysourcing-redis
@@ -26,10 +29,13 @@ services:
       - "6379:6379"
     networks:
       - mysourcing-network
-
   # Aplicación backend
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Descomentar si tienes problemas con ARM64
+      # platform: linux/amd64
     container_name: mysourcing-backend
     environment:
       NODE_ENV: development
@@ -37,21 +43,25 @@ services:
       JWT_SECRET: your-super-secret-jwt-key-here
       JWT_REFRESH_SECRET: your-super-secret-refresh-key-here
       FRONTEND_URL: http://localhost:3000
+      # Variables para Prisma
+      PRISMA_CLI_BINARY_TARGETS: "native,linux-musl-openssl-3.0.x,debian-openssl-3.0.x"
     ports:
       - "3001:3001"
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/dist
     networks:
       - mysourcing-network
     command: npm run dev
-
+    restart: unless-stopped
 volumes:
   postgres_data:
-
 networks:
   mysourcing-network:
     driver: bridge

@@ -6,6 +6,31 @@ import { validateEmployee } from '../middleware/validation';
 const prisma = new PrismaClient();
 
 export const employeeController = {
+  // Obtener todos los empleados
+  async getAllEmployees(req: Request, res: Response) {
+    try {
+      const employees = await prisma.employee.findMany({
+        include: {
+          company: true,
+          incidences: true
+        },
+        orderBy: { name: 'asc' }
+      });
+
+      res.json({
+        success: true,
+        data: employees,
+        count: employees.length
+      });
+    } catch (error) {
+      logger.error('Error fetching all employees:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error al obtener empleados'
+      });
+    }
+  },
+
   // Obtener todos los empleados de una empresa
   async getEmployeesByCompany(req: Request, res: Response) {
     try {

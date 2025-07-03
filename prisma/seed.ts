@@ -80,8 +80,9 @@ async function main() {
         rfc: `ETC${i.toString().padStart(6, '0')}H1A`,
         position: i <= 15 ? 'Desarrollador' : i <= 30 ? 'Analista' : 'Gerente',
         department: i <= 20 ? 'Tecnología' : i <= 35 ? 'Ventas' : 'Administración',
-        salary: 15000 + (i * 500),
+        baseSalary: 15000 + (i * 500),
         hireDate: new Date(`2023-0${Math.floor(Math.random() * 9) + 1}-${Math.floor(Math.random() * 28) + 1}`),
+        contractType: 'INDEFINITE',
         status: 'ACTIVE',
         companyId: companies[0].id
       }

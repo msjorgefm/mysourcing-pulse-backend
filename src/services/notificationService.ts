@@ -61,7 +61,7 @@ export class NotificationService {
           select: { id: true, name: true }
         },
         payroll: {
-          select: { id: true, period: true, amount: true }
+          select: { id: true, period: true, totalNet: true }
         }
       },
       orderBy: { createdAt: 'desc' },

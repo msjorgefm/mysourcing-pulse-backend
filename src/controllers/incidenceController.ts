@@ -7,6 +7,31 @@ import { calculateIncidenceAmount } from '../utils/calculator';
 const prisma = new PrismaClient();
 
 export const incidenceController = {
+  // Obtener todas las incidencias
+  async getAllIncidences(req: Request, res: Response) {
+    try {
+      const incidences = await prisma.incidence.findMany({
+        include: {
+          employee: true,
+          company: true
+        },
+        orderBy: { date: 'desc' }
+      });
+
+      res.json({
+        success: true,
+        data: incidences,
+        count: incidences.length
+      });
+    } catch (error) {
+      logger.error('Error fetching all incidences:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error al obtener incidencias'
+      });
+    }
+  },
+
   // Obtener incidencias por empresa y período
   async getIncidencesByPeriod(req: Request, res: Response) {
     try {
@@ -66,9 +91,15 @@ export const incidenceController = {
       }
 
       // Calcular monto automáticamente
+      const employeeForCalculation = {
+        ...employee,
+        salary: Number(employee.baseSalary),
+        isActive: employee.status === 'ACTIVE'
+      };
+      
       const calculatedAmount = calculateIncidenceAmount(
         req.body.type,
-        employee,
+        employeeForCalculation,
         req.body.quantity
       );
 
@@ -116,9 +147,15 @@ export const incidenceController = {
         where: { id: req.body.employeeId }
       });
 
+      const employeeForCalculation = {
+        ...employee!,
+        salary: Number(employee!.baseSalary),
+        isActive: employee!.status === 'ACTIVE'
+      };
+      
       const calculatedAmount = calculateIncidenceAmount(
         req.body.type,
-        employee!,
+        employeeForCalculation,
         req.body.quantity
       );
 

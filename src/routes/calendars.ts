@@ -10,6 +10,15 @@ import {
 const router = Router();
 
 // Calendar routes
+// GET /api/calendars
+router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await calendarController.getAllCalendars(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get(
   '/company/:companyId',
   validateCalendarParams,
@@ -60,26 +69,38 @@ router.delete(
   }
 );
 
-// Period routes
+// Calendar utility routes
 router.get(
-  '/:calendarId/periods',
-  validateCalendarParams,
-  validateCalendarQuery,
-  calendarController.getCalendarPeriods
-);
-
-router.get(
-  '/:calendarId/periods/active',
-  validateCalendarParams,
-  calendarController.getActivePeriods
-);
-
-router.get(
-  '/:calendarId/periods/current',
+  '/:calendarId/info',
   validateCalendarParams,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await calendarController.getCurrentPeriod(req, res);
+      await calendarController.getCalendarInfo(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get(
+  '/:calendarId/working-days',
+  validateCalendarParams,
+  validateCalendarQuery,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.getWorkingDaysInMonth(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get(
+  '/:calendarId/is-working-day',
+  validateCalendarParams,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await calendarController.checkWorkingDay(req, res);
     } catch (err) {
       next(err);
     }
@@ -87,12 +108,11 @@ router.get(
 );
 
 router.post(
-  '/:calendarId/periods',
+  '/:calendarId/holidays',
   validateCalendarParams,
-  validatePeriodParams,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await calendarController.createPeriod(req, res);
+      await calendarController.addHoliday(req, res);
     } catch (err) {
       next(err);
     }
@@ -100,12 +120,11 @@ router.post(
 );
 
 router.put(
-  '/:calendarId/periods/:periodId',
+  '/:calendarId/work-days',
   validateCalendarParams,
-  validatePeriodParams,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await calendarController.updatePeriod(req, res);
+      await calendarController.updateWorkDays(req, res);
     } catch (err) {
       next(err);
     }
@@ -113,25 +132,25 @@ router.put(
 );
 
 router.delete(
-  '/:calendarId/periods/:periodId',
+  '/:calendarId/holidays',
   validateCalendarParams,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await calendarController.deletePeriod(req, res);
+      await calendarController.removeHoliday(req, res);
     } catch (err) {
       next(err);
     }
   }
 );
 
-// Generate periods
-router.post(
-  '/:calendarId/generate-periods',
+// Calendar statistics
+router.get(
+  '/:calendarId/stats',
   validateCalendarParams,
-  validateGeneratePeriods,
+  validateCalendarQuery,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await calendarController.generatePeriods(req, res);
+      await calendarController.getCalendarStats(req, res);
     } catch (err) {
       next(err);
     }
