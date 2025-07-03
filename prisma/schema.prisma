@@ -5,21 +5,14 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = [
-    "native",
-    "linux-musl-openssl-3.0.x",
-    "linux-musl-arm64-openssl-3.0.x",
-    "debian-openssl-3.0.x",
-    "linux-arm64-openssl-3.0.x"
-  ]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 // ================================
 // USUARIOS Y AUTENTICACIÓN
@@ -48,6 +41,8 @@ model User {
   // Sesiones y tokens
   refreshTokens RefreshToken[]
   
+  // Índices
+  @@index([email, isActive])
   @@map("users")
 }
 
@@ -86,63 +81,85 @@ model Company {
   // Configuración de nómina
   paymentMethod String?
   bankAccount   String?
+  taxRegime     String?
+  
+  // Configuración del SAT
+  certificateFile String?
+  keyFile         String?
+  certificatePassword String?
   
   // Relaciones
+  users         User[]
   employees     Employee[]
   payrolls      Payroll[]
-  calendars     PayrollCalendar[]
   incidences    Incidence[]
   notifications Notification[]
-  users         User[]  // Usuarios cliente de esta empresa
+  calendars     Calendar[]
   
   // Timestamps
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
+  // Índices
+  @@index([status])
   @@map("companies")
 }
 
 enum CompanyStatus {
-  IN_SETUP      // En Configuración
-  CONFIGURED    // Configurada
-  ACTIVE        // Activa
-  INACTIVE      // Inactiva
-  SUSPENDED     // Suspendida
+  IN_SETUP
+  CONFIGURED
+  ACTIVE
+  SUSPENDED
+  INACTIVE
 }
 
 // ================================
 // EMPLEADOS
 // ================================
 model Employee {
-  id               Int      @id @default(autoincrement())
-  employeeNumber   String   @unique
-  name             String
-  email            String   @unique
-  rfc              String   @unique
-  position         String
-  department       String
-  salary           Float
-  hireDate         DateTime
-  status           EmployeeStatus @default(ACTIVE)
+  id              Int      @id @default(autoincrement())
+  employeeNumber  String   @unique
+  name            String
+  email           String?
+  rfc             String   @unique
+  position        String
+  department      String
+  status          EmployeeStatus @default(ACTIVE)
+  
+  // Información de contrato
+  hireDate        DateTime
+  contractType    ContractType
+  workSchedule    String?
+  baseSalary      Decimal  @db.Decimal(10, 2)
+  
+  // Información personal
+  dateOfBirth     DateTime?
+  address         String?
+  phone           String?
+  emergencyContact String?
   
   // Información bancaria
-  bankName         String?
-  accountNumber    String?
-  clabe            String?
+  bankName        String?
+  bankAccount     String?
+  clabe           String?
   
-  // Relación con empresa
-  companyId        Int
-  company          Company  @relation(fields: [companyId], references: [id])
+  // Información del SAT
+  taxRegime       String?
   
   // Relaciones
-  incidences       Incidence[]
-  payrollDetails   PayrollDetail[]
-  user             User?    // Usuario del empleado para portal
+  companyId       Int
+  company         Company @relation(fields: [companyId], references: [id])
+  
+  user            User?
+  payrollItems    PayrollItem[]
+  incidences      Incidence[]
   
   // Timestamps
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   
+  // Índices
+  @@index([companyId, status])
   @@map("employees")
 }
 
@@ -153,127 +170,146 @@ enum EmployeeStatus {
   ON_LEAVE
 }
 
-// ================================
-// CALENDARIOS DE NÓMINA
-// ================================
-model PayrollCalendar {
-  id              Int      @id @default(autoincrement())
-  name            String
-  payFrequency    PayFrequency
-  daysBeforeClose Int      @default(0)
-  startDate       DateTime
-  periodNumber    Int      @default(1)
-  payNaturalDays  Boolean  @default(false)
-  isActive        Boolean  @default(true)
-  
-  // Relación con empresa
-  companyId       Int
-  company         Company  @relation(fields: [companyId], references: [id])
-  
-  // Relaciones
-  payrolls        Payroll[]
-  
-  // Timestamps
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
-  @@map("payroll_calendars")
+enum ContractType {
+  INDEFINITE
+  FIXED_TERM
+  PART_TIME
+  CONTRACTOR
+  INTERN
 }
 
-enum PayFrequency {
-  WEEKLY    // semanal
-  BIWEEKLY  // quincenal
-  MONTHLY   // mensual
-  BIMONTHLY // decenal
-  OTHER     // catorcenal, etc
+// ================================
+// CALENDARIO LABORAL
+// ================================
+model Calendar {
+  id          Int      @id @default(autoincrement())
+  name        String
+  year        Int
+  
+  // Días de trabajo por semana
+  workDays    Json     // [1,2,3,4,5] = lunes a viernes
+  
+  // Días festivos
+  holidays    Json     // [{date: "2024-01-01", name: "Año Nuevo"}]
+  
+  // Configuración
+  isDefault   Boolean  @default(false)
+  
+  // Relaciones
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id])
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([companyId, year])
+  @@map("calendars")
 }
 
 // ================================
 // NÓMINAS
 // ================================
 model Payroll {
-  id                Int            @id @default(autoincrement())
-  period            String         // "2025-06-01 a 2025-06-15"
-  periodStart       DateTime
-  periodEnd         DateTime
-  amount            Float
-  employees         Int            // Número de empleados
-  status            PayrollStatus  @default(CALCULATING)
+  id            Int      @id @default(autoincrement())
+  period        String   // "2024-01" formato año-mes
+  periodStart   DateTime
+  periodEnd     DateTime
+  status        PayrollStatus @default(DRAFT)
   
-  // Cálculos de nómina (JSON)
-  calculations      Json?          // Totales generales
-  detailedCalculations Json?       // Detalles por empleado
+  // Totales
+  totalGross    Decimal  @db.Decimal(12, 2)
+  totalDeductions Decimal @db.Decimal(12, 2)
+  totalNet      Decimal  @db.Decimal(12, 2)
   
-  // Información de autorización
-  submittedAt       DateTime?
-  submittedBy       String?
-  authorizedAt      DateTime?
-  authorizedBy      String?
-  comments          String?
+  // Metadata
+  employeeCount Int
+  processedAt   DateTime?
+  authorizedAt  DateTime?
+  authorizedBy  String?
   
-  // Información de timbrado
-  timberedAt        DateTime?
-  cfdiFiles         Json?          // URLs de archivos CFDI
-  
-  // Relación con empresa y calendario
-  companyId         Int
-  company           Company        @relation(fields: [companyId], references: [id])
-  
-  calendarId        Int?
-  calendar          PayrollCalendar? @relation(fields: [calendarId], references: [id])
+  // XML y PDF paths
+  xmlPath       String?
+  pdfPath       String?
   
   // Relaciones
-  incidences        Incidence[]
-  details           PayrollDetail[]
-  notifications     Notification[]
+  companyId     Int
+  company       Company @relation(fields: [companyId], references: [id])
+  
+  payrollItems  PayrollItem[]
+  incidences    Incidence[]
+  notifications Notification[]
   
   // Timestamps
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
+  // Índices
+  @@index([companyId, status])
+  @@index([periodStart, periodEnd])
   @@map("payrolls")
 }
 
 enum PayrollStatus {
-  CALCULATING           // calculando
-  PENDING_AUTHORIZATION // pending_authorization  
-  APPROVED              // approved
-  REJECTED              // rejected
-  TIMBERED              // timbered
-  DISPERSED             // dispersed
-  CANCELLED             // cancelled
+  DRAFT
+  CALCULATED
+  PENDING_AUTHORIZATION
+  AUTHORIZED
+  PROCESSED
+  TIMBERED
+  ERROR
 }
 
 // ================================
-// DETALLES DE NÓMINA POR EMPLEADO
+// PARTIDAS DE NÓMINA
 // ================================
-model PayrollDetail {
-  id           Int      @id @default(autoincrement())
+model PayrollItem {
+  id            Int      @id @default(autoincrement())
+  
+  // Percepciones
+  baseSalary    Decimal  @db.Decimal(10, 2)
+  overtime      Decimal  @db.Decimal(10, 2) @default(0)
+  bonuses       Decimal  @db.Decimal(10, 2) @default(0)
+  totalGross    Decimal  @db.Decimal(10, 2)
+  
+  // Deducciones
+  incomeTax     Decimal  @db.Decimal(10, 2) @default(0)
+  socialSecurity Decimal @db.Decimal(10, 2) @default(0)
+  otherDeductions Decimal @db.Decimal(10, 2) @default(0)
+  totalDeductions Decimal @db.Decimal(10, 2)
+  
+  // Total neto
+  netSalary     Decimal  @db.Decimal(10, 2)
+  
+  // Días trabajados
+  workedDays    Int
+  
+  // Status del CFDI
+  cfdiStatus    CFDIStatus @default(PENDING)
+  cfdiUuid      String?
+  cfdiXmlPath   String?
+  cfdiPdfPath   String?
   
   // Relaciones
-  payrollId    Int
-  payroll      Payroll  @relation(fields: [payrollId], references: [id])
+  employeeId    Int
+  employee      Employee @relation(fields: [employeeId], references: [id])
   
-  employeeId   Int
-  employee     Employee @relation(fields: [employeeId], references: [id])
-  
-  // Cálculos individuales
-  perceptions  Json     // Percepciones detalladas
-  deductions   Json     // Deducciones detalladas
-  provisions   Json     // Provisiones patronales
-  netPay       Float    // Neto a pagar
-  
-  // Información CFDI
-  cfdiUuid     String?  // UUID del timbrado
-  cfdiXml      String?  // Ruta del XML
-  cfdiPdf      String?  // Ruta del PDF
+  payrollId     Int
+  payroll       Payroll @relation(fields: [payrollId], references: [id])
   
   // Timestamps
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
-  @@unique([payrollId, employeeId])
-  @@map("payroll_details")
+  @@unique([employeeId, payrollId])
+  @@map("payroll_items")
+}
+
+enum CFDIStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  ERROR
 }
 
 // ================================
@@ -282,10 +318,11 @@ model PayrollDetail {
 model Incidence {
   id          Int            @id @default(autoincrement())
   type        IncidenceType
-  quantity    Float
-  amount      Float
   date        DateTime
-  comments    String?
+  quantity    Decimal        @db.Decimal(8, 2) // horas, días, etc.
+  amount      Decimal?       @db.Decimal(10, 2) // monto en pesos
+  description String?
+  status      IncidenceStatus @default(PENDING)
   
   // Relaciones
   employeeId  Int
@@ -301,6 +338,9 @@ model Incidence {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   
+  // Índices
+  @@index([companyId, date])
+  @@index([employeeId, type])
   @@map("incidences")
 }
 
@@ -310,6 +350,13 @@ enum IncidenceType {
   VACACIONES    // vacaciones
   TIEMPO_EXTRA  // tiempo_extra
   BONOS         // bonos
+}
+
+enum IncidenceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PROCESSED
 }
 
 // ================================
@@ -337,6 +384,8 @@ model Notification {
   createdAt DateTime         @default(now())
   readAt    DateTime?
   
+  // Índices
+  @@index([companyId, read])
   @@map("notifications")
 }
 
@@ -355,17 +404,3 @@ enum NotificationPriority {
   HIGH
   URGENT
 }
-
-// ================================
-// ÍNDICES PARA PERFORMANCE
-// ================================
-
-// Índices para búsquedas comunes
-@@index([Company.status])
-@@index([Employee.companyId, Employee.status])
-@@index([Payroll.companyId, Payroll.status])
-@@index([Payroll.periodStart, Payroll.periodEnd])
-@@index([Incidence.companyId, Incidence.date])
-@@index([Incidence.employeeId, Incidence.type])
-@@index([Notification.companyId, Notification.read])
-@@index([User.email, User.isActive])
