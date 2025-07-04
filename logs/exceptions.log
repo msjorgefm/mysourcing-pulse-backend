@@ -62,3 +62,65 @@ src/services/companyWizardService.ts(144,9): error TS2322: Type '{ companyId: nu
     at Module.load (node:internal/modules/cjs/loader:1203:32)
     at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 16:02:17 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(144,31): error TS2339: Property 'companyGeneralInfo' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(148,31): error TS2339: Property 'companyTaxObligations' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(152,31): error TS2339: Property 'companyBank' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(156,31): error TS2339: Property 'companyDigitalCertificate' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(161,33): error TS2339: Property 'companyArea' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(162,39): error TS2339: Property 'companyDepartment' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(163,37): error TS2339: Property 'companyPosition' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(167,36): error TS2339: Property 'companyBenefit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(168,41): error TS2339: Property 'companyBenefitGroup' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(176,37): error TS2339: Property 'companySchedule' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(204,38): error TS2339: Property 'companyWizardSection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(220,22): error TS2339: Property 'companyWizardSection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(144,31): error TS2339: Property 'companyGeneralInfo' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(148,31): error TS2339: Property 'companyTaxObligations' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(152,31): error TS2339: Property 'companyBank' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(156,31): error TS2339: Property 'companyDigitalCertificate' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(161,33): error TS2339: Property 'companyArea' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(162,39): error TS2339: Property 'companyDepartment' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(163,37): error TS2339: Property 'companyPosition' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(167,36): error TS2339: Property 'companyBenefit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(168,41): error TS2339: Property 'companyBenefitGroup' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(176,37): error TS2339: Property 'companySchedule' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(204,38): error TS2339: Property 'companyWizardSection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(220,22): error TS2339: Property 'companyWizardSection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(144,31): error TS2339: Property 'companyGeneralInfo' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(148,31): error TS2339: Property 'companyTaxObligations' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(152,31): error TS2339: Property 'companyBank' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(156,31): error TS2339: Property 'companyDigitalCertificate' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(161,33): error TS2339: Property 'companyArea' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(162,39): error TS2339: Property 'companyDepartment' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(163,37): error TS2339: Property 'companyPosition' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(167,36): error TS2339: Property 'companyBenefit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(168,41): error TS2339: Property 'companyBenefitGroup' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(176,37): error TS2339: Property 'companySchedule' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(204,38): error TS2339: Property 'companyWizardSection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(220,22): error TS2339: Property 'companyWizardSection' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
