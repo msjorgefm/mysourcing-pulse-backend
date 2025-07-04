@@ -7,17 +7,37 @@ const validation_1 = require("../middleware/validation");
 const library_1 = require("@prisma/client/runtime/library");
 const prisma = new client_1.PrismaClient();
 exports.calendarController = {
+    // Obtener todos los calendarios
+    async getAllCalendars(req, res) {
+        try {
+            const calendars = await prisma.calendar.findMany({
+                include: {
+                    company: true
+                },
+                orderBy: { name: 'asc' }
+            });
+            res.json({
+                success: true,
+                data: calendars,
+                count: calendars.length
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error fetching all calendars:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al obtener calendarios'
+            });
+        }
+    },
     // Obtener calendarios de una empresa
     async getCalendarsByCompany(req, res) {
         try {
             const { companyId } = req.params;
-            const calendars = await prisma.payrollCalendar.findMany({
+            const calendars = await prisma.calendar.findMany({
                 where: { companyId: parseInt(companyId) },
                 include: {
-                    company: true,
-                    periods: {
-                        orderBy: { startDate: 'desc' }
-                    }
+                    company: true
                 },
                 orderBy: { name: 'asc' }
             });
@@ -38,13 +58,10 @@ exports.calendarController = {
     async getCalendarById(req, res) {
         try {
             const { id } = req.params;
-            const calendar = await prisma.payrollCalendar.findUnique({
+            const calendar = await prisma.calendar.findUnique({
                 where: { id: parseInt(id) },
                 include: {
-                    company: true,
-                    periods: {
-                        orderBy: { startDate: 'desc' }
-                    }
+                    company: true
                 }
             });
             if (!calendar) {
@@ -77,11 +94,10 @@ exports.calendarController = {
                     errors: validation.errors
                 });
             }
-            const calendar = await prisma.payrollCalendar.create({
+            const calendar = await prisma.calendar.create({
                 data: req.body,
                 include: {
-                    company: true,
-                    periods: true
+                    company: true
                 }
             });
             logger_1.logger.info(`Calendar created: ${calendar.name}`);
@@ -110,12 +126,11 @@ exports.calendarController = {
                     errors: validation.errors
                 });
             }
-            const calendar = await prisma.payrollCalendar.update({
+            const calendar = await prisma.calendar.update({
                 where: { id: parseInt(id) },
                 data: req.body,
                 include: {
-                    company: true,
-                    periods: true
+                    company: true
                 }
             });
             logger_1.logger.info(`Calendar updated: ${calendar.name}`);
@@ -142,17 +157,7 @@ exports.calendarController = {
     async deleteCalendar(req, res) {
         try {
             const { id } = req.params;
-            // Verificar si el calendario tiene períodos asociados
-            const periodsCount = await prisma.payrollPeriod.count({
-                where: { calendarId: parseInt(id) }
-            });
-            if (periodsCount > 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'No se puede eliminar el calendario porque tiene períodos asociados'
-                });
-            }
-            await prisma.payrollCalendar.delete({
+            await prisma.calendar.delete({
                 where: { id: parseInt(id) }
             });
             logger_1.logger.info(`Calendar deleted: ${id}`);
@@ -175,257 +180,51 @@ exports.calendarController = {
             });
         }
     },
-    // Obtener períodos de un calendario
-    async getCalendarPeriods(req, res) {
+    // Obtener información del calendario
+    async getCalendarInfo(req, res) {
         try {
             const { calendarId } = req.params;
-            const { status, year } = req.query;
-            const whereClause = {
-                calendarId: parseInt(calendarId)
-            };
-            if (status) {
-                whereClause.status = status;
-            }
-            if (year) {
-                const yearStart = new Date(`${year}-01-01`);
-                const yearEnd = new Date(`${year}-12-31`);
-                whereClause.startDate = {
-                    gte: yearStart,
-                    lte: yearEnd
-                };
-            }
-            const periods = await prisma.payrollPeriod.findMany({
-                where: whereClause,
-                orderBy: { startDate: 'desc' }
-            });
-            res.json({
-                success: true,
-                data: periods
-            });
-        }
-        catch (error) {
-            logger_1.logger.error('Error fetching calendar periods:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Error al obtener períodos del calendario'
-            });
-        }
-    },
-    // Obtener períodos activos
-    async getActivePeriods(req, res) {
-        try {
-            const { calendarId } = req.params;
-            const currentDate = new Date();
-            const periods = await prisma.payrollPeriod.findMany({
-                where: {
-                    calendarId: parseInt(calendarId),
-                    startDate: { lte: currentDate },
-                    endDate: { gte: currentDate }
-                },
-                orderBy: { startDate: 'asc' }
-            });
-            res.json({
-                success: true,
-                data: periods
-            });
-        }
-        catch (error) {
-            logger_1.logger.error('Error fetching active periods:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Error al obtener períodos activos'
-            });
-        }
-    },
-    // Obtener período actual
-    async getCurrentPeriod(req, res) {
-        try {
-            const { calendarId } = req.params;
-            const currentDate = new Date();
-            const period = await prisma.payrollPeriod.findFirst({
-                where: {
-                    calendarId: parseInt(calendarId),
-                    startDate: { lte: currentDate },
-                    endDate: { gte: currentDate }
+            const calendar = await prisma.calendar.findUnique({
+                where: { id: parseInt(calendarId) },
+                include: {
+                    company: true
                 }
             });
-            if (!period) {
+            if (!calendar) {
                 return res.status(404).json({
                     success: false,
-                    message: 'No hay período activo en este momento'
+                    message: 'Calendario no encontrado'
                 });
             }
             res.json({
                 success: true,
-                data: period
+                data: {
+                    ...calendar,
+                    workDays: calendar.workDays,
+                    holidays: calendar.holidays
+                }
             });
         }
         catch (error) {
-            logger_1.logger.error('Error fetching current period:', error);
+            logger_1.logger.error('Error fetching calendar info:', error);
             res.status(500).json({
                 success: false,
-                message: 'Error al obtener período actual'
+                message: 'Error al obtener información del calendario'
             });
         }
     },
-    // Crear período
-    async createPeriod(req, res) {
+    // Obtener días laborables del mes
+    async getWorkingDaysInMonth(req, res) {
         try {
             const { calendarId } = req.params;
-            const periodData = {
-                ...req.body,
-                calendarId: parseInt(calendarId)
-            };
-            // Validar que no haya solapamiento de fechas
-            const overlappingPeriod = await prisma.payrollPeriod.findFirst({
-                where: {
-                    calendarId: parseInt(calendarId),
-                    OR: [
-                        {
-                            startDate: { lte: new Date(periodData.endDate) },
-                            endDate: { gte: new Date(periodData.startDate) }
-                        }
-                    ]
-                }
-            });
-            if (overlappingPeriod) {
+            const { year, month } = req.query;
+            if (!year || !month) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Las fechas del período se solapan con un período existente'
+                    message: 'Año y mes son requeridos'
                 });
             }
-            const period = await prisma.payrollPeriod.create({
-                data: periodData
-            });
-            logger_1.logger.info(`Period created: ${period.name}`);
-            res.status(201).json({
-                success: true,
-                data: period
-            });
-        }
-        catch (error) {
-            logger_1.logger.error('Error creating period:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Error al crear período'
-            });
-        }
-    },
-    // Actualizar período
-    async updatePeriod(req, res) {
-        try {
-            const { calendarId, periodId } = req.params;
-            // Verificar que el período existe y pertenece al calendario
-            const existingPeriod = await prisma.payrollPeriod.findFirst({
-                where: {
-                    id: parseInt(periodId),
-                    calendarId: parseInt(calendarId)
-                }
-            });
-            if (!existingPeriod) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Período no encontrado'
-                });
-            }
-            // Validar solapamiento si se están actualizando las fechas
-            if (req.body.startDate || req.body.endDate) {
-                const startDate = req.body.startDate ? new Date(req.body.startDate) : existingPeriod.startDate;
-                const endDate = req.body.endDate ? new Date(req.body.endDate) : existingPeriod.endDate;
-                const overlappingPeriod = await prisma.payrollPeriod.findFirst({
-                    where: {
-                        calendarId: parseInt(calendarId),
-                        id: { not: parseInt(periodId) },
-                        OR: [
-                            {
-                                startDate: { lte: endDate },
-                                endDate: { gte: startDate }
-                            }
-                        ]
-                    }
-                });
-                if (overlappingPeriod) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Las fechas del período se solapan con un período existente'
-                    });
-                }
-            }
-            const period = await prisma.payrollPeriod.update({
-                where: { id: parseInt(periodId) },
-                data: req.body
-            });
-            logger_1.logger.info(`Period updated: ${period.name}`);
-            res.json({
-                success: true,
-                data: period
-            });
-        }
-        catch (error) {
-            logger_1.logger.error('Error updating period:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Error al actualizar período'
-            });
-        }
-    },
-    // Eliminar período
-    async deletePeriod(req, res) {
-        try {
-            const { calendarId, periodId } = req.params;
-            // Verificar que el período existe y pertenece al calendario
-            const existingPeriod = await prisma.payrollPeriod.findFirst({
-                where: {
-                    id: parseInt(periodId),
-                    calendarId: parseInt(calendarId)
-                }
-            });
-            if (!existingPeriod) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Período no encontrado'
-                });
-            }
-            // Verificar si hay nóminas asociadas al período
-            const payrollsCount = await prisma.payroll.count({
-                where: { periodId: parseInt(periodId) }
-            });
-            if (payrollsCount > 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'No se puede eliminar el período porque tiene nóminas asociadas'
-                });
-            }
-            await prisma.payrollPeriod.delete({
-                where: { id: parseInt(periodId) }
-            });
-            logger_1.logger.info(`Period deleted: ${periodId}`);
-            res.json({
-                success: true,
-                message: 'Período eliminado exitosamente'
-            });
-        }
-        catch (error) {
-            logger_1.logger.error('Error deleting period:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Error al eliminar período'
-            });
-        }
-    },
-    // Generar períodos automáticamente
-    async generatePeriods(req, res) {
-        try {
-            const { calendarId } = req.params;
-            const { year, frequency } = req.body;
-            if (!year || !frequency) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Año y frecuencia son requeridos'
-                });
-            }
-            // Obtener el calendario
-            const calendar = await prisma.payrollCalendar.findUnique({
+            const calendar = await prisma.calendar.findUnique({
                 where: { id: parseInt(calendarId) }
             });
             if (!calendar) {
@@ -434,71 +233,266 @@ exports.calendarController = {
                     message: 'Calendario no encontrado'
                 });
             }
-            const periods = [];
-            const startDate = new Date(`${year}-01-01`);
-            // Calcular períodos según la frecuencia
-            const frequencyMap = {
-                'quincenal': 15,
-                'mensual': 30,
-                'semanal': 7,
-                'decenal': 10
-            };
-            const daysPerPeriod = frequencyMap[frequency] || 15;
-            const periodsPerYear = Math.floor(365 / daysPerPeriod);
-            for (let i = 0; i < periodsPerYear; i++) {
-                const periodStart = new Date(startDate);
-                periodStart.setDate(startDate.getDate() + (i * daysPerPeriod));
-                const periodEnd = new Date(periodStart);
-                periodEnd.setDate(periodStart.getDate() + daysPerPeriod - 1);
-                // Verificar que no exceda el año
-                if (periodEnd.getFullYear() > year) {
-                    periodEnd.setDate(31);
-                    periodEnd.setMonth(11);
-                    periodEnd.setFullYear(year);
-                }
-                const periodName = `Período ${i + 1} - ${year}`;
-                periods.push({
-                    calendarId: parseInt(calendarId),
-                    name: periodName,
-                    startDate: periodStart,
-                    endDate: periodEnd,
-                    status: 'draft',
-                    workingDays: this.calculateWorkingDays(periodStart, periodEnd)
-                });
-            }
-            // Crear períodos en la base de datos
-            const createdPeriods = await prisma.payrollPeriod.createMany({
-                data: periods,
-                skipDuplicates: true
-            });
-            logger_1.logger.info(`Generated ${createdPeriods.count} periods for calendar ${calendarId}`);
-            res.status(201).json({
+            const workingDays = this.calculateWorkingDaysInMonth(parseInt(year), parseInt(month), calendar.workDays, calendar.holidays);
+            res.json({
                 success: true,
-                message: `Se generaron ${createdPeriods.count} períodos exitosamente`,
-                data: { count: createdPeriods.count }
+                data: { workingDays }
             });
         }
         catch (error) {
-            logger_1.logger.error('Error generating periods:', error);
+            logger_1.logger.error('Error calculating working days:', error);
             res.status(500).json({
                 success: false,
-                message: 'Error al generar períodos'
+                message: 'Error al calcular días laborables'
             });
         }
     },
-    // Método auxiliar para calcular días laborables
-    calculateWorkingDays(startDate, endDate) {
+    // Verificar si una fecha es laborable
+    async checkWorkingDay(req, res) {
+        try {
+            const { calendarId } = req.params;
+            const { date } = req.query;
+            if (!date) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Fecha es requerida'
+                });
+            }
+            const calendar = await prisma.calendar.findUnique({
+                where: { id: parseInt(calendarId) }
+            });
+            if (!calendar) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Calendario no encontrado'
+                });
+            }
+            const checkDate = new Date(date);
+            const isWorking = this.isWorkingDay(checkDate, calendar.workDays, calendar.holidays);
+            res.json({
+                success: true,
+                data: { isWorkingDay: isWorking }
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error checking working day:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al verificar día laborable'
+            });
+        }
+    },
+    // Añadir día festivo
+    async addHoliday(req, res) {
+        try {
+            const { calendarId } = req.params;
+            const { date, name } = req.body;
+            if (!date || !name) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Fecha y nombre son requeridos'
+                });
+            }
+            const calendar = await prisma.calendar.findUnique({
+                where: { id: parseInt(calendarId) }
+            });
+            if (!calendar) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Calendario no encontrado'
+                });
+            }
+            const holidays = calendar.holidays;
+            const newHoliday = { date, name };
+            // Verificar si ya existe
+            const existingHoliday = holidays.find(h => h.date === date);
+            if (existingHoliday) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Ya existe un día festivo en esa fecha'
+                });
+            }
+            holidays.push(newHoliday);
+            const updatedCalendar = await prisma.calendar.update({
+                where: { id: parseInt(calendarId) },
+                data: { holidays }
+            });
+            logger_1.logger.info(`Holiday added to calendar ${calendarId}: ${name}`);
+            res.status(201).json({
+                success: true,
+                data: updatedCalendar
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error adding holiday:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al añadir día festivo'
+            });
+        }
+    },
+    // Actualizar días laborables
+    async updateWorkDays(req, res) {
+        try {
+            const { calendarId } = req.params;
+            const { workDays } = req.body;
+            if (!workDays || !Array.isArray(workDays)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Días laborables son requeridos y deben ser un array'
+                });
+            }
+            const calendar = await prisma.calendar.update({
+                where: { id: parseInt(calendarId) },
+                data: { workDays }
+            });
+            logger_1.logger.info(`Work days updated for calendar ${calendarId}`);
+            res.json({
+                success: true,
+                data: calendar
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error updating work days:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al actualizar días laborables'
+            });
+        }
+    },
+    // Eliminar día festivo
+    async removeHoliday(req, res) {
+        try {
+            const { calendarId } = req.params;
+            const { date } = req.body;
+            if (!date) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Fecha es requerida'
+                });
+            }
+            const calendar = await prisma.calendar.findUnique({
+                where: { id: parseInt(calendarId) }
+            });
+            if (!calendar) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Calendario no encontrado'
+                });
+            }
+            const holidays = calendar.holidays;
+            const filteredHolidays = holidays.filter(h => h.date !== date);
+            if (holidays.length === filteredHolidays.length) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Día festivo no encontrado'
+                });
+            }
+            const updatedCalendar = await prisma.calendar.update({
+                where: { id: parseInt(calendarId) },
+                data: { holidays: filteredHolidays }
+            });
+            logger_1.logger.info(`Holiday removed from calendar ${calendarId}: ${date}`);
+            res.json({
+                success: true,
+                data: updatedCalendar
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error removing holiday:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al eliminar día festivo'
+            });
+        }
+    },
+    // Obtener estadísticas del calendario
+    async getCalendarStats(req, res) {
+        try {
+            const { calendarId } = req.params;
+            const { year } = req.query;
+            const calendar = await prisma.calendar.findUnique({
+                where: { id: parseInt(calendarId) },
+                include: {
+                    company: true
+                }
+            });
+            if (!calendar) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Calendario no encontrado'
+                });
+            }
+            const currentYear = year ? parseInt(year) : new Date().getFullYear();
+            const holidays = calendar.holidays;
+            const workDays = calendar.workDays;
+            // Calcular estadísticas del año
+            const yearStats = {
+                totalDays: this.getDaysInYear(currentYear),
+                workingDays: this.calculateWorkingDaysInYear(currentYear, workDays, holidays),
+                holidays: holidays.filter(h => new Date(h.date).getFullYear() === currentYear).length,
+                weekends: this.calculateWeekendsInYear(currentYear, workDays)
+            };
+            res.json({
+                success: true,
+                data: {
+                    calendar,
+                    stats: yearStats
+                }
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error getting calendar stats:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al obtener estadísticas del calendario'
+            });
+        }
+    },
+    // Métodos auxiliares para cálculos de calendario
+    calculateWorkingDaysInMonth(year, month, workDays, holidays) {
         let workingDays = 0;
-        const currentDate = new Date(startDate);
-        while (currentDate <= endDate) {
-            const dayOfWeek = currentDate.getDay();
-            // Excluir sábados (6) y domingos (0)
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        const daysInMonth = new Date(year, month, 0).getDate();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month - 1, day);
+            if (this.isWorkingDay(date, workDays, holidays)) {
                 workingDays++;
             }
-            currentDate.setDate(currentDate.getDate() + 1);
         }
         return workingDays;
+    },
+    calculateWorkingDaysInYear(year, workDays, holidays) {
+        let totalWorkingDays = 0;
+        for (let month = 1; month <= 12; month++) {
+            totalWorkingDays += this.calculateWorkingDaysInMonth(year, month, workDays, holidays);
+        }
+        return totalWorkingDays;
+    },
+    isWorkingDay(date, workDays, holidays) {
+        const dayOfWeek = date.getDay();
+        const dateStr = date.toISOString().split('T')[0];
+        // Verificar si es día laborable
+        if (!workDays.includes(dayOfWeek)) {
+            return false;
+        }
+        // Verificar si es día festivo
+        const isHoliday = holidays.some(h => h.date === dateStr);
+        return !isHoliday;
+    },
+    getDaysInYear(year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 366 : 365;
+    },
+    calculateWeekendsInYear(year, workDays) {
+        let weekends = 0;
+        const totalDays = this.getDaysInYear(year);
+        for (let day = 0; day < totalDays; day++) {
+            const date = new Date(year, 0, day + 1);
+            const dayOfWeek = date.getDay();
+            if (!workDays.includes(dayOfWeek)) {
+                weekends++;
+            }
+        }
+        return weekends;
     }
 };
 //# sourceMappingURL=calendarController.js.map

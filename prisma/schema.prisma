@@ -95,6 +95,19 @@ model Company {
   notifications Notification[]
   calendars     Calendar[]
   
+  // Wizard y configuración
+  wizard        CompanyWizard?
+  generalInfo   CompanyGeneralInfo?
+  taxObligations CompanyTaxObligations?
+  banks         CompanyBank[]
+  digitalCertificate CompanyDigitalCertificate?
+  areas         CompanyArea[]
+  departments   CompanyDepartment[]
+  positions     CompanyPosition[]
+  benefits      CompanyBenefit[]
+  benefitGroups CompanyBenefitGroup[]
+  schedules     CompanySchedule[]
+  
   // Timestamps
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -402,4 +415,324 @@ enum NotificationPriority {
   NORMAL
   HIGH
   URGENT
+}
+
+// ================================
+// WIZARD DE CONFIGURACIÓN DE EMPRESAS
+// ================================
+model CompanyWizard {
+  id                Int                 @id @default(autoincrement())
+  companyId         Int                 @unique
+  company           Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  // Estado general del wizard
+  status            WizardStatus        @default(IN_PROGRESS)
+  currentSection    Int                 @default(1)
+  currentStep       Int                 @default(1)
+  
+  // Datos del wizard (JSON para flexibilidad)
+  wizardData        Json                @default("{}")
+  
+  // Progreso por secciones
+  sectionProgress   CompanyWizardSection[]
+  
+  // Timestamps
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  completedAt       DateTime?
+  
+  @@map("company_wizards")
+}
+
+model CompanyWizardSection {
+  id              Int                 @id @default(autoincrement())
+  wizardId        Int
+  wizard          CompanyWizard       @relation(fields: [wizardId], references: [id], onDelete: Cascade)
+  
+  // Identificación de la sección
+  sectionNumber   Int                 // 1-8
+  sectionName     String              // "Datos Generales", "Obligaciones Patronales", etc.
+  
+  // Estado de la sección
+  status          SectionStatus       @default(PENDING)
+  isOptional      Boolean             @default(false)
+  
+  // Pasos de la sección
+  steps           CompanyWizardStep[]
+  
+  // Timestamps
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  completedAt     DateTime?
+  
+  @@unique([wizardId, sectionNumber])
+  @@map("company_wizard_sections")
+}
+
+model CompanyWizardStep {
+  id              Int                 @id @default(autoincrement())
+  sectionId       Int
+  section         CompanyWizardSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  
+  // Identificación del paso
+  stepNumber      Int                 // 1-n
+  stepName        String              // "Información General", "Domicilio", etc.
+  
+  // Estado del paso
+  status          StepStatus          @default(PENDING)
+  isOptional      Boolean             @default(false)
+  
+  // Datos del paso (JSON)
+  stepData        Json                @default("{}")
+  
+  // Timestamps
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  completedAt     DateTime?
+  
+  @@unique([sectionId, stepNumber])
+  @@map("company_wizard_steps")
+}
+
+// Nuevas tablas para almacenar datos específicos del wizard
+model CompanyGeneralInfo {
+  id              Int      @id @default(autoincrement())
+  companyId       Int      @unique
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  // Información general
+  businessName    String
+  commercialName  String?
+  rfc             String
+  taxRegime       String
+  startDate       DateTime
+  
+  // Domicilio
+  street          String
+  exteriorNumber  String
+  interiorNumber  String?
+  neighborhood    String
+  city            String
+  state           String
+  zipCode         String
+  country         String   @default("México")
+  
+  // Representante legal
+  legalRepName    String
+  legalRepRFC     String
+  legalRepCurp    String?
+  legalRepPosition String
+  
+  // Poder notarial
+  notarialPower   String?
+  notaryNumber    String?
+  notaryName      String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_general_info")
+}
+
+model CompanyTaxObligations {
+  id                    Int      @id @default(autoincrement())
+  companyId             Int      @unique
+  company               Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  // IMSS Registro patronal
+  imssRegistration      String?
+  imssClassification    String?
+  imssRiskClass         String?
+  
+  // IMSS Domicilio
+  imssAddress           String?
+  imssCity              String?
+  imssState             String?
+  imssZipCode           String?
+  
+  // FONACOT
+  fonacotRegistration   String?
+  fonacotCenter         String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@map("company_tax_obligations")
+}
+
+model CompanyBank {
+  id              Int      @id @default(autoincrement())
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  bankName        String
+  bankType        BankType
+  accountNumber   String
+  clabe           String?
+  isPrimary       Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_banks")
+}
+
+model CompanyDigitalCertificate {
+  id              Int      @id @default(autoincrement())
+  companyId       Int      @unique
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  certificateFile String
+  keyFile         String
+  password        String
+  validFrom       DateTime
+  validUntil      DateTime
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_digital_certificates")
+}
+
+model CompanyArea {
+  id              Int                 @id @default(autoincrement())
+  companyId       Int
+  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String
+  description     String?
+  isActive        Boolean             @default(true)
+  
+  // Relaciones
+  departments     CompanyDepartment[]
+  
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@map("company_areas")
+}
+
+model CompanyDepartment {
+  id              Int                 @id @default(autoincrement())
+  companyId       Int
+  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  areaId          Int?
+  area            CompanyArea?        @relation(fields: [areaId], references: [id])
+  
+  name            String
+  description     String?
+  isActive        Boolean             @default(true)
+  
+  // Relaciones
+  positions       CompanyPosition[]
+  
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@map("company_departments")
+}
+
+model CompanyPosition {
+  id              Int                 @id @default(autoincrement())
+  companyId       Int
+  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  departmentId    Int
+  department      CompanyDepartment   @relation(fields: [departmentId], references: [id])
+  
+  name            String
+  description     String?
+  minSalary       Decimal?            @db.Decimal(10, 2)
+  maxSalary       Decimal?            @db.Decimal(10, 2)
+  isActive        Boolean             @default(true)
+  
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@map("company_positions")
+}
+
+model CompanyBenefit {
+  id              Int      @id @default(autoincrement())
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String
+  type            BenefitType
+  isLegal         Boolean  @default(false) // Prestación de ley
+  percentage      Decimal? @db.Decimal(5, 2)
+  amount          Decimal? @db.Decimal(10, 2)
+  description     String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_benefits")
+}
+
+model CompanyBenefitGroup {
+  id              Int      @id @default(autoincrement())
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String
+  description     String?
+  benefits        Json     // Array de IDs de beneficios
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_benefit_groups")
+}
+
+model CompanySchedule {
+  id              Int      @id @default(autoincrement())
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String
+  startTime       String   // "08:00"
+  endTime         String   // "17:00"
+  breakTime       Int?     // minutos
+  workDays        Json     // [1,2,3,4,5] = lunes a viernes
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_schedules")
+}
+
+// Enums para el wizard
+enum WizardStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+enum SectionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+enum StepStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+enum BankType {
+  CHECKING
+  SAVINGS
+  PAYROLL
+}
+
+enum BenefitType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  DAYS
+  HOURS
 }

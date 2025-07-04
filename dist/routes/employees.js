@@ -4,6 +4,15 @@ const express_1 = require("express");
 const employeeController_1 = require("../controllers/employeeController");
 const validation_1 = require("../middleware/validation");
 const router = (0, express_1.Router)();
+// GET /api/employees
+router.get('/', async (req, res, next) => {
+    try {
+        await employeeController_1.employeeController.getAllEmployees(req, res);
+    }
+    catch (err) {
+        next(err);
+    }
+});
 // GET /api/employees/company/:companyId
 router.get('/company/:companyId', validation_1.validateEmployeeParams, employeeController_1.employeeController.getEmployeesByCompany);
 // POST /api/employees

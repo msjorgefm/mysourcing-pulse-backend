@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 export declare const employeeController: {
+    getAllEmployees(req: Request, res: Response): Promise<void>;
     getEmployeesByCompany(req: Request, res: Response): Promise<void>;
     createEmployee(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
     updateEmployee(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;

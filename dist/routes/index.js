@@ -7,6 +7,7 @@ const express_1 = require("express");
 const employees_1 = __importDefault(require("./employees"));
 const incidences_1 = __importDefault(require("./incidences"));
 const calendars_1 = __importDefault(require("./calendars"));
+const companyWizard_1 = __importDefault(require("./companyWizard"));
 const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
 // Health check
@@ -23,5 +24,6 @@ router.use(auth_1.authenticate);
 router.use('/employees', employees_1.default);
 router.use('/incidences', incidences_1.default);
 router.use('/calendars', calendars_1.default);
+router.use('/', companyWizard_1.default); // Las rutas del wizard ya incluyen el prefijo completo
 exports.default = router;
 //# sourceMappingURL=index.js.map

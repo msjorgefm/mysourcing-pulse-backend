@@ -7,6 +7,30 @@ const validation_1 = require("../middleware/validation");
 const calculator_1 = require("../utils/calculator");
 const prisma = new client_1.PrismaClient();
 exports.incidenceController = {
+    // Obtener todas las incidencias
+    async getAllIncidences(req, res) {
+        try {
+            const incidences = await prisma.incidence.findMany({
+                include: {
+                    employee: true,
+                    company: true
+                },
+                orderBy: { date: 'desc' }
+            });
+            res.json({
+                success: true,
+                data: incidences,
+                count: incidences.length
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Error fetching all incidences:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Error al obtener incidencias'
+            });
+        }
+    },
     // Obtener incidencias por empresa y período
     async getIncidencesByPeriod(req, res) {
         try {
@@ -61,7 +85,12 @@ exports.incidenceController = {
                 });
             }
             // Calcular monto automáticamente
-            const calculatedAmount = (0, calculator_1.calculateIncidenceAmount)(req.body.type, employee, req.body.quantity);
+            const employeeForCalculation = {
+                ...employee,
+                salary: Number(employee.baseSalary),
+                isActive: employee.status === 'ACTIVE'
+            };
+            const calculatedAmount = (0, calculator_1.calculateIncidenceAmount)(req.body.type, employeeForCalculation, req.body.quantity);
             const incidence = await prisma.incidence.create({
                 data: {
                     ...req.body,
@@ -102,7 +131,12 @@ exports.incidenceController = {
             const employee = await prisma.employee.findUnique({
                 where: { id: req.body.employeeId }
             });
-            const calculatedAmount = (0, calculator_1.calculateIncidenceAmount)(req.body.type, employee, req.body.quantity);
+            const employeeForCalculation = {
+                ...employee,
+                salary: Number(employee.baseSalary),
+                isActive: employee.status === 'ACTIVE'
+            };
+            const calculatedAmount = (0, calculator_1.calculateIncidenceAmount)(req.body.type, employeeForCalculation, req.body.quantity);
             const incidence = await prisma.incidence.update({
                 where: { id: parseInt(id) },
                 data: {

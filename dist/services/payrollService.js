@@ -18,13 +18,11 @@ class PayrollService {
                 company: {
                     select: { id: true, name: true, rfc: true }
                 },
-                calendar: {
-                    select: { id: true, name: true, payFrequency: true }
-                },
+                // Calendar relationship removed as it doesn't exist in schema
                 _count: {
                     select: {
                         incidences: true,
-                        details: true
+                        payrollItems: true
                     }
                 }
             },
@@ -35,19 +33,15 @@ class PayrollService {
             period: payroll.period,
             periodStart: payroll.periodStart.toISOString().split('T')[0],
             periodEnd: payroll.periodEnd.toISOString().split('T')[0],
-            amount: payroll.amount,
-            employees: payroll.employees,
+            totalNet: Number(payroll.totalNet),
+            employeeCount: payroll.employeeCount,
             status: this.mapStatusToFrontend(payroll.status),
             companyId: payroll.companyId,
             companyName: payroll.company.name,
-            calendarInfo: payroll.calendar,
-            calculations: payroll.calculations,
             incidencesCount: payroll._count.incidences,
-            submittedAt: payroll.submittedAt,
-            submittedBy: payroll.submittedBy,
+            processedAt: payroll.processedAt,
             authorizedAt: payroll.authorizedAt,
             authorizedBy: payroll.authorizedBy,
-            comments: payroll.comments,
             createdAt: payroll.createdAt,
             updatedAt: payroll.updatedAt
         }));
@@ -57,9 +51,7 @@ class PayrollService {
             company: {
                 select: { id: true, name: true, rfc: true }
             },
-            calendar: {
-                select: { id: true, name: true, payFrequency: true }
-            },
+            // Calendar relationship removed
             incidences: {
                 include: {
                     employee: {
@@ -69,7 +61,7 @@ class PayrollService {
             }
         };
         if (includeDetails) {
-            include.details = {
+            include.payrollItems = {
                 include: {
                     employee: {
                         select: { id: true, name: true, employeeNumber: true, position: true }
@@ -89,21 +81,17 @@ class PayrollService {
             period: payroll.period,
             periodStart: payroll.periodStart.toISOString().split('T')[0],
             periodEnd: payroll.periodEnd.toISOString().split('T')[0],
-            amount: payroll.amount,
-            employees: payroll.employees,
+            totalNet: Number(payroll.totalNet),
+            employeeCount: payroll.employeeCount,
             status: this.mapStatusToFrontend(payroll.status),
             companyId: payroll.companyId,
             companyName: payroll.company.name,
-            calendarInfo: payroll.calendar,
-            calculations: payroll.calculations,
-            detailedCalculations: payroll.detailedCalculations,
             incidences: payroll.incidences,
-            ...(includeDetails && { details: payroll.details }),
-            submittedAt: payroll.submittedAt,
-            submittedBy: payroll.submittedBy,
+            ...(includeDetails && { payrollItems: payroll.payrollItems }),
+            processedAt: payroll.processedAt,
             authorizedAt: payroll.authorizedAt,
             authorizedBy: payroll.authorizedBy,
-            comments: payroll.comments,
+            // Comments field removed
             createdAt: payroll.createdAt,
             updatedAt: payroll.updatedAt
         };
@@ -123,8 +111,8 @@ class PayrollService {
         }
         // Obtener empleados a incluir
         const employees = data.employeeIds?.length
-            ? company.employees.filter((emp) => data.employeeIds.includes(emp.id))
-            : company.employees;
+            ? company.employees?.filter((emp) => data.employeeIds.includes(emp.id)) || []
+            : company.employees || [];
         if (employees.length === 0) {
             throw new Error('No active employees found for this company');
         }
@@ -134,12 +122,12 @@ class PayrollService {
                 period: data.period,
                 periodStart: new Date(data.periodStart),
                 periodEnd: new Date(data.periodEnd),
-                amount: 0, // Se calculará después
-                employees: employees.length,
-                status: 'CALCULATING',
-                companyId: data.companyId,
-                calendarId: data.calendarId,
-                submittedBy: `User-${userId}`
+                totalGross: 0,
+                totalDeductions: 0,
+                totalNet: 0,
+                employeeCount: employees.length,
+                status: 'DRAFT',
+                companyId: data.companyId
             }
         });
         return {
@@ -147,8 +135,8 @@ class PayrollService {
             period: payroll.period,
             periodStart: payroll.periodStart.toISOString().split('T')[0],
             periodEnd: payroll.periodEnd.toISOString().split('T')[0],
-            amount: payroll.amount,
-            employees: payroll.employees,
+            totalNet: Number(payroll.totalNet),
+            employeeCount: payroll.employeeCount,
             status: this.mapStatusToFrontend(payroll.status),
             companyId: payroll.companyId,
             companyName: company.name,
@@ -176,22 +164,23 @@ class PayrollService {
         if (!payroll) {
             throw new Error('Payroll not found');
         }
-        if (payroll.status !== 'CALCULATING') {
-            throw new Error('Payroll is not in calculating status');
+        if (payroll.status !== 'DRAFT') {
+            throw new Error('Payroll is not in draft status');
         }
         // Calcular nómina usando el servicio de cálculos
-        const calculations = await calculationService_1.CalculationService.calculatePayrollForCompany(payroll.company.employees, payroll.incidences, payroll.periodStart, payroll.periodEnd);
+        const calculations = await calculationService_1.CalculationService.calculatePayrollForCompany(payroll.company.employees || [], payroll.incidences || [], payroll.periodStart, payroll.periodEnd);
         // Crear detalles por empleado
         const payrollDetails = [];
         for (const empCalc of calculations.employeeCalculations) {
-            const detail = await prisma.payrollDetail.create({
+            const detail = await prisma.payrollItem.create({
                 data: {
                     payrollId: payrollId,
                     employeeId: empCalc.employeeId,
-                    perceptions: empCalc.perceptions,
-                    deductions: empCalc.deductions,
-                    provisions: empCalc.provisions,
-                    netPay: empCalc.netPay
+                    baseSalary: empCalc.perceptions?.salarioBase || 0,
+                    totalGross: empCalc.perceptions?.total || 0,
+                    totalDeductions: empCalc.deductions?.total || 0,
+                    netSalary: empCalc.netPay || 0,
+                    workedDays: 15
                 }
             });
             payrollDetails.push(detail);
@@ -200,9 +189,9 @@ class PayrollService {
         const updatedPayroll = await prisma.payroll.update({
             where: { id: payrollId },
             data: {
-                amount: calculations.totals.totalNetPay,
-                calculations: calculations.totals,
-                detailedCalculations: calculations.employeeCalculations,
+                totalGross: calculations.totals.totalPerceptions || 0,
+                totalDeductions: calculations.totals.totalDeductions || 0,
+                totalNet: calculations.totals.totalNetPay || 0,
                 status: 'PENDING_AUTHORIZATION'
             }
         });
@@ -223,11 +212,11 @@ class PayrollService {
         if (!payroll) {
             throw new Error('Payroll not found');
         }
-        if (!['CALCULATING', 'PENDING_AUTHORIZATION'].includes(payroll.status)) {
+        if (!['DRAFT', 'CALCULATED', 'PENDING_AUTHORIZATION'].includes(payroll.status)) {
             throw new Error('Payroll cannot be sent for authorization');
         }
         // Si está en CALCULATING, calcular primero
-        if (payroll.status === 'CALCULATING') {
+        if (payroll.status === 'DRAFT') {
             await this.calculatePayroll(payrollId);
         }
         // Actualizar estado
@@ -235,8 +224,8 @@ class PayrollService {
             where: { id: payrollId },
             data: {
                 status: 'PENDING_AUTHORIZATION',
-                submittedAt: new Date(),
-                submittedBy: `User-${userId}`
+                processedAt: new Date(),
+                authorizedBy: `User-${userId}`
             }
         });
         // Crear notificación para el cliente
@@ -248,8 +237,8 @@ class PayrollService {
             payrollId: payroll.id,
             metadata: {
                 period: payroll.period,
-                amount: payroll.amount,
-                employees: payroll.employees,
+                totalNet: Number(payroll.totalNet),
+                employeeCount: payroll.employeeCount,
                 companyName: payroll.company.name
             }
         });
@@ -265,7 +254,7 @@ class PayrollService {
         return {
             id: updatedPayroll.id,
             status: this.mapStatusToFrontend(updatedPayroll.status),
-            submittedAt: updatedPayroll.submittedAt
+            processedAt: updatedPayroll.processedAt
         };
     }
     static async authorizePayroll(payrollId, action, comments = '', userId, io) {
@@ -288,8 +277,7 @@ class PayrollService {
             data: {
                 status: newStatus,
                 authorizedAt: new Date(),
-                authorizedBy: `User-${userId}`,
-                comments: comments || undefined
+                authorizedBy: `User-${userId}`
             }
         });
         // Crear notificación para operadores
@@ -303,8 +291,8 @@ class PayrollService {
             payrollId: payroll.id,
             metadata: {
                 period: payroll.period,
-                amount: payroll.amount,
-                employees: payroll.employees,
+                totalNet: Number(payroll.totalNet),
+                employeeCount: payroll.employeeCount,
                 companyName: payroll.company.name,
                 action,
                 comments
@@ -324,7 +312,7 @@ class PayrollService {
             id: updatedPayroll.id,
             status: this.mapStatusToFrontend(updatedPayroll.status),
             authorizedAt: updatedPayroll.authorizedAt,
-            comments: updatedPayroll.comments
+            // Comments field removed
         };
     }
     static async getPayrollStats(companyId) {
@@ -334,14 +322,14 @@ class PayrollService {
         const stats = await prisma.payroll.aggregate({
             where,
             _count: { id: true },
-            _sum: { amount: true },
-            _avg: { amount: true }
+            _sum: { totalNet: true },
+            _avg: { totalNet: true }
         });
         const statusStats = await prisma.payroll.groupBy({
             by: ['status'],
             where,
             _count: { id: true },
-            _sum: { amount: true }
+            _sum: { totalNet: true }
         });
         const monthlyStats = await prisma.payroll.groupBy({
             by: ['createdAt'],
@@ -352,30 +340,31 @@ class PayrollService {
                 }
             },
             _count: { id: true },
-            _sum: { amount: true }
+            _sum: { totalNet: true }
         });
         return {
             total: {
                 count: stats._count.id,
-                amount: stats._sum.amount || 0,
-                average: stats._avg.amount || 0
+                amount: Number(stats._sum.totalNet) || 0,
+                average: Number(stats._avg.totalNet) || 0
             },
             byStatus: statusStats.map((stat) => ({
                 status: this.mapStatusToFrontend(stat.status),
                 count: stat._count.id,
-                amount: stat._sum.amount || 0
+                amount: stat._sum.totalNet || 0
             })),
             monthly: monthlyStats.map((stat) => ({
                 month: stat.createdAt,
                 count: stat._count.id,
-                amount: stat._sum.amount || 0
+                amount: stat._sum.totalNet || 0
             }))
         };
     }
     // Mapeo de estados
     static mapStatusToFrontend(status) {
         const statusMap = {
-            'CALCULATING': 'calculating',
+            'DRAFT': 'draft',
+            'CALCULATED': 'calculated',
             'PENDING_AUTHORIZATION': 'pending_authorization',
             'APPROVED': 'approved',
             'REJECTED': 'rejected',
@@ -387,7 +376,8 @@ class PayrollService {
     }
     static mapStatusFromFrontend(status) {
         const statusMap = {
-            'calculating': 'CALCULATING',
+            'draft': 'DRAFT',
+            'calculated': 'CALCULATED',
             'pending_authorization': 'PENDING_AUTHORIZATION',
             'approved': 'APPROVED',
             'rejected': 'REJECTED',
