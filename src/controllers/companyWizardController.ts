@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { CompanyWizardService } from '../services/companyWizardService';
+import { PrismaClient } from '@prisma/client';
 
 export class CompanyWizardController {
   
@@ -134,8 +135,7 @@ export class CompanyWizardController {
   }
 
   // Método auxiliar para obtener datos específicos de cada sección
-  static async getSectionSpecificData(companyId: number, sectionNumber: number) {
-    const { PrismaClient } = await import('@prisma/client');
+  static async getSectionSpecificData(companyId: number, sectionNumber: number): Promise<any> {
     const prisma = new PrismaClient();
 
     try {
@@ -197,7 +197,6 @@ export class CompanyWizardController {
         return res.status(400).json({ error: 'Valid section number is required' });
       }
 
-      const { PrismaClient } = await import('@prisma/client');
       const prisma = new PrismaClient();
 
       try {

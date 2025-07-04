@@ -126,7 +126,7 @@ export class CompanyWizardService {
   // Obtener estado del wizard
   static async getWizardStatus(companyId: number) {
     try {
-      const wizard = await prisma.companyWizard.findUnique({
+      let wizard = await prisma.companyWizard.findUnique({
         where: { companyId },
         include: {
           sectionProgress: {
@@ -139,7 +139,22 @@ export class CompanyWizardService {
       });
 
       if (!wizard) {
-        throw new Error('Wizard not found');
+        // Si no existe el wizard, lo creamos automáticamente
+        console.log(`Wizard no encontrado para empresa ${companyId}, creando uno nuevo...`);
+        await this.initializeWizard(companyId);
+        
+        // Recuperar el wizard con todas las relaciones
+        wizard = await prisma.companyWizard.findUnique({
+          where: { companyId },
+          include: {
+            sectionProgress: {
+              include: {
+                steps: true
+              },
+              orderBy: { sectionNumber: 'asc' }
+            }
+          }
+        });
       }
 
       return wizard;

@@ -10,7 +10,7 @@ export declare class CompanyWizardService {
         wizardData: import("@prisma/client/runtime/library").JsonValue;
         completedAt: Date | null;
     }>;
-    static getWizardStatus(companyId: number): Promise<{
+    static getWizardStatus(companyId: number): Promise<({
         sectionProgress: ({
             steps: {
                 id: number;
@@ -45,7 +45,7 @@ export declare class CompanyWizardService {
         currentStep: number;
         wizardData: import("@prisma/client/runtime/library").JsonValue;
         completedAt: Date | null;
-    }>;
+    }) | null>;
     static updateWizardStep(companyId: number, sectionNumber: number, stepNumber: number, stepData: any): Promise<{
         id: number;
         createdAt: Date;

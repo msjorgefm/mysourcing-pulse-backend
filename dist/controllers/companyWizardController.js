@@ -1,40 +1,8 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyWizardController = void 0;
 const companyWizardService_1 = require("../services/companyWizardService");
+const client_1 = require("@prisma/client");
 class CompanyWizardController {
     // Inicializar wizard para una empresa
     static async initializeWizard(req, res) {
@@ -142,8 +110,7 @@ class CompanyWizardController {
     }
     // Método auxiliar para obtener datos específicos de cada sección
     static async getSectionSpecificData(companyId, sectionNumber) {
-        const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
-        const prisma = new PrismaClient();
+        const prisma = new client_1.PrismaClient();
         try {
             switch (sectionNumber) {
                 case 1: // Datos Generales
@@ -200,8 +167,7 @@ class CompanyWizardController {
             if (!sectionNumber || isNaN(Number(sectionNumber))) {
                 return res.status(400).json({ error: 'Valid section number is required' });
             }
-            const { PrismaClient } = await Promise.resolve().then(() => __importStar(require('@prisma/client')));
-            const prisma = new PrismaClient();
+            const prisma = new client_1.PrismaClient();
             try {
                 // Encontrar la sección
                 const section = await prisma.companyWizardSection.findFirst({
