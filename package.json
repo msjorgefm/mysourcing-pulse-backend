@@ -27,6 +27,9 @@
     "express",
     "api"
   ],
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "author": "Mysourcing Team",
   "license": "MIT",
   "type": "commonjs",

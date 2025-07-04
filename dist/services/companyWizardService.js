@@ -246,23 +246,70 @@ class CompanyWizardService {
     }
     // Métodos para procesar datos específicos
     static async processGeneralInfoData(companyId, stepNumber, stepData) {
-        const existingInfo = await prisma.companyGeneralInfo.findUnique({
-            where: { companyId }
-        });
-        const updateData = { ...stepData };
-        if (existingInfo) {
-            await prisma.companyGeneralInfo.update({
-                where: { companyId },
-                data: updateData
+        // Paso 1: Información General
+        if (stepNumber === 1) {
+            const existingInfo = await prisma.companyGeneralInfo.findUnique({
+                where: { companyId }
             });
+            // Convertir la fecha al formato ISO-8601 completo si viene solo la fecha
+            const updateData = { ...stepData };
+            if (updateData.startDate && !updateData.startDate.includes('T')) {
+                updateData.startDate = new Date(updateData.startDate + 'T00:00:00.000Z');
+            }
+            if (existingInfo) {
+                await prisma.companyGeneralInfo.update({
+                    where: { companyId },
+                    data: updateData
+                });
+            }
+            else {
+                await prisma.companyGeneralInfo.create({
+                    data: {
+                        companyId,
+                        ...updateData
+                    }
+                });
+            }
         }
-        else {
-            await prisma.companyGeneralInfo.create({
-                data: {
-                    companyId,
-                    ...updateData
-                }
+        // Paso 2: Domicilio
+        else if (stepNumber === 2) {
+            const existingAddress = await prisma.companyAddress.findUnique({
+                where: { companyId }
             });
+            if (existingAddress) {
+                await prisma.companyAddress.update({
+                    where: { companyId },
+                    data: stepData
+                });
+            }
+            else {
+                await prisma.companyAddress.create({
+                    data: {
+                        companyId,
+                        ...stepData
+                    }
+                });
+            }
+        }
+        // Paso 3: Representante Legal
+        else if (stepNumber === 3) {
+            const existingRep = await prisma.companyLegalRepresentative.findUnique({
+                where: { companyId }
+            });
+            if (existingRep) {
+                await prisma.companyLegalRepresentative.update({
+                    where: { companyId },
+                    data: stepData
+                });
+            }
+            else {
+                await prisma.companyLegalRepresentative.create({
+                    data: {
+                        companyId,
+                        ...stepData
+                    }
+                });
+            }
         }
     }
     static async processTaxObligationsData(companyId, stepNumber, stepData) {

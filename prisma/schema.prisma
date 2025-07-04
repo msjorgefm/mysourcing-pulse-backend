@@ -97,16 +97,35 @@ model Company {
   
   // Wizard y configuración
   wizard        CompanyWizard?
+  
+  // Sección 1: Datos Generales
   generalInfo   CompanyGeneralInfo?
+  companyAddress CompanyAddress?
+  legalRepresentative CompanyLegalRepresentative?
+  
+  // Sección 2: Obligaciones Patronales
   taxObligations CompanyTaxObligations?
+  
+  // Sección 3: Bancos
   banks         CompanyBank[]
+  
+  // Sección 4: Sellos Digitales
   digitalCertificate CompanyDigitalCertificate?
+  
+  // Sección 5: Estructura Organizacional
   areas         CompanyArea[]
   departments   CompanyDepartment[]
   positions     CompanyPosition[]
+  
+  // Sección 6: Prestaciones
   benefits      CompanyBenefit[]
   benefitGroups CompanyBenefitGroup[]
+  
+  // Sección 7: Nómina (usa el modelo Calendar existente)
+  
+  // Sección 8: Talento Humano
   schedules     CompanySchedule[]
+  policies      CompanyPolicy[]
   
   // Timestamps
   createdAt     DateTime @default(now())
@@ -494,20 +513,34 @@ model CompanyWizardStep {
   @@map("company_wizard_steps")
 }
 
-// Nuevas tablas para almacenar datos específicos del wizard
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 1: DATOS GENERALES
+// ================================
+
+// Paso 1: Información General
 model CompanyGeneralInfo {
   id              Int      @id @default(autoincrement())
   companyId       Int      @unique
   company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   
-  // Información general
   businessName    String
   commercialName  String?
   rfc             String
   taxRegime       String
   startDate       DateTime
   
-  // Domicilio
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_general_info")
+}
+
+// Paso 2: Domicilio
+model CompanyAddress {
+  id              Int      @id @default(autoincrement())
+  companyId       Int      @unique
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
   street          String
   exteriorNumber  String
   interiorNumber  String?
@@ -517,11 +550,22 @@ model CompanyGeneralInfo {
   zipCode         String
   country         String   @default("México")
   
-  // Representante legal
-  legalRepName    String
-  legalRepRFC     String
-  legalRepCurp    String?
-  legalRepPosition String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_address")
+}
+
+// Paso 3: Representante Legal
+model CompanyLegalRepresentative {
+  id              Int      @id @default(autoincrement())
+  companyId       Int      @unique
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String
+  rfc             String
+  curp            String?
+  position        String
   
   // Poder notarial
   notarialPower   String?
@@ -531,9 +575,14 @@ model CompanyGeneralInfo {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   
-  @@map("company_general_info")
+  @@map("company_legal_representative")
 }
 
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 2: OBLIGACIONES PATRONALES
+// ================================
+
+// Paso 1: Registro IMSS
 model CompanyTaxObligations {
   id                    Int      @id @default(autoincrement())
   companyId             Int      @unique
@@ -550,7 +599,7 @@ model CompanyTaxObligations {
   imssState             String?
   imssZipCode           String?
   
-  // FONACOT
+  // FONACOT (Paso 2)
   fonacotRegistration   String?
   fonacotCenter         String?
   
@@ -560,6 +609,11 @@ model CompanyTaxObligations {
   @@map("company_tax_obligations")
 }
 
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 3: BANCOS
+// ================================
+
+// Paso 1: Cuentas Bancarias
 model CompanyBank {
   id              Int      @id @default(autoincrement())
   companyId       Int
@@ -577,6 +631,11 @@ model CompanyBank {
   @@map("company_banks")
 }
 
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 4: SELLOS DIGITALES
+// ================================
+
+// Paso 1: Certificados SAT
 model CompanyDigitalCertificate {
   id              Int      @id @default(autoincrement())
   companyId       Int      @unique
@@ -594,6 +653,11 @@ model CompanyDigitalCertificate {
   @@map("company_digital_certificates")
 }
 
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 5: ESTRUCTURA ORGANIZACIONAL
+// ================================
+
+// Paso 1: Áreas
 model CompanyArea {
   id              Int                 @id @default(autoincrement())
   companyId       Int
@@ -612,6 +676,7 @@ model CompanyArea {
   @@map("company_areas")
 }
 
+// Paso 2: Departamentos
 model CompanyDepartment {
   id              Int                 @id @default(autoincrement())
   companyId       Int
@@ -633,6 +698,7 @@ model CompanyDepartment {
   @@map("company_departments")
 }
 
+// Paso 3: Puestos
 model CompanyPosition {
   id              Int                 @id @default(autoincrement())
   companyId       Int
@@ -653,6 +719,11 @@ model CompanyPosition {
   @@map("company_positions")
 }
 
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 6: PRESTACIONES
+// ================================
+
+// Paso 1: Prestaciones
 model CompanyBenefit {
   id              Int      @id @default(autoincrement())
   companyId       Int
@@ -671,6 +742,7 @@ model CompanyBenefit {
   @@map("company_benefits")
 }
 
+// Paso 2: Grupos de Prestaciones
 model CompanyBenefitGroup {
   id              Int      @id @default(autoincrement())
   companyId       Int
@@ -686,6 +758,17 @@ model CompanyBenefitGroup {
   @@map("company_benefit_groups")
 }
 
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 7: NÓMINA
+// ================================
+// Usa el modelo Calendar existente para Calendario Laboral
+// La configuración de nómina se maneja en el modelo Company
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 8: TALENTO HUMANO
+// ================================
+
+// Paso 1: Horarios
 model CompanySchedule {
   id              Int      @id @default(autoincrement())
   companyId       Int
@@ -701,6 +784,24 @@ model CompanySchedule {
   updatedAt       DateTime @updatedAt
   
   @@map("company_schedules")
+}
+
+// Paso 2: Políticas
+model CompanyPolicy {
+  id              Int      @id @default(autoincrement())
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  name            String
+  type            PolicyType
+  description     String?
+  content         String   @db.Text
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("company_policies")
 }
 
 // Enums para el wizard
@@ -735,4 +836,12 @@ enum BenefitType {
   FIXED_AMOUNT
   DAYS
   HOURS
+}
+
+enum PolicyType {
+  ATTENDANCE      // Políticas de asistencia
+  VACATION        // Políticas de vacaciones
+  REMOTE_WORK     // Políticas de trabajo remoto
+  CODE_OF_CONDUCT // Código de conducta
+  OTHER           // Otras políticas
 }

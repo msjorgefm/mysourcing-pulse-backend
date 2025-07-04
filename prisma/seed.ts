@@ -196,7 +196,7 @@ async function main() {
 
     // Crear algunos datos de ejemplo para la primera empresa
     if (company.id === companies[0].id) {
-      // Información general
+      // Paso 1: Información general
       await prisma.companyGeneralInfo.create({
         data: {
           companyId: company.id,
@@ -204,7 +204,14 @@ async function main() {
           commercialName: company.name,
           rfc: company.rfc,
           taxRegime: '601 - General de Ley Personas Morales',
-          startDate: new Date('2020-01-01'),
+          startDate: new Date('2020-01-01')
+        }
+      });
+
+      // Paso 2: Domicilio
+      await prisma.companyAddress.create({
+        data: {
+          companyId: company.id,
           street: 'Av. Reforma',
           exteriorNumber: '123',
           interiorNumber: 'Piso 5',
@@ -212,11 +219,18 @@ async function main() {
           city: 'Ciudad de México',
           state: 'CDMX',
           zipCode: '06000',
-          country: 'México',
-          legalRepName: 'Roberto Hernández López',
-          legalRepRFC: 'HELR850215HDF',
-          legalRepCurp: 'HELR850215HDFLPR08',
-          legalRepPosition: 'Representante Legal',
+          country: 'México'
+        }
+      });
+
+      // Paso 3: Representante Legal
+      await prisma.companyLegalRepresentative.create({
+        data: {
+          companyId: company.id,
+          name: 'Roberto Hernández López',
+          rfc: 'HELR850215HDF',
+          curp: 'HELR850215HDFLPR08',
+          position: 'Representante Legal',
           notarialPower: 'Escritura Pública No. 12345',
           notaryNumber: '45',
           notaryName: 'Lic. María González'
@@ -421,6 +435,29 @@ async function main() {
             { date: '2025-12-25', name: 'Navidad' }
           ],
           isDefault: true
+        }
+      });
+
+      // Políticas de la empresa
+      await prisma.companyPolicy.create({
+        data: {
+          companyId: company.id,
+          name: 'Política de Asistencia',
+          type: 'ATTENDANCE',
+          description: 'Lineamientos para el control de asistencia',
+          content: 'Todos los empleados deben registrar su entrada y salida...',
+          isActive: true
+        }
+      });
+
+      await prisma.companyPolicy.create({
+        data: {
+          companyId: company.id,
+          name: 'Política de Vacaciones',
+          type: 'VACATION',
+          description: 'Reglas para solicitud y aprobación de vacaciones',
+          content: 'Las vacaciones deben solicitarse con al menos 15 días de anticipación...',
+          isActive: true
         }
       });
     }

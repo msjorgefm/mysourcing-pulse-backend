@@ -157,7 +157,12 @@ export class CompanyWizardService {
         });
       }
 
-      return wizard;
+      // Asegurarse de que se devuelven currentSection y currentStep
+      return {
+        ...wizard,
+        currentSection: wizard?.currentSection || 1,
+        currentStep: wizard?.currentStep || 1
+      };
     } catch (error) {
       console.error('Error getting wizard status:', error);
       throw error;
@@ -190,6 +195,15 @@ export class CompanyWizardService {
           stepData,
           status: 'COMPLETED',
           completedAt: new Date()
+        }
+      });
+
+      // Actualizar la posición actual del wizard
+      await prisma.companyWizard.update({
+        where: { companyId },
+        data: {
+          currentSection: sectionNumber,
+          currentStep: stepNumber
         }
       });
 
@@ -260,24 +274,97 @@ export class CompanyWizardService {
 
   // Métodos para procesar datos específicos
   static async processGeneralInfoData(companyId: number, stepNumber: number, stepData: any) {
-    const existingInfo = await prisma.companyGeneralInfo.findUnique({
-      where: { companyId }
-    });
-
-    const updateData = { ...stepData };
-
-    if (existingInfo) {
-      await prisma.companyGeneralInfo.update({
-        where: { companyId },
-        data: updateData
+    // Paso 1: Información General
+    if (stepNumber === 1) {
+      const existingInfo = await prisma.companyGeneralInfo.findUnique({
+        where: { companyId }
       });
-    } else {
-      await prisma.companyGeneralInfo.create({
-        data: {
-          companyId,
-          ...updateData
-        }
+
+      // Convertir la fecha al formato ISO-8601 completo si viene solo la fecha
+      const updateData = { ...stepData };
+      if (updateData.startDate && !updateData.startDate.includes('T')) {
+        updateData.startDate = new Date(updateData.startDate + 'T00:00:00.000Z');
+      }
+
+      if (existingInfo) {
+        // Hacer merge de los datos existentes con los nuevos para permitir actualizaciones parciales
+        await prisma.companyGeneralInfo.update({
+          where: { companyId },
+          data: updateData
+        });
+      } else {
+        await prisma.companyGeneralInfo.create({
+          data: {
+            companyId,
+            ...updateData
+          }
+        });
+      }
+    }
+    // Paso 2: Domicilio
+    else if (stepNumber === 2) {
+      const existingAddress = await prisma.companyAddress.findUnique({
+        where: { companyId }
       });
+
+      if (existingAddress) {
+        await prisma.companyAddress.update({
+          where: { companyId },
+          data: stepData
+        });
+      } else {
+        await prisma.companyAddress.create({
+          data: {
+            companyId,
+            ...stepData
+          }
+        });
+      }
+    }
+    // Paso 3: Representante Legal
+    else if (stepNumber === 3) {
+      const existingRep = await prisma.companyLegalRepresentative.findUnique({
+        where: { companyId }
+      });
+
+      // Mapear los campos del frontend a los campos de la base de datos
+      const mappedData = {
+        name: stepData.legalRepName,
+        rfc: stepData.legalRepRFC,
+        curp: stepData.legalRepCurp || null,
+        position: stepData.legalRepPosition
+      };
+
+      if (existingRep) {
+        await prisma.companyLegalRepresentative.update({
+          where: { companyId },
+          data: mappedData
+        });
+      } else {
+        await prisma.companyLegalRepresentative.create({
+          data: {
+            companyId,
+            ...mappedData
+          }
+        });
+      }
+    }
+    // Paso 4: Poder Notarial (actualizar el representante legal existente)
+    else if (stepNumber === 4) {
+      const existingRep = await prisma.companyLegalRepresentative.findUnique({
+        where: { companyId }
+      });
+
+      if (existingRep) {
+        await prisma.companyLegalRepresentative.update({
+          where: { companyId },
+          data: {
+            notarialPower: stepData.notarialPower || null,
+            notaryNumber: stepData.notaryNumber || null,
+            notaryName: stepData.notaryName || null
+          }
+        });
+      }
     }
   }
 
@@ -308,12 +395,23 @@ export class CompanyWizardService {
         where: { companyId }
       });
 
+      // Mapeo de tipos del frontend al backend
+      const bankTypeMap: { [key: string]: 'CHECKING' | 'SAVINGS' | 'PAYROLL' } = {
+        'OPERACION': 'CHECKING',
+        'AHORRO': 'SAVINGS',
+        'NOMINA': 'PAYROLL'
+      };
+
       // Crear nuevos bancos
       for (const bank of stepData.banks) {
         await prisma.companyBank.create({
           data: {
             companyId,
-            ...bank
+            bankName: bank.name,
+            bankType: bankTypeMap[bank.type] || 'CHECKING',
+            accountNumber: bank.accountNumber,
+            clabe: bank.clabe || null,
+            isPrimary: bank.isDefault || false
           }
         });
       }
