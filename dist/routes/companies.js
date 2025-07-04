@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const companyController_1 = require("../controllers/companyController");
 const auth_1 = require("../middleware/auth");
+const companyWizardController_1 = require("../controllers/companyWizardController");
 const router = express_1.default.Router();
 // Todas las rutas requieren autenticación
 router.use(auth_1.authenticate);
@@ -54,6 +55,39 @@ router.put('/:id', (0, auth_1.authorize)(['OPERATOR', 'ADMIN']), async (req, res
 router.delete('/:id', (0, auth_1.authorize)(['OPERATOR', 'ADMIN']), async (req, res, next) => {
     try {
         await companyController_1.CompanyController.deleteCompany(req, res);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+// Rutas del wizard de configuración
+router.get('/:companyId/wizard/status', (0, auth_1.authorize)(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+    try {
+        await companyWizardController_1.CompanyWizardController.getWizardStatus(req, res);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+router.get('/:companyId/wizard/section/:sectionNumber/data', (0, auth_1.authorize)(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+    try {
+        await companyWizardController_1.CompanyWizardController.getSectionData(req, res);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+router.put('/:companyId/wizard/section/:sectionNumber/step/:stepNumber', (0, auth_1.authorize)(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+    try {
+        await companyWizardController_1.CompanyWizardController.updateWizardStep(req, res);
+    }
+    catch (err) {
+        next(err);
+    }
+});
+router.post('/:companyId/wizard/complete', (0, auth_1.authorize)(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+    try {
+        await companyWizardController_1.CompanyWizardController.completeWizard(req, res);
     }
     catch (err) {
         next(err);

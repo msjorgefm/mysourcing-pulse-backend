@@ -32,9 +32,9 @@ export declare class CompanyWizardController {
         updatedAt: Date;
         rfc: string;
         taxRegime: string;
-        startDate: Date;
         businessName: string;
         commercialName: string | null;
+        startDate: Date;
         street: string;
         exteriorNumber: string;
         interiorNumber: string | null;

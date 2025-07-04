@@ -19,10 +19,10 @@ export declare class CompanyWizardService {
                 status: import(".prisma/client").$Enums.StepStatus;
                 completedAt: Date | null;
                 isOptional: boolean;
-                sectionId: number;
                 stepNumber: number;
                 stepName: string;
                 stepData: import("@prisma/client/runtime/library").JsonValue;
+                sectionId: number;
             }[];
         } & {
             id: number;
@@ -30,10 +30,10 @@ export declare class CompanyWizardService {
             updatedAt: Date;
             status: import(".prisma/client").$Enums.SectionStatus;
             completedAt: Date | null;
-            wizardId: number;
             sectionNumber: number;
             sectionName: string;
             isOptional: boolean;
+            wizardId: number;
         })[];
     } & {
         id: number;
@@ -53,10 +53,10 @@ export declare class CompanyWizardService {
         status: import(".prisma/client").$Enums.StepStatus;
         completedAt: Date | null;
         isOptional: boolean;
-        sectionId: number;
         stepNumber: number;
         stepName: string;
         stepData: import("@prisma/client/runtime/library").JsonValue;
+        sectionId: number;
     }>;
     static processStepData(companyId: number, sectionNumber: number, stepNumber: number, stepData: any): Promise<void>;
     static processGeneralInfoData(companyId: number, stepNumber: number, stepData: any): Promise<void>;
