@@ -1,0 +1,144 @@
+2025-07-05 04:01:54 [[31MERROR[39M]: Error fetching all employees: 
+Invalid `prisma.employee.findMany()` invocation in
+/app/src/controllers/employeeController.ts:12:47
+
+   9 // Obtener todos los empleados
+  10 async getAllEmployees(req: Request, res: Response) {
+  11   try {
+→ 12     const employees = await prisma.employee.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+PrismaClientKnownRequestError: 
+Invalid `prisma.employee.findMany()` invocation in
+/app/src/controllers/employeeController.ts:12:47
+
+   9 // Obtener todos los empleados
+  10 async getAllEmployees(req: Request, res: Response) {
+  11   try {
+→ 12     const employees = await prisma.employee.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+    at Xn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.getAllEmployees (/app/src/controllers/employeeController.ts:12:25)
+    at async /app/src/routes/employees.ts:10:5
+2025-07-05 04:01:54 [[31MERROR[39M]: Error fetching all calendars: 
+Invalid `prisma.calendar.findMany()` invocation in
+/app/src/controllers/calendarController.ts:14:47
+
+  11 // Obtener todos los calendarios
+  12 async getAllCalendars(req: Request, res: Response) {
+  13   try {
+→ 14     const calendars = await prisma.calendar.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+PrismaClientKnownRequestError: 
+Invalid `prisma.calendar.findMany()` invocation in
+/app/src/controllers/calendarController.ts:14:47
+
+  11 // Obtener todos los calendarios
+  12 async getAllCalendars(req: Request, res: Response) {
+  13   try {
+→ 14     const calendars = await prisma.calendar.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+    at Xn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.getAllCalendars (/app/src/controllers/calendarController.ts:14:25)
+    at async /app/src/routes/calendars.ts:16:5
+2025-07-05 04:11:26 [[31MERROR[39M]: Error fetching all employees: 
+Invalid `prisma.employee.findMany()` invocation in
+/app/src/controllers/employeeController.ts:12:47
+
+   9 // Obtener todos los empleados
+  10 async getAllEmployees(req: Request, res: Response) {
+  11   try {
+→ 12     const employees = await prisma.employee.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+PrismaClientKnownRequestError: 
+Invalid `prisma.employee.findMany()` invocation in
+/app/src/controllers/employeeController.ts:12:47
+
+   9 // Obtener todos los empleados
+  10 async getAllEmployees(req: Request, res: Response) {
+  11   try {
+→ 12     const employees = await prisma.employee.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+    at Xn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.getAllEmployees (/app/src/controllers/employeeController.ts:12:25)
+    at async /app/src/routes/employees.ts:10:5
+2025-07-05 04:11:26 [[31MERROR[39M]: Error fetching all employees: 
+Invalid `prisma.employee.findMany()` invocation in
+/app/src/controllers/employeeController.ts:12:47
+
+   9 // Obtener todos los empleados
+  10 async getAllEmployees(req: Request, res: Response) {
+  11   try {
+→ 12     const employees = await prisma.employee.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+PrismaClientKnownRequestError: 
+Invalid `prisma.employee.findMany()` invocation in
+/app/src/controllers/employeeController.ts:12:47
+
+   9 // Obtener todos los empleados
+  10 async getAllEmployees(req: Request, res: Response) {
+  11   try {
+→ 12     const employees = await prisma.employee.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+    at Xn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.getAllEmployees (/app/src/controllers/employeeController.ts:12:25)
+    at async /app/src/routes/employees.ts:10:5
+2025-07-05 04:11:26 [[31MERROR[39M]: Error fetching all calendars: 
+Invalid `prisma.calendar.findMany()` invocation in
+/app/src/controllers/calendarController.ts:14:47
+
+  11 // Obtener todos los calendarios
+  12 async getAllCalendars(req: Request, res: Response) {
+  13   try {
+→ 14     const calendars = await prisma.calendar.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+PrismaClientKnownRequestError: 
+Invalid `prisma.calendar.findMany()` invocation in
+/app/src/controllers/calendarController.ts:14:47
+
+  11 // Obtener todos los calendarios
+  12 async getAllCalendars(req: Request, res: Response) {
+  13   try {
+→ 14     const calendars = await prisma.calendar.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+    at Xn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.getAllCalendars (/app/src/controllers/calendarController.ts:14:25)
+    at async /app/src/routes/calendars.ts:16:5
+2025-07-05 04:11:26 [[31MERROR[39M]: Error fetching all calendars: 
+Invalid `prisma.calendar.findMany()` invocation in
+/app/src/controllers/calendarController.ts:14:47
+
+  11 // Obtener todos los calendarios
+  12 async getAllCalendars(req: Request, res: Response) {
+  13   try {
+→ 14     const calendars = await prisma.calendar.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+PrismaClientKnownRequestError: 
+Invalid `prisma.calendar.findMany()` invocation in
+/app/src/controllers/calendarController.ts:14:47
+
+  11 // Obtener todos los calendarios
+  12 async getAllCalendars(req: Request, res: Response) {
+  13   try {
+→ 14     const calendars = await prisma.calendar.findMany(
+The column `companies.paymentMethod` does not exist in the current database.
+    at Xn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/app/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/app/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.getAllCalendars (/app/src/controllers/calendarController.ts:14:25)
+    at async /app/src/routes/calendars.ts:16:5

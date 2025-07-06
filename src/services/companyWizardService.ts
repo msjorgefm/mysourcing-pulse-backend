@@ -423,16 +423,25 @@ export class CompanyWizardService {
       where: { companyId }
     });
 
+    // Asegurarse de que las fechas están en formato ISO-8601
+    const certificateData = {
+      certificateFile: stepData.certificateFile || '',
+      keyFile: stepData.keyFile || '',
+      password: stepData.password || '',
+      validFrom: stepData.validFrom ? new Date(stepData.validFrom) : new Date(),
+      validUntil: stepData.validUntil ? new Date(stepData.validUntil) : new Date()
+    };
+
     if (existingCert) {
       await prisma.companyDigitalCertificate.update({
         where: { companyId },
-        data: stepData
+        data: certificateData
       });
     } else {
       await prisma.companyDigitalCertificate.create({
         data: {
           companyId,
-          ...stepData
+          ...certificateData
         }
       });
     }

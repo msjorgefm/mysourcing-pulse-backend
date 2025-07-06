@@ -23,6 +23,9 @@ const payrolls_1 = __importDefault(require("./routes/payrolls"));
 const calendars_1 = __importDefault(require("./routes/calendars"));
 const incidences_1 = __importDefault(require("./routes/incidences"));
 const notifications_1 = __importDefault(require("./routes/notifications"));
+const upload_1 = __importDefault(require("./routes/upload"));
+const catalogs_1 = __importDefault(require("./routes/catalogs"));
+const companyWizard_1 = __importDefault(require("./routes/companyWizard"));
 // Cargar variables de entorno
 dotenv_1.default.config();
 // Crear aplicación Express
@@ -109,6 +112,9 @@ app.use('/api/payrolls', payrolls_1.default);
 app.use('/api/calendars', calendars_1.default);
 app.use('/api/incidences', incidences_1.default);
 app.use('/api/notifications', notifications_1.default);
+app.use('/api', upload_1.default);
+app.use('/api', catalogs_1.default);
+app.use('/api', companyWizard_1.default);
 // ================================
 // SOCKET.IO PARA TIEMPO REAL
 // ================================

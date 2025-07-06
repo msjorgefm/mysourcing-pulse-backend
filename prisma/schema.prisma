@@ -77,16 +77,6 @@ model Company {
   status        CompanyStatus @default(IN_SETUP)
   employeesCount Int     @default(0)
   
-  // Configuración de nómina
-  paymentMethod String?
-  bankAccount   String?
-  taxRegime     String?
-  
-  // Configuración del SAT
-  certificateFile String?
-  keyFile         String?
-  certificatePassword String?
-  
   // Relaciones
   users         User[]
   employees     Employee[]
@@ -523,9 +513,11 @@ model CompanyGeneralInfo {
   companyId       Int      @unique
   company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   
-  businessName    String
+  businessName    String   @db.VarChar(100)
   commercialName  String?
   rfc             String
+  tipoPersona     String?  // FISICA o MORAL
+  actividadEconomica String?
   taxRegime       String
   startDate       DateTime
   
@@ -844,4 +836,64 @@ enum PolicyType {
   REMOTE_WORK     // Políticas de trabajo remoto
   CODE_OF_CONDUCT // Código de conducta
   OTHER           // Otras políticas
+}
+
+// ================================
+// CATÁLOGOS
+// ================================
+
+// Catálogo de Regímenes Fiscales
+model TaxRegime {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  name        String
+  tipoPersona String   // FISICA, MORAL o AMBAS
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("cat_tax_regimes")
+}
+
+// Catálogo de Actividades Económicas
+model EconomicActivity {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("cat_economic_activities")
+}
+
+// Catálogo de Códigos Postales (SEPOMEX)
+model PostalCode {
+  id              Int      @id @default(autoincrement())
+  postalCode      String   @db.VarChar(5)
+  neighborhood    String
+  city            String
+  state           String
+  municipality    String
+  country         String   @default("México")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([postalCode])
+  @@map("cat_postal_codes")
+}
+
+// Catálogo de Estados de México
+model State {
+  id              Int      @id @default(autoincrement())
+  code            String   @unique @db.VarChar(3)
+  name            String
+  abbreviation    String   @db.VarChar(10)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("cat_states")
 }

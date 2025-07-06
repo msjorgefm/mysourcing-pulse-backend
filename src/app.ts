@@ -15,12 +15,7 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 
 // Importar rutas
 import authRoutes from './routes/auth';
-import companyRoutes from './routes/companies';
-import employeeRoutes from './routes/employees';
-import payrollRoutes from './routes/payrolls';
-import calendarRoutes from './routes/calendars';
-import incidenceRoutes from './routes/incidences';
-import notificationRoutes from './routes/notifications';
+import apiRoutes from './routes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -114,12 +109,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/companies', companyRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/payrolls', payrollRoutes);
-app.use('/api/calendars', calendarRoutes);
-app.use('/api/incidences', incidenceRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use('/api', apiRoutes);
 
 // ================================
 // SOCKET.IO PARA TIEMPO REAL

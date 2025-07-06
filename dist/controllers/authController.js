@@ -6,18 +6,22 @@ const authValidation_1 = require("../validations/authValidation");
 class AuthController {
     static async login(req, res) {
         try {
+            console.log('🔵 Login request received:', req.body.email);
+            console.log('🔵 Request headers:', req.headers);
             const { error } = authValidation_1.loginValidation.validate(req.body);
             if (error) {
+                console.log('❌ Validation error:', error.details[0].message);
                 return res.status(400).json({ error: error.details[0].message });
             }
             const result = await authService_1.AuthService.login(req.body);
+            console.log('✅ Login response ready for:', req.body.email);
             res.json({
                 message: 'Login successful',
                 data: result
             });
         }
         catch (error) {
-            console.error('Login error:', error);
+            console.error('❌ Login controller error:', error);
             res.status(401).json({ error: error.message || 'Login failed' });
         }
     }

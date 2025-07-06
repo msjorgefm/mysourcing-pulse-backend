@@ -1,20 +1,114 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { seedPostalCodes } from './seeds/postalCodes';
+import { seedStates } from './seeds/states';
 
 const prisma = new PrismaClient();
 
+async function seedCatalogs() {
+  console.log('📚 Seeding catalogs...');
+  
+  // Seed Tax Regimes
+  const taxRegimes = [
+    // Personas Morales
+    { code: '601', name: 'General de Ley Personas Morales', tipoPersona: 'MORAL' },
+    { code: '603', name: 'Personas Morales con Fines no Lucrativos', tipoPersona: 'MORAL' },
+    { code: '607', name: 'Régimen de Enajenación o Adquisición de Bienes', tipoPersona: 'MORAL' },
+    { code: '609', name: 'Consolidación', tipoPersona: 'MORAL' },
+    { code: '610', name: 'Residentes en el Extranjero sin Establecimiento Permanente en México', tipoPersona: 'MORAL' },
+    { code: '622', name: 'Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras', tipoPersona: 'MORAL' },
+    { code: '623', name: 'Opcional para Grupos de Sociedades', tipoPersona: 'MORAL' },
+    { code: '624', name: 'Coordinados', tipoPersona: 'MORAL' },
+    { code: '628', name: 'Hidrocarburos', tipoPersona: 'MORAL' },
+    
+    // Personas Físicas
+    { code: '605', name: 'Sueldos y Salarios e Ingresos Asimilados a Salarios', tipoPersona: 'FISICA' },
+    { code: '606', name: 'Arrendamiento', tipoPersona: 'FISICA' },
+    { code: '608', name: 'Demás ingresos', tipoPersona: 'FISICA' },
+    { code: '611', name: 'Ingresos por Dividendos (socios y accionistas)', tipoPersona: 'FISICA' },
+    { code: '612', name: 'Personas Físicas con Actividades Empresariales y Profesionales', tipoPersona: 'FISICA' },
+    { code: '614', name: 'Ingresos por intereses', tipoPersona: 'FISICA' },
+    { code: '615', name: 'Régimen de los ingresos por obtención de premios', tipoPersona: 'FISICA' },
+    { code: '616', name: 'Sin obligaciones fiscales', tipoPersona: 'FISICA' },
+    { code: '621', name: 'Incorporación Fiscal', tipoPersona: 'FISICA' },
+    { code: '625', name: 'Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas', tipoPersona: 'FISICA' },
+    { code: '626', name: 'Régimen Simplificado de Confianza', tipoPersona: 'FISICA' },
+  ];
+
+  for (const regime of taxRegimes) {
+    await prisma.taxRegime.upsert({
+      where: { code: regime.code },
+      update: { name: regime.name, tipoPersona: regime.tipoPersona },
+      create: regime,
+    });
+  }
+
+  // Seed Economic Activities
+  const economicActivities = [
+    { code: '11', name: 'Agricultura, cría y explotación de animales, aprovechamiento forestal, pesca y caza' },
+    { code: '21', name: 'Minería' },
+    { code: '22', name: 'Generación, transmisión, distribución y comercialización de energía eléctrica, suministro de agua y de gas' },
+    { code: '23', name: 'Construcción' },
+    { code: '31-33', name: 'Industrias manufactureras' },
+    { code: '43', name: 'Comercio al por mayor' },
+    { code: '46', name: 'Comercio al por menor' },
+    { code: '48-49', name: 'Transportes, correos y almacenamiento' },
+    { code: '51', name: 'Información en medios masivos' },
+    { code: '52', name: 'Servicios financieros y de seguros' },
+    { code: '53', name: 'Servicios inmobiliarios y de alquiler de bienes muebles e intangibles' },
+    { code: '54', name: 'Servicios profesionales, científicos y técnicos' },
+    { code: '55', name: 'Corporativos' },
+    { code: '56', name: 'Servicios de apoyo a los negocios y manejo de residuos, y servicios de remediación' },
+    { code: '61', name: 'Servicios educativos' },
+    { code: '62', name: 'Servicios de salud y de asistencia social' },
+    { code: '71', name: 'Servicios de esparcimiento culturales y deportivos, y otros servicios recreativos' },
+    { code: '72', name: 'Servicios de alojamiento temporal y de preparación de alimentos y bebidas' },
+    { code: '81', name: 'Otros servicios excepto actividades gubernamentales' },
+    { code: '93', name: 'Actividades legislativas, gubernamentales, de impartición de justicia y de organismos internacionales' },
+  ];
+
+  for (const activity of economicActivities) {
+    await prisma.economicActivity.upsert({
+      where: { code: activity.code },
+      update: { name: activity.name },
+      create: activity,
+    });
+  }
+
+  console.log('✅ Catalogs seeded successfully!');
+}
+
 async function main() {
   console.log('🌱 Iniciando seed de la base de datos...');
+
+  // Primero, seed de los catálogos
+  await seedCatalogs();
+  
+  // Seed de estados
+  await seedStates();
+  
+  // Seed de códigos postales
+  await seedPostalCodes();
 
   // Crear usuarios
   const operatorPassword = await bcrypt.hash('operator123', 12);
   const clientPassword = await bcrypt.hash('client123', 12);
   const employeePassword = await bcrypt.hash('employee123', 12);
 
-  // Crear empresas
+  // Crear o actualizar empresas
   const companies = await Promise.all([
-    prisma.company.create({
-      data: {
+    prisma.company.upsert({
+      where: { rfc: 'TCM850101A1B' },
+      update: {
+        name: 'TechCorp México',
+        legalName: 'Tecnología Corporativa de México SA de CV',
+        address: 'Av. Reforma 123, Col. Centro, CDMX',
+        email: 'admin@techcorp.mx',
+        phone: '55-1234-5678',
+        status: 'ACTIVE',
+        employeesCount: 45
+      },
+      create: {
         name: 'TechCorp México',
         rfc: 'TCM850101A1B',
         legalName: 'Tecnología Corporativa de México SA de CV',
@@ -25,8 +119,18 @@ async function main() {
         employeesCount: 45
       }
     }),
-    prisma.company.create({
-      data: {
+    prisma.company.upsert({
+      where: { rfc: 'RSL900215C2D' },
+      update: {
+        name: 'Retail Solutions SA',
+        legalName: 'Retail Solutions Sociedad Anónima',
+        address: 'Blvd. Avila Camacho 456, Naucalpan, EdoMex',
+        email: 'contacto@retailsolutions.mx',
+        phone: '55-9876-5432',
+        status: 'CONFIGURED',
+        employeesCount: 120
+      },
+      create: {
         name: 'Retail Solutions SA',
         rfc: 'RSL900215C2D',
         legalName: 'Retail Solutions Sociedad Anónima',
@@ -41,16 +145,29 @@ async function main() {
 
   // Crear usuarios
   const users = await Promise.all([
-    prisma.user.create({
-      data: {
+    prisma.user.upsert({
+      where: { email: 'carlos@mysourcing.mx' },
+      update: {
+        password: operatorPassword,
+        name: 'Carlos Mendoza',
+        role: 'OPERATOR'
+      },
+      create: {
         email: 'carlos@mysourcing.mx',
         password: operatorPassword,
         name: 'Carlos Mendoza',
         role: 'OPERATOR'
       }
     }),
-    prisma.user.create({
-      data: {
+    prisma.user.upsert({
+      where: { email: 'ana@techcorp.mx' },
+      update: {
+        password: clientPassword,
+        name: 'Ana Rivera',
+        role: 'CLIENT',
+        companyId: companies[0].id
+      },
+      create: {
         email: 'ana@techcorp.mx',
         password: clientPassword,
         name: 'Ana Rivera',
@@ -58,8 +175,15 @@ async function main() {
         companyId: companies[0].id
       }
     }),
-    prisma.user.create({
-      data: {
+    prisma.user.upsert({
+      where: { email: 'juan.perez@techcorp.mx' },
+      update: {
+        password: employeePassword,
+        name: 'Juan Pérez García',
+        role: 'EMPLOYEE',
+        companyId: companies[0].id
+      },
+      create: {
         email: 'juan.perez@techcorp.mx',
         password: employeePassword,
         name: 'Juan Pérez García',
@@ -72,9 +196,19 @@ async function main() {
   // Crear empleados para TechCorp
   const employees = [];
   for (let i = 1; i <= 45; i++) {
-    const employee = await prisma.employee.create({
-      data: {
-        employeeNumber: `TC${i.toString().padStart(3, '0')}`,
+    const employeeNumber = `TC${i.toString().padStart(3, '0')}`;
+    const employee = await prisma.employee.upsert({
+      where: { employeeNumber },
+      update: {
+        name: `Empleado TechCorp ${i}`,
+        email: `empleado${i}@techcorp.mx`,
+        position: i <= 15 ? 'Desarrollador' : i <= 30 ? 'Analista' : 'Gerente',
+        department: i <= 20 ? 'Tecnología' : i <= 35 ? 'Ventas' : 'Administración',
+        baseSalary: 15000 + (i * 500),
+        status: 'ACTIVE'
+      },
+      create: {
+        employeeNumber,
         name: `Empleado TechCorp ${i}`,
         email: `empleado${i}@techcorp.mx`,
         rfc: `ETC${i.toString().padStart(6, '0')}H1A`,
@@ -98,7 +232,12 @@ async function main() {
 
   // Crear wizards para las empresas
   for (const company of companies) {
-    const wizard = await prisma.companyWizard.create({
+    // Verificar si el wizard ya existe
+    const existingWizard = await prisma.companyWizard.findUnique({
+      where: { companyId: company.id }
+    });
+    
+    const wizard = existingWizard || await prisma.companyWizard.create({
       data: {
         companyId: company.id,
         status: 'IN_PROGRESS',
@@ -108,30 +247,31 @@ async function main() {
       }
     });
 
-    // Crear secciones del wizard
-    const sections = [
-      { sectionNumber: 1, sectionName: 'Datos Generales', isOptional: false },
-      { sectionNumber: 2, sectionName: 'Obligaciones Patronales', isOptional: false },
-      { sectionNumber: 3, sectionName: 'Bancos', isOptional: false },
-      { sectionNumber: 4, sectionName: 'Sellos Digitales', isOptional: false },
-      { sectionNumber: 5, sectionName: 'Estructura Organizacional', isOptional: false },
-      { sectionNumber: 6, sectionName: 'Prestaciones', isOptional: false },
-      { sectionNumber: 7, sectionName: 'Nómina', isOptional: false },
-      { sectionNumber: 8, sectionName: 'Talento Humano', isOptional: true }
-    ];
+    // Crear secciones del wizard si no existe el wizard previamente
+    if (!existingWizard) {
+      const sections = [
+        { sectionNumber: 1, sectionName: 'Datos Generales', isOptional: false },
+        { sectionNumber: 2, sectionName: 'Obligaciones Patronales', isOptional: false },
+        { sectionNumber: 3, sectionName: 'Bancos', isOptional: false },
+        { sectionNumber: 4, sectionName: 'Sellos Digitales', isOptional: false },
+        { sectionNumber: 5, sectionName: 'Estructura Organizacional', isOptional: false },
+        { sectionNumber: 6, sectionName: 'Prestaciones', isOptional: false },
+        { sectionNumber: 7, sectionName: 'Nómina', isOptional: false },
+        { sectionNumber: 8, sectionName: 'Talento Humano', isOptional: true }
+      ];
 
-    for (const section of sections) {
-      const wizardSection = await prisma.companyWizardSection.create({
-        data: {
-          wizardId: wizard.id,
-          ...section,
-          status: section.sectionNumber === 1 ? 'IN_PROGRESS' : 'PENDING'
-        }
-      });
+      for (const section of sections) {
+        const wizardSection = await prisma.companyWizardSection.create({
+          data: {
+            wizardId: wizard.id,
+            ...section,
+            status: section.sectionNumber === 1 ? 'IN_PROGRESS' : 'PENDING'
+          }
+        });
 
-      // Crear pasos para cada sección
-      let steps: Array<{ stepNumber: number; stepName: string; isOptional: boolean }> = [];
-      switch (section.sectionNumber) {
+        // Crear pasos para cada sección
+        let steps: Array<{ stepNumber: number; stepName: string; isOptional: boolean }> = [];
+        switch (section.sectionNumber) {
         case 1:
           steps = [
             { stepNumber: 1, stepName: 'Información General', isOptional: false },
@@ -191,41 +331,75 @@ async function main() {
             stepData: {}
           }
         });
+        }
       }
     }
 
     // Crear algunos datos de ejemplo para la primera empresa
     if (company.id === companies[0].id) {
       // Paso 1: Información general
-      await prisma.companyGeneralInfo.create({
-        data: {
+      await prisma.companyGeneralInfo.upsert({
+        where: { companyId: company.id },
+        update: {
+          businessName: company.legalName,
+          commercialName: company.name,
+          rfc: company.rfc,
+          taxRegime: '601',
+          tipoPersona: 'MORAL',
+          actividadEconomica: '54',
+          startDate: new Date('2020-01-01')
+        },
+        create: {
           companyId: company.id,
           businessName: company.legalName,
           commercialName: company.name,
           rfc: company.rfc,
-          taxRegime: '601 - General de Ley Personas Morales',
+          taxRegime: '601',
+          tipoPersona: 'MORAL',
+          actividadEconomica: '54',
           startDate: new Date('2020-01-01')
         }
       });
 
       // Paso 2: Domicilio
-      await prisma.companyAddress.create({
-        data: {
+      await prisma.companyAddress.upsert({
+        where: { companyId: company.id },
+        update: {
+          street: 'Av. Reforma',
+          exteriorNumber: '123',
+          interiorNumber: 'Piso 5',
+          neighborhood: 'Centro',
+          city: 'Ciudad de México',
+          state: 'CMX',
+          zipCode: '06000',
+          country: 'México'
+        },
+        create: {
           companyId: company.id,
           street: 'Av. Reforma',
           exteriorNumber: '123',
           interiorNumber: 'Piso 5',
           neighborhood: 'Centro',
           city: 'Ciudad de México',
-          state: 'CDMX',
+          state: 'CMX',
           zipCode: '06000',
           country: 'México'
         }
       });
 
       // Paso 3: Representante Legal
-      await prisma.companyLegalRepresentative.create({
-        data: {
+      await prisma.companyLegalRepresentative.upsert({
+        where: { companyId: company.id },
+        update: {
+          name: 'Roberto Hernández López',
+          rfc: 'HELR850215HDF',
+          curp: 'HELR850215HDFLPR08',
+          position: 'Representante Legal',
+          notarialPower: 'Escritura Pública No. 12345',
+          notaryNumber: '45',
+          notaryName: 'Lic. María González'
+        },
+        create: {
           companyId: company.id,
           name: 'Roberto Hernández López',
           rfc: 'HELR850215HDF',
@@ -238,8 +412,20 @@ async function main() {
       });
 
       // Obligaciones patronales
-      await prisma.companyTaxObligations.create({
-        data: {
+      await prisma.companyTaxObligations.upsert({
+        where: { companyId: company.id },
+        update: {
+          imssRegistration: 'Y12-34567-89-0',
+          imssClassification: 'Clase III',
+          imssRiskClass: '3.54',
+          imssAddress: 'Av. Reforma 123',
+          imssCity: 'Ciudad de México',
+          imssState: 'CDMX',
+          imssZipCode: '06000',
+          fonacotRegistration: 'FON123456',
+          fonacotCenter: 'Centro CDMX'
+        },
+        create: {
           companyId: company.id,
           imssRegistration: 'Y12-34567-89-0',
           imssClassification: 'Clase III',
@@ -254,6 +440,8 @@ async function main() {
       });
 
       // Bancos
+      // Primero eliminar bancos existentes
+      await prisma.companyBank.deleteMany({ where: { companyId: company.id } });
       await prisma.companyBank.create({
         data: {
           companyId: company.id,
@@ -266,8 +454,16 @@ async function main() {
       });
 
       // Certificado digital
-      await prisma.companyDigitalCertificate.create({
-        data: {
+      await prisma.companyDigitalCertificate.upsert({
+        where: { companyId: company.id },
+        update: {
+          certificateFile: '/certs/cert_techcorp.cer',
+          keyFile: '/certs/key_techcorp.key',
+          password: 'encrypted_password',
+          validFrom: new Date('2024-01-01'),
+          validUntil: new Date('2028-01-01')
+        },
+        create: {
           companyId: company.id,
           certificateFile: '/certs/cert_techcorp.cer',
           keyFile: '/certs/key_techcorp.key',
@@ -278,6 +474,8 @@ async function main() {
       });
 
       // Áreas
+      // Primero eliminar áreas existentes
+      await prisma.companyArea.deleteMany({ where: { companyId: company.id } });
       const areas = await Promise.all([
         prisma.companyArea.create({
           data: {
@@ -407,6 +605,8 @@ async function main() {
       });
 
       // Horarios
+      // Primero eliminar horarios existentes
+      await prisma.companySchedule.deleteMany({ where: { companyId: company.id } });
       await prisma.companySchedule.create({
         data: {
           companyId: company.id,
@@ -419,8 +619,28 @@ async function main() {
       });
 
       // Calendario laboral
-      await prisma.calendar.create({
-        data: {
+      await prisma.calendar.upsert({
+        where: {
+          companyId_year: {
+            companyId: company.id,
+            year: 2025
+          }
+        },
+        update: {
+          name: 'Calendario 2025',
+          workDays: [1, 2, 3, 4, 5],
+          holidays: [
+            { date: '2025-01-01', name: 'Año Nuevo' },
+            { date: '2025-02-03', name: 'Día de la Constitución' },
+            { date: '2025-03-17', name: 'Natalicio de Benito Juárez' },
+            { date: '2025-05-01', name: 'Día del Trabajo' },
+            { date: '2025-09-16', name: 'Día de la Independencia' },
+            { date: '2025-11-17', name: 'Revolución Mexicana' },
+            { date: '2025-12-25', name: 'Navidad' }
+          ],
+          isDefault: true
+        },
+        create: {
           companyId: company.id,
           name: 'Calendario 2025',
           year: 2025,
@@ -439,6 +659,8 @@ async function main() {
       });
 
       // Políticas de la empresa
+      // Primero eliminar políticas existentes
+      await prisma.companyPolicy.deleteMany({ where: { companyId: company.id } });
       await prisma.companyPolicy.create({
         data: {
           companyId: company.id,
@@ -465,6 +687,7 @@ async function main() {
 
   console.log('✅ Seed completado exitosamente');
   console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${employees.length} empleados`);
+  console.log('📚 Catálogos: regímenes fiscales y actividades económicas');
   console.log('🧙‍♂️ Wizards y datos de configuración creados para las empresas');
 }
 
