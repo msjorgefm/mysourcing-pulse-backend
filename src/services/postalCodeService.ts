@@ -94,4 +94,50 @@ export class PostalCodeService {
 
     return neighborhoods;
   }
+
+  /**
+   * Crea un nuevo código postal si no existe
+   * @param data - Datos del nuevo código postal
+   * @returns El código postal creado o el existente
+   */
+  static async createPostalCodeIfNotExists(data: {
+    postalCode: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    municipality?: string;
+  }) {
+    if (!data.postalCode || data.postalCode.length !== 5) {
+      throw new Error('Código postal inválido');
+    }
+
+    // Verificar si ya existe
+    const existing = await prisma.postalCode.findFirst({
+      where: {
+        postalCode: data.postalCode,
+        neighborhood: data.neighborhood,
+        city: data.city,
+        state: data.state
+      }
+    });
+
+    if (existing) {
+      return existing;
+    }
+
+    // Crear nuevo código postal
+    const newPostalCode = await prisma.postalCode.create({
+      data: {
+        postalCode: data.postalCode,
+        neighborhood: data.neighborhood,
+        city: data.city,
+        state: data.state,
+        municipality: data.municipality || data.city,
+        country: 'México',
+        isActive: true
+      }
+    });
+
+    return newPostalCode;
+  }
 }

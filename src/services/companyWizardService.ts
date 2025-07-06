@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PostalCodeService } from './postalCodeService';
 
 const prisma = new PrismaClient();
 
@@ -303,6 +304,17 @@ export class CompanyWizardService {
     }
     // Paso 2: Domicilio
     else if (stepNumber === 2) {
+      // Verificar si el código postal existe, si no, crearlo
+      if (stepData.zipCode && stepData.neighborhood && stepData.city && stepData.state) {
+        await PostalCodeService.createPostalCodeIfNotExists({
+          postalCode: stepData.zipCode,
+          neighborhood: stepData.neighborhood,
+          city: stepData.city,
+          state: stepData.state,
+          municipality: stepData.municipio
+        });
+      }
+
       const existingAddress = await prisma.companyAddress.findUnique({
         where: { companyId }
       });

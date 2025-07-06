@@ -533,6 +533,8 @@ model CompanyAddress {
   companyId       Int      @unique
   company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   
+  tipoDomicilio   String   @default("matriz")
+  nombreSucursal  String
   street          String
   exteriorNumber  String
   interiorNumber  String?
@@ -540,7 +542,7 @@ model CompanyAddress {
   city            String
   state           String
   zipCode         String
-  country         String   @default("México")
+  municipio       String?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
