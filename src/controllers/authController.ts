@@ -6,19 +6,25 @@ export class AuthController {
   
   static async login(req: Request, res: Response) {
     try {
+      console.log('🔵 Login request received:', req.body.email);
+      console.log('🔵 Request headers:', req.headers);
+      
       const { error } = loginValidation.validate(req.body);
       if (error) {
+        console.log('❌ Validation error:', error.details[0].message);
         return res.status(400).json({ error: error.details[0].message });
       }
       
       const result = await AuthService.login(req.body);
+      
+      console.log('✅ Login response ready for:', req.body.email);
       
       res.json({
         message: 'Login successful',
         data: result
       });
     } catch (error: any) {
-      console.error('Login error:', error);
+      console.error('❌ Login controller error:', error);
       res.status(401).json({ error: error.message || 'Login failed' });
     }
   }

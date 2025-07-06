@@ -10,8 +10,10 @@ export declare class CompanyWizardService {
         wizardData: import("@prisma/client/runtime/library").JsonValue;
         completedAt: Date | null;
     }>;
-    static getWizardStatus(companyId: number): Promise<({
-        sectionProgress: ({
+    static getWizardStatus(companyId: number): Promise<{
+        currentSection: number;
+        currentStep: number;
+        sectionProgress?: ({
             steps: {
                 id: number;
                 createdAt: Date;
@@ -34,18 +36,15 @@ export declare class CompanyWizardService {
             sectionName: string;
             isOptional: boolean;
             wizardId: number;
-        })[];
-    } & {
-        id: number;
-        companyId: number;
-        createdAt: Date;
-        updatedAt: Date;
-        status: import(".prisma/client").$Enums.WizardStatus;
-        currentSection: number;
-        currentStep: number;
-        wizardData: import("@prisma/client/runtime/library").JsonValue;
-        completedAt: Date | null;
-    }) | null>;
+        })[] | undefined;
+        id?: number | undefined;
+        companyId?: number | undefined;
+        createdAt?: Date | undefined;
+        updatedAt?: Date | undefined;
+        status?: import(".prisma/client").$Enums.WizardStatus | undefined;
+        wizardData?: import("@prisma/client/runtime/library").JsonValue | undefined;
+        completedAt?: Date | null | undefined;
+    }>;
     static updateWizardStep(companyId: number, sectionNumber: number, stepNumber: number, stepData: any): Promise<{
         id: number;
         createdAt: Date;

@@ -48,8 +48,6 @@ class CompanyService {
             payrollsCount: company._count.payrolls,
             incidencesCount: company._count.incidences,
             calendarsCount: company.calendars.length,
-            paymentMethod: company.paymentMethod,
-            bankAccount: company.bankAccount,
             recentPayrolls: company.payrolls,
             activeCalendars: company.calendars,
             createdAt: company.createdAt,
@@ -94,8 +92,6 @@ class CompanyService {
             phone: company.phone,
             status: this.mapStatusToFrontend(company.status),
             employeesCount: company._count?.employees || 0,
-            paymentMethod: company.paymentMethod,
-            bankAccount: company.bankAccount,
             ...(includeDetails && {
                 employees: company.employees || [],
                 payrolls: company.payrolls || [],
@@ -122,8 +118,6 @@ class CompanyService {
                 email: data.email,
                 phone: data.phone,
                 status: (data.status ? this.mapStatusFromFrontend(data.status) : 'IN_SETUP'),
-                paymentMethod: data.paymentMethod,
-                bankAccount: data.bankAccount,
                 employeesCount: 0
             }
         });
@@ -178,8 +172,6 @@ class CompanyService {
             phone: company.phone,
             status: this.mapStatusToFrontend(company.status),
             employeesCount: company.employeesCount,
-            paymentMethod: company.paymentMethod,
-            bankAccount: company.bankAccount,
             createdAt: company.createdAt,
             updatedAt: company.updatedAt
         };

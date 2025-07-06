@@ -11,6 +11,7 @@ const prisma = new client_1.PrismaClient();
 class AuthService {
     static async login(credentials) {
         const { email, password } = credentials;
+        console.log('🔐 Login attempt for:', email);
         // Buscar usuario
         const user = await prisma.user.findUnique({
             where: { email },
@@ -19,14 +20,21 @@ class AuthService {
                 employee: true
             }
         });
-        if (!user || !user.isActive) {
+        if (!user) {
+            console.log('❌ User not found:', email);
+            throw new Error('Invalid credentials');
+        }
+        if (!user.isActive) {
+            console.log('❌ User is inactive:', email);
             throw new Error('Invalid credentials');
         }
         // Verificar contraseña
         const isValidPassword = await bcryptjs_1.default.compare(password, user.password);
         if (!isValidPassword) {
+            console.log('❌ Invalid password for:', email);
             throw new Error('Invalid credentials');
         }
+        console.log('✅ Login successful for:', email);
         // Generar tokens
         const accessToken = this.generateAccessToken(user.id);
         const refreshToken = this.generateRefreshToken(user.id);

@@ -58,9 +58,12 @@ class CompanyWizardController {
                 return res.status(400).json({ error: 'Valid step number is required' });
             }
             const updatedStep = await companyWizardService_1.CompanyWizardService.updateWizardStep(Number(companyId), Number(sectionNumber), Number(stepNumber), stepData);
+            // Obtener el estado actualizado del wizard completo
+            const updatedWizard = await companyWizardService_1.CompanyWizardService.getWizardStatus(Number(companyId));
             res.json({
                 message: 'Wizard step updated successfully',
-                data: updatedStep
+                data: updatedStep,
+                wizardStatus: updatedWizard
             });
         }
         catch (error) {
@@ -108,23 +111,80 @@ class CompanyWizardController {
             res.status(500).json({ error: error.message || 'Failed to get section data' });
         }
     }
+    // Método auxiliar para obtener datos específicos de un paso
+    static async getStepSpecificData(companyId, sectionNumber, stepNumber) {
+        const prisma = new client_1.PrismaClient();
+        try {
+            switch (sectionNumber) {
+                case 1: // Datos Generales
+                    if (stepNumber === 1) {
+                        return await prisma.companyGeneralInfo.findUnique({ where: { companyId } });
+                    }
+                    else if (stepNumber === 2) {
+                        return await prisma.companyAddress.findUnique({ where: { companyId } });
+                    }
+                    else if (stepNumber === 3) {
+                        return await prisma.companyLegalRepresentative.findUnique({ where: { companyId } });
+                    }
+                    break;
+            }
+            return null;
+        }
+        finally {
+            await prisma.$disconnect();
+        }
+    }
     // Método auxiliar para obtener datos específicos de cada sección
     static async getSectionSpecificData(companyId, sectionNumber) {
         const prisma = new client_1.PrismaClient();
         try {
             switch (sectionNumber) {
                 case 1: // Datos Generales
-                    return await prisma.companyGeneralInfo.findUnique({
-                        where: { companyId }
-                    });
+                    const generalInfo = await prisma.companyGeneralInfo.findUnique({ where: { companyId } });
+                    const address = await prisma.companyAddress.findUnique({ where: { companyId } });
+                    const legalRep = await prisma.companyLegalRepresentative.findUnique({ where: { companyId } });
+                    // Mapear los datos del representante legal a los nombres esperados por el frontend
+                    let mappedLegalRep = null;
+                    if (legalRep) {
+                        mappedLegalRep = {
+                            legalRepName: legalRep.name,
+                            legalRepRFC: legalRep.rfc,
+                            legalRepCurp: legalRep.curp,
+                            legalRepPosition: legalRep.position,
+                            notarialPower: legalRep.notarialPower,
+                            notaryNumber: legalRep.notaryNumber,
+                            notaryName: legalRep.notaryName
+                        };
+                    }
+                    return {
+                        generalInfo,
+                        address,
+                        legalRepresentative: mappedLegalRep
+                    };
                 case 2: // Obligaciones Patronales
                     return await prisma.companyTaxObligations.findUnique({
                         where: { companyId }
                     });
                 case 3: // Bancos
-                    return await prisma.companyBank.findMany({
+                    const banks = await prisma.companyBank.findMany({
                         where: { companyId }
                     });
+                    // Mapeo inverso de tipos del backend al frontend
+                    const bankTypeMapReverse = {
+                        'CHECKING': 'OPERACION',
+                        'SAVINGS': 'AHORRO',
+                        'PAYROLL': 'NOMINA'
+                    };
+                    // Mapear los datos para el frontend
+                    return {
+                        banks: banks.map(bank => ({
+                            name: bank.bankName,
+                            type: bankTypeMapReverse[bank.bankType] || 'OPERACION',
+                            accountNumber: bank.accountNumber,
+                            clabe: bank.clabe || '',
+                            isDefault: bank.isPrimary
+                        }))
+                    };
                 case 4: // Sellos Digitales
                     return await prisma.companyDigitalCertificate.findUnique({
                         where: { companyId }

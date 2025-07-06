@@ -6,8 +6,6 @@ export interface CreateCompanyRequest {
     email: string;
     phone?: string;
     status?: string;
-    paymentMethod?: string;
-    bankAccount?: string;
 }
 export interface UpdateCompanyRequest extends Partial<CreateCompanyRequest> {
     id: number;
@@ -26,8 +24,6 @@ export declare class CompanyService {
         payrollsCount: any;
         incidencesCount: any;
         calendarsCount: any;
-        paymentMethod: any;
-        bankAccount: any;
         recentPayrolls: any;
         activeCalendars: any;
         createdAt: any;
@@ -48,8 +44,7 @@ export declare class CompanyService {
         phone: string | null;
         status: string;
         employeesCount: any;
-        paymentMethod: string | null;
-        bankAccount: string | null;
+
     }>;
     static createCompany(data: CreateCompanyRequest): Promise<{
         id: number;
@@ -74,8 +69,6 @@ export declare class CompanyService {
         phone: string | null;
         status: string;
         employeesCount: number;
-        paymentMethod: string | null;
-        bankAccount: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
