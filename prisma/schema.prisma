@@ -56,6 +56,21 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
+model InvitationToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  email     String
+  companyId Int
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  usedAt    DateTime?
+  
+  @@index([token, used])
+  @@map("invitation_tokens")
+}
+
 enum UserRole {
   OPERATOR
   CLIENT
@@ -94,6 +109,7 @@ model Company {
   incidences    Incidence[]
   notifications Notification[]
   calendars     Calendar[]
+  invitationTokens InvitationToken[]
   
   // Wizard y configuración
   wizard        CompanyWizard?

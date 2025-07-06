@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { InvitationService } from './invitationService';
 
 const prisma = new PrismaClient();
 
@@ -152,6 +153,18 @@ export class CompanyService {
         employeesCount: 0
       }
     });
+    
+    // Enviar invitación por correo electrónico
+    try {
+      await InvitationService.createAndSendInvitation(
+        company.id,
+        company.email,
+        company.name
+      );
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      // No fallar la creación de la empresa si falla el envío del correo
+    }
     
     return {
       id: company.id,

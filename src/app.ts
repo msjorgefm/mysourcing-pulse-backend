@@ -21,6 +21,8 @@ import payrollRoutes from './routes/payrolls';
 import calendarRoutes from './routes/calendars';
 import incidenceRoutes from './routes/incidences';
 import notificationRoutes from './routes/notifications';
+import onboardingRoutes from './routes/onboardingRoutes';
+import testRoutes from './routes/testRoutes';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -120,6 +122,12 @@ app.use('/api/payrolls', payrollRoutes);
 app.use('/api/calendars', calendarRoutes);
 app.use('/api/incidences', incidenceRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+
+// Rutas de prueba (solo en desarrollo)
+if (process.env.NODE_ENV === 'development') {
+  app.use('/api/test', testRoutes);
+}
 
 // ================================
 // SOCKET.IO PARA TIEMPO REAL

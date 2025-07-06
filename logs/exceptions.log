@@ -124,3 +124,804 @@ src/controllers/companyWizardController.ts(220,22): error TS2339: Property 'comp
     at Module.load (node:internal/modules/cjs/loader:1203:32)
     at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:11:46 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:12:35 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:13:44 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:13:56 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:15:05 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:15:16 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:27:47 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+----------2025-07-04 12:43:19 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/onboardingRoutes.ts(7,31): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/onboardingRoutes.ts(10,30): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/onboardingRoutes.ts(13,46): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/onboardingRoutes.ts(7,31): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/onboardingRoutes.ts(10,30): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/onboardingRoutes.ts(13,46): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/onboardingRoutes.ts(7,31): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/onboardingRoutes.ts(10,30): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/onboardingRoutes.ts(13,46): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-04 17:43:46 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:43:58 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:44:13 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 12:44:26 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at startServer (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts:195:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at startServer (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts:195:12)
+2025-07-04 17:53:59 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 17:54:40 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/invitationService.ts(19,20): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(43,44): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(72,18): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/services/invitationService.ts(82,42): error TS2339: Property 'invitationToken' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 12:55:42 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at startServer (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts:195:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at startServer (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts:195:12)
+2025-07-04 18:41:44 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 18:42:01 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 18:42:16 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 18:42:32 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 18:42:49 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 18:43:55 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/emailService.ts(25,35): error TS2551: Property 'createTransporter' does not exist on type 'typeof import("/app/node_modules/@types/nodemailer/index")'. Did you mean 'createTransport'?
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 20:54:31 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 20:54:42 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-04 20:55:54 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(62,9): error TS2353: Object literal may only specify known properties, and 'companyName' does not exist in type 'User'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)

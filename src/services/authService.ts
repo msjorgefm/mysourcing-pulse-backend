@@ -11,16 +11,19 @@ export class AuthService {
   static async login(credentials: LoginRequest): Promise<AuthResponse> {
     const { email, password } = credentials;
     
-    // Buscar usuario
-    const user = await prisma.user.findUnique({
-      where: { email },
+    // Buscar usuario por email (que ahora puede ser username o email)
+    const user = await prisma.user.findFirst({
+      where: {
+        email: email,
+        isActive: true
+      },
       include: {
         company: true,
         employee: true
       }
     });
     
-    if (!user || !user.isActive) {
+    if (!user) {
       throw new Error('Invalid credentials');
     }
     
@@ -56,6 +59,7 @@ export class AuthService {
         name: user.name,
         role: user.role as any,
         companyId: user.companyId || undefined,
+        companyName: user.company?.name || undefined,
         employeeId: user.employeeId || undefined,
         isActive: user.isActive
       },

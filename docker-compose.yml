@@ -45,6 +45,12 @@ services:
       FRONTEND_URL: http://localhost:3000
       # Variables para Prisma
       PRISMA_CLI_BINARY_TARGETS: "native,linux-musl-openssl-3.0.x,debian-openssl-3.0.x"
+      # Variables SMTP
+      SMTP_HOST: sandbox.smtp.mailtrap.io
+      SMTP_PORT: 2525
+      SMTP_USER: ea5ee2c4e8dfb1
+      SMTP_PASS: e8184ce2c5dba0
+      SMTP_FROM: MySourcing Pulse <noreply@mysourcing.com>
     ports:
       - "3001:3001"
     depends_on:
