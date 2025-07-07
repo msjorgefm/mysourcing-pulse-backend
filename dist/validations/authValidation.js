@@ -6,7 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerValidation = exports.loginValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.loginValidation = joi_1.default.object({
-    email: joi_1.default.string().email().required(),
+    email: joi_1.default.string().required().messages({
+        'string.empty': 'El usuario es requerido',
+        'any.required': 'El usuario es requerido'
+    }),
     password: joi_1.default.string().min(6).required()
 });
 exports.registerValidation = joi_1.default.object({

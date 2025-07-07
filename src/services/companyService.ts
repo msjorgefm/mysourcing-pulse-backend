@@ -372,4 +372,59 @@ export class CompanyService {
     
     return statusMap[status] || 'IN_SETUP';
   }
+  
+  static async getCompanyDepartments(companyId: number) {
+    const departments = await prisma.companyDepartment.findMany({
+      where: { 
+        companyId,
+        isActive: true
+      },
+      include: {
+        area: true,
+        positions: {
+          where: { isActive: true }
+        }
+      },
+      orderBy: { name: 'asc' }
+    });
+    
+    return departments;
+  }
+  
+  static async inviteDepartmentHead(companyId: number, email: string, departmentId: number) {
+    // Verificar que el departamento pertenezca a la empresa
+    const department = await prisma.companyDepartment.findFirst({
+      where: {
+        id: departmentId,
+        companyId,
+        isActive: true
+      }
+    });
+    
+    if (!department) {
+      throw new Error('Departamento no encontrado o no pertenece a esta empresa');
+    }
+    
+    // Verificar que no exista ya un usuario con ese email
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
+    
+    if (existingUser) {
+      throw new Error('Ya existe un usuario con ese correo electrónico');
+    }
+    
+    // Crear invitación
+    const invitation = await InvitationService.createDepartmentHeadInvitation(
+      companyId,
+      email,
+      departmentId
+    );
+    
+    return {
+      success: true,
+      message: 'Invitación enviada exitosamente',
+      invitation
+    };
+  }
 }

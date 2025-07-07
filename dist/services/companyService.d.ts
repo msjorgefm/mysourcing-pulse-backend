@@ -44,7 +44,6 @@ export declare class CompanyService {
         phone: string | null;
         status: string;
         employeesCount: any;
-
     }>;
     static createCompany(data: CreateCompanyRequest): Promise<{
         id: number;

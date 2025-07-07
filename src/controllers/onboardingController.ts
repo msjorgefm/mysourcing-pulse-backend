@@ -48,7 +48,10 @@ export class OnboardingController {
         token: Joi.string().required(),
         username: Joi.string().min(3).max(50).required(),
         password: Joi.string().min(8).required(),
-        confirmPassword: Joi.string().valid(Joi.ref('password')).required()
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        firstName: Joi.string().min(2).max(50).required(),
+        lastName: Joi.string().min(2).max(50).required(),
+        phone: Joi.string().pattern(/^[0-9\-\+\(\)\s]+$/).optional()
       });
       
       const { error, value } = schema.validate(req.body);
@@ -59,7 +62,7 @@ export class OnboardingController {
         });
       }
       
-      const { token, username, password } = value;
+      const { token, username, password, firstName, lastName, phone } = value;
       
       // Validar token
       const validation = await InvitationService.validateToken(token);
@@ -91,12 +94,21 @@ export class OnboardingController {
       // Hashear contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
       
-      // Crear usuario con rol CLIENT
+      // Obtener detalles completos de la invitación para verificar metadata
+      const fullInvitationDetails = await InvitationService.getFullInvitationDetails(token);
+      const metadata = (fullInvitationDetails as any)?.metadata;
+      const isDepartmentHead = metadata?.role === 'DEPARTMENT_HEAD';
+      
+      // Crear usuario con el rol apropiado
+      const fullName = `${firstName} ${lastName}`;
       const newUser = await UserService.createUser({
         email: username,
         password: hashedPassword,
-        name: invitationDetails.company.name,
-        role: 'CLIENT',
+        name: fullName,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        role: isDepartmentHead ? 'DEPARTMENT_HEAD' : 'CLIENT',
         companyId: invitationDetails.company.id
       });
       

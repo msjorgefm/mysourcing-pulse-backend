@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyService = void 0;
 const client_1 = require("@prisma/client");
+const invitationService_1 = require("./invitationService");
 const prisma = new client_1.PrismaClient();
 class CompanyService {
     static async getAllCompanies(operatorOnly = false) {
@@ -121,6 +122,14 @@ class CompanyService {
                 employeesCount: 0
             }
         });
+        // Enviar invitación por correo electrónico
+        try {
+            await invitationService_1.InvitationService.createAndSendInvitation(company.id, company.email, company.name);
+        }
+        catch (error) {
+            console.error('Error sending invitation:', error);
+            // No fallar la creación de la empresa si falla el envío del correo
+        }
         return {
             id: company.id,
             name: company.name,

@@ -28,6 +28,7 @@ import catalogRoutes from './routes/catalogs';
 import companyWizardRoutes from './routes/companyWizard';
 import postalCodeRoutes from './routes/postalCodeRoutes';
 import stateRoutes from './routes/stateRoutes';
+import userRoutes from './routes/users';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -144,6 +145,7 @@ app.use('/api/catalogs', catalogRoutes);
 app.use('/api/company-wizard', companyWizardRoutes);
 app.use('/api/postal-codes', postalCodeRoutes);
 app.use('/api/states', stateRoutes);
+app.use('/api/users', userRoutes);
 
 // Rutas de prueba (solo en desarrollo)
 if (process.env.NODE_ENV === 'development') {

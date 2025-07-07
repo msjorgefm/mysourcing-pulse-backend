@@ -2,6 +2,9 @@ import express from 'express';
 import { CompanyController } from '../controllers/companyController';
 import { authenticate, authorize } from '../middleware/auth';
 import { CompanyWizardController } from '../controllers/companyWizardController';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const router = express.Router();
 
@@ -86,5 +89,42 @@ router.post('/:companyId/wizard/complete', authorize(['OPERATOR', 'ADMIN']), asy
   }
 });
 
+// Obtener departamentos de una empresa
+router.get('/:companyId/departments', authenticate, async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const departments = await CompanyController.getCompanyDepartments(parseInt(companyId));
+    res.json(departments);
+  } catch (error) {
+    console.error('Error getting departments:', error);
+    res.status(500).json({ error: 'Error al obtener los departamentos' });
+  }
+});
+
+// Crear invitación para jefe de departamento
+router.post('/:companyId/invite-department-head', authenticate, async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const { email, departmentId } = req.body;
+    
+    // Verificar que el usuario tenga permisos
+    const userId = (req as any).userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { company: true }
+    });
+    
+    if (!user || user.companyId !== parseInt(companyId) || user.role !== 'OPERATOR') {
+      res.status(403).json({ error: 'No tienes permisos para realizar esta acción' });
+      return;
+    }
+    
+    const result = await CompanyController.inviteDepartmentHead(parseInt(companyId), email, departmentId);
+    res.json(result);
+  } catch (error) {
+    console.error('Error inviting department head:', error);
+    res.status(500).json({ error: 'Error al enviar la invitación' });
+  }
+});
 
 export default router;

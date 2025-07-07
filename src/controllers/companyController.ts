@@ -144,4 +144,22 @@ export class CompanyController {
       res.status(500).json({ error: error.message || 'Failed to get company statistics' });
     }
   }
+  
+  static async getCompanyDepartments(companyId: number) {
+    try {
+      return await CompanyService.getCompanyDepartments(companyId);
+    } catch (error: any) {
+      console.error('Get company departments error:', error);
+      throw error;
+    }
+  }
+  
+  static async inviteDepartmentHead(companyId: number, email: string, departmentId: number) {
+    try {
+      return await CompanyService.inviteDepartmentHead(companyId, email, departmentId);
+    } catch (error: any) {
+      console.error('Invite department head error:', error);
+      throw error;
+    }
+  }
 }

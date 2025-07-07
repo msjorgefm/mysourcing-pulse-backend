@@ -7,6 +7,9 @@ export interface CreateUserData {
   email: string;
   password: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
   role: UserRole;
   companyId?: number;
   employeeId?: number;
@@ -16,6 +19,10 @@ export interface UpdateUserData {
   email?: string;
   password?: string;
   name?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  photoUrl?: string;
   role?: UserRole;
   isActive?: boolean;
 }
@@ -32,7 +39,24 @@ export class UserService {
     });
   }
   
-  static async getUserById(id: number) {
+  static async getUserById(id: number, includePassword: boolean = false) {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        employee: true
+      }
+    });
+    
+    if (user && !includePassword) {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    }
+    
+    return user;
+  }
+  
+  static async getUserByIdWithPassword(id: number) {
     return await prisma.user.findUnique({
       where: { id },
       include: {
@@ -54,6 +78,9 @@ export class UserService {
         email: data.email,
         password: data.password, // Ya debe venir hasheada
         name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
         role: data.role,
         companyId: data.companyId,
         employeeId: data.employeeId,
@@ -63,6 +90,9 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
         role: true,
         isActive: true,
         companyId: true,
@@ -87,6 +117,10 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        photoUrl: true,
         role: true,
         isActive: true,
         companyId: true,

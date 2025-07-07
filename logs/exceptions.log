@@ -105,3 +105,1577 @@ Error: listen EADDRINUSE: address already in use :::3001
     at listenInCluster (node:net:1994:12)
     at Server.listen (node:net:2099:7)
     at startServer (/Users/uriel.leyva/Documents/pulse/mysourcing-pulse-backend/src/app.ts:199:12)
+2025-07-06 19:50:27 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(14,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(21,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(27,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(35,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(36,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(43,1): error TS1185: Merge conflict marker encountered.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(14,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(21,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(27,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(35,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(36,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(43,1): error TS1185: Merge conflict marker encountered.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/authService.ts(14,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(21,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(27,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(35,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(36,1): error TS1185: Merge conflict marker encountered.
+src/services/authService.ts(43,1): error TS1185: Merge conflict marker encountered.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-06 19:52:06 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-06 20:07:30 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-06 15:17:36 [ERROR]: uncaughtException: Cannot find module 'multer'
+Require stack:
+- /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/upload.ts
+- /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts
+Error: Cannot find module 'multer'
+Require stack:
+- /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/upload.ts
+- /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1249:15)
+    at Function.Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue [as _resolveFilename] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@cspotcode/source-map-support/source-map-support.js:811:30)
+    at Function._load (node:internal/modules/cjs/loader:1075:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
+    at Module.require (node:internal/modules/cjs/loader:1340:12)
+    at require (node:internal/modules/helpers:138:16)
+    at Object.<anonymous> (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/upload.ts:7:16)
+    at Module._compile (node:internal/modules/cjs/loader:1565:14)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1618:23)
+Error: Cannot find module 'multer'
+Require stack:
+- /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/upload.ts
+- /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts
+    at Function.<anonymous> (node:internal/modules/cjs/loader:1249:15)
+    at Function.Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue [as _resolveFilename] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@cspotcode/source-map-support/source-map-support.js:811:30)
+    at Function._load (node:internal/modules/cjs/loader:1075:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
+    at Module.require (node:internal/modules/cjs/loader:1340:12)
+    at require (node:internal/modules/helpers:138:16)
+    at Object.<anonymous> (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/upload.ts:7:16)
+    at Module._compile (node:internal/modules/cjs/loader:1565:14)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1618:23)
+2025-07-06 20:19:04 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-06 15:19:21 [ERROR]: uncaughtException: listen EADDRINUSE: address already in use :::3001
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at startServer (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts:222:12)
+Error: listen EADDRINUSE: address already in use :::3001
+    at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+    at listenInCluster (node:net:1969:12)
+    at Server.listen (node:net:2074:7)
+    at startServer (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/app.ts:222:12)
+2025-07-06 20:24:39 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/companyWizardController.ts(151,33): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(153,33): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+src/controllers/companyWizardController.ts(171,40): error TS2551: Property 'companyAddress' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'companyArea'?
+src/controllers/companyWizardController.ts(172,41): error TS2339: Property 'companyLegalRepresentative' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-06 15:46:46 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/controllers/onboardingController.ts(103,9): error TS2353: Object literal may only specify known properties, and 'firstName' does not exist in type 'CreateUserData'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/onboardingController.ts(103,9): error TS2353: Object literal may only specify known properties, and 'firstName' does not exist in type 'CreateUserData'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/onboardingController.ts(103,9): error TS2353: Object literal may only specify known properties, and 'firstName' does not exist in type 'CreateUserData'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:12:51 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(4,10): error TS2305: Module '"../middleware/validation"' has no exported member 'validateRequest'.
+src/routes/users.ts(13,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(19,75): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(4,10): error TS2305: Module '"../middleware/validation"' has no exported member 'validateRequest'.
+src/routes/users.ts(13,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(19,75): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(4,10): error TS2305: Module '"../middleware/validation"' has no exported member 'validateRequest'.
+src/routes/users.ts(13,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(19,75): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:13:30 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(4,10): error TS2305: Module '"../middleware/validation"' has no exported member 'validateRequest'.
+src/routes/users.ts(13,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(19,75): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(4,10): error TS2305: Module '"../middleware/validation"' has no exported member 'validateRequest'.
+src/routes/users.ts(13,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(19,75): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(4,10): error TS2305: Module '"../middleware/validation"' has no exported member 'validateRequest'.
+src/routes/users.ts(13,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(19,75): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:14:13 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(35,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(38,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+src/routes/users.ts(41,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(35,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(38,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+src/routes/users.ts(41,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(35,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(38,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+src/routes/users.ts(41,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:14:43 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(35,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(38,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+src/routes/users.ts(41,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(35,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(38,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+src/routes/users.ts(41,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(35,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(38,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+src/routes/users.ts(41,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response, next: NextFunction) => Response<any, Record<string, any>> | undefined' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void | Promise<void>'.
+          Type 'Response<any, Record<string, any>>' is not assignable to type 'void | Promise<void>'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:15:15 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:18:07 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:18:42 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:19:58 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:21:32 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:21:59 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/users.ts(37,24): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>>) => Promise<...>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.
+src/routes/users.ts(43,56): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request, res: Response) => Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:29:44 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(96,49): error TS2339: Property 'getCompanyDepartments' does not exist on type 'typeof CompanyController'.
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+src/routes/companies.ts(121,44): error TS2339: Property 'inviteDepartmentHead' does not exist on type 'typeof CompanyController'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(96,49): error TS2339: Property 'getCompanyDepartments' does not exist on type 'typeof CompanyController'.
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+src/routes/companies.ts(121,44): error TS2339: Property 'inviteDepartmentHead' does not exist on type 'typeof CompanyController'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(96,49): error TS2339: Property 'getCompanyDepartments' does not exist on type 'typeof CompanyController'.
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+src/routes/companies.ts(121,44): error TS2339: Property 'inviteDepartmentHead' does not exist on type 'typeof CompanyController'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:30:23 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:30:58 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:32:08 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:38:56 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>, next: NextFunction) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:41:28 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:42:16 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:42:44 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:42:58 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:48:44 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:49:07 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:49:38 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+2025-07-06 16:51:57 [ERROR]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companies.ts(105,65): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to parameter of type 'RequestHandlerParams<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+      Type '(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>, res: Response<any, Record<string, any>, number>) => Promise<...>' is not assignable to type 'RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+        Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'void | Promise<void>'.
+          Type 'Promise<Response<any, Record<string, any>, number> | undefined>' is not assignable to type 'Promise<void>'.
+            Type 'Response<any, Record<string, any>, number> | undefined' is not assignable to type 'void'.
+              Type 'Response<any, Record<string, any>, number>' is not assignable to type 'void'.
+
+    at createTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1708:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1318:32)
+    at Function._load (node:internal/modules/cjs/loader:1128:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)

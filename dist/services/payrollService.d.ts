@@ -46,9 +46,9 @@ export declare class PayrollService {
             employeeId: number;
             createdAt: Date;
             updatedAt: Date;
+            status: import(".prisma/client").$Enums.IncidenceStatus;
             type: import(".prisma/client").$Enums.IncidenceType;
             date: Date;
-            status: import(".prisma/client").$Enums.IncidenceStatus;
             quantity: import("@prisma/client/runtime/library").Decimal;
             amount: import("@prisma/client/runtime/library").Decimal | null;
             description: string | null;
@@ -59,9 +59,9 @@ export declare class PayrollService {
             employeeId: number;
             createdAt: Date;
             updatedAt: Date;
+            status: import(".prisma/client").$Enums.IncidenceStatus;
             type: import(".prisma/client").$Enums.IncidenceType;
             date: Date;
-            status: import(".prisma/client").$Enums.IncidenceStatus;
             quantity: import("@prisma/client/runtime/library").Decimal;
             amount: import("@prisma/client/runtime/library").Decimal | null;
             description: string | null;
@@ -72,9 +72,9 @@ export declare class PayrollService {
             companyId: number | null;
             createdAt: Date;
             type: import(".prisma/client").$Enums.NotificationType;
+            priority: import(".prisma/client").$Enums.NotificationPriority;
             payrollId: number | null;
             title: string;
-            priority: import(".prisma/client").$Enums.NotificationPriority;
             read: boolean;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             readAt: Date | null;
@@ -84,9 +84,9 @@ export declare class PayrollService {
             companyId: number | null;
             createdAt: Date;
             type: import(".prisma/client").$Enums.NotificationType;
+            priority: import(".prisma/client").$Enums.NotificationPriority;
             payrollId: number | null;
             title: string;
-            priority: import(".prisma/client").$Enums.NotificationPriority;
             read: boolean;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             readAt: Date | null;
@@ -96,9 +96,9 @@ export declare class PayrollService {
             employeeId: number;
             createdAt: Date;
             updatedAt: Date;
+            status: import(".prisma/client").$Enums.IncidenceStatus;
             type: import(".prisma/client").$Enums.IncidenceType;
             date: Date;
-            status: import(".prisma/client").$Enums.IncidenceStatus;
             quantity: import("@prisma/client/runtime/library").Decimal;
             amount: import("@prisma/client/runtime/library").Decimal | null;
             description: string | null;
@@ -109,9 +109,9 @@ export declare class PayrollService {
             companyId: number | null;
             createdAt: Date;
             type: import(".prisma/client").$Enums.NotificationType;
+            priority: import(".prisma/client").$Enums.NotificationPriority;
             payrollId: number | null;
             title: string;
-            priority: import(".prisma/client").$Enums.NotificationPriority;
             read: boolean;
             metadata: import("@prisma/client/runtime/library").JsonValue | null;
             readAt: Date | null;

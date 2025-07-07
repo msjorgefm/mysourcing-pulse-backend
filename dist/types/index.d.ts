@@ -4,6 +4,7 @@ export interface User {
     name: string;
     role: 'OPERATOR' | 'CLIENT' | 'EMPLOYEE' | 'ADMIN';
     companyId?: number;
+    companyName?: string;
     employeeId?: number;
     isActive: boolean;
 }

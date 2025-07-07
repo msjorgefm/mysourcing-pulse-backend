@@ -4,6 +4,8 @@ export interface User {
     name: string;
     role: UserRole;
     companyId?: number;
+    companyName?: string;
+    employeeId?: number;
     isActive: boolean;
     lastLogin?: Date;
     createdAt: Date;

@@ -21,6 +21,10 @@ model User {
   email       String   @unique
   password    String
   name        String
+  firstName   String?
+  lastName    String?
+  phone       String?
+  photoUrl    String?
   role        UserRole
   isActive    Boolean  @default(true)
   
@@ -66,6 +70,7 @@ model InvitationToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
   usedAt    DateTime?
+  metadata  Json?    // Para almacenar información adicional como rol y departamento
   
   @@index([token, used])
   @@map("invitation_tokens")
@@ -75,6 +80,7 @@ enum UserRole {
   OPERATOR
   CLIENT
   EMPLOYEE
+  DEPARTMENT_HEAD
   ADMIN
 }
 

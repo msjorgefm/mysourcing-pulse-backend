@@ -59,9 +59,9 @@ export declare class EmployeeService {
             employeeId: number;
             createdAt: Date;
             updatedAt: Date;
+            status: import(".prisma/client").$Enums.IncidenceStatus;
             type: import(".prisma/client").$Enums.IncidenceType;
             date: Date;
-            status: import(".prisma/client").$Enums.IncidenceStatus;
             quantity: import("@prisma/client/runtime/library").Decimal;
             amount: import("@prisma/client/runtime/library").Decimal | null;
             description: string | null;

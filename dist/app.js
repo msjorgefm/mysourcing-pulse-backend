@@ -23,9 +23,13 @@ const payrolls_1 = __importDefault(require("./routes/payrolls"));
 const calendars_1 = __importDefault(require("./routes/calendars"));
 const incidences_1 = __importDefault(require("./routes/incidences"));
 const notifications_1 = __importDefault(require("./routes/notifications"));
+const onboardingRoutes_1 = __importDefault(require("./routes/onboardingRoutes"));
+const testRoutes_1 = __importDefault(require("./routes/testRoutes"));
 const upload_1 = __importDefault(require("./routes/upload"));
 const catalogs_1 = __importDefault(require("./routes/catalogs"));
 const companyWizard_1 = __importDefault(require("./routes/companyWizard"));
+const postalCodeRoutes_1 = __importDefault(require("./routes/postalCodeRoutes"));
+const stateRoutes_1 = __importDefault(require("./routes/stateRoutes"));
 // Cargar variables de entorno
 dotenv_1.default.config();
 // Crear aplicación Express
@@ -104,6 +108,16 @@ app.get('/health', (req, res) => {
         version: process.env.npm_package_version || '1.0.0'
     });
 });
+// API Health check
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+        version: process.env.npm_package_version || '1.0.0'
+    });
+});
 // API routes
 app.use('/api/auth', auth_1.default);
 app.use('/api/companies', companies_1.default);
@@ -112,9 +126,16 @@ app.use('/api/payrolls', payrolls_1.default);
 app.use('/api/calendars', calendars_1.default);
 app.use('/api/incidences', incidences_1.default);
 app.use('/api/notifications', notifications_1.default);
-app.use('/api', upload_1.default);
-app.use('/api', catalogs_1.default);
-app.use('/api', companyWizard_1.default);
+app.use('/api/onboarding', onboardingRoutes_1.default);
+app.use('/api/upload', upload_1.default);
+app.use('/api/catalogs', catalogs_1.default);
+app.use('/api/company-wizard', companyWizard_1.default);
+app.use('/api/postal-codes', postalCodeRoutes_1.default);
+app.use('/api/states', stateRoutes_1.default);
+// Rutas de prueba (solo en desarrollo)
+if (process.env.NODE_ENV === 'development') {
+    app.use('/api/test', testRoutes_1.default);
+}
 // ================================
 // SOCKET.IO PARA TIEMPO REAL
 // ================================
