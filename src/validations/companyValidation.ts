@@ -7,9 +7,7 @@ export const createCompanyValidation = Joi.object({
   address: Joi.string().min(10).max(500).required(),
   email: Joi.string().email().required(),
   phone: Joi.string().pattern(/^[0-9\-\+\(\)\s]+$/).optional(),
-  status: Joi.string().valid('En Configuración', 'Configurada', 'Activa', 'Inactiva').optional(),
-  paymentMethod: Joi.string().max(100).optional(),
-  bankAccount: Joi.string().max(100).optional()
+  status: Joi.string().valid('En Configuración', 'Configurada', 'Activa', 'Inactiva').optional()
 });
 
 export const updateCompanyValidation = Joi.object({
@@ -19,7 +17,5 @@ export const updateCompanyValidation = Joi.object({
   address: Joi.string().min(10).max(500).optional(),
   email: Joi.string().email().optional(),
   phone: Joi.string().pattern(/^[0-9\-\+\(\)\s]+$/).optional(),
-  status: Joi.string().valid('En Configuración', 'Configurada', 'Activa', 'Inactiva').optional(),
-  paymentMethod: Joi.string().max(100).optional(),
-  bankAccount: Joi.string().max(100).optional()
+  status: Joi.string().valid('En Configuración', 'Configurada', 'Activa', 'Inactiva').optional()
 });

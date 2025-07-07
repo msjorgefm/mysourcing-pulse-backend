@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { PostalCodeService } from './postalCodeService';
 
 const prisma = new PrismaClient();
 
@@ -303,6 +304,17 @@ export class CompanyWizardService {
     }
     // Paso 2: Domicilio
     else if (stepNumber === 2) {
+      // Verificar si el código postal existe, si no, crearlo
+      if (stepData.zipCode && stepData.neighborhood && stepData.city && stepData.state) {
+        await PostalCodeService.createPostalCodeIfNotExists({
+          postalCode: stepData.zipCode,
+          neighborhood: stepData.neighborhood,
+          city: stepData.city,
+          state: stepData.state,
+          municipality: stepData.municipio
+        });
+      }
+
       const existingAddress = await prisma.companyAddress.findUnique({
         where: { companyId }
       });
@@ -329,10 +341,11 @@ export class CompanyWizardService {
 
       // Mapear los campos del frontend a los campos de la base de datos
       const mappedData = {
-        name: stepData.legalRepName,
-        rfc: stepData.legalRepRFC,
-        curp: stepData.legalRepCurp || null,
-        position: stepData.legalRepPosition
+        name: stepData.name || stepData.legalRepName || '',
+        primerApellido: stepData.primerApellido || null,
+        segundoApellido: stepData.segundoApellido || null,
+        tipoIdentificacionId: stepData.tipoIdentificacion ? parseInt(stepData.tipoIdentificacion) : null,
+        uriIdentificacion: stepData.uriIdentificacion || null
       };
 
       if (existingRep) {
@@ -349,19 +362,34 @@ export class CompanyWizardService {
         });
       }
     }
-    // Paso 4: Poder Notarial (actualizar el representante legal existente)
+    // Paso 4: Poder Notarial
     else if (stepNumber === 4) {
-      const existingRep = await prisma.companyLegalRepresentative.findUnique({
+      const existingPower = await prisma.companyNotarialPower.findUnique({
         where: { companyId }
       });
 
-      if (existingRep) {
-        await prisma.companyLegalRepresentative.update({
+      // Mapear los datos del frontend
+      const mappedData = {
+        folioPoderNotarial: stepData.folioPoderNotarial || '',
+        fechaEmision: stepData.fechaEmision ? new Date(stepData.fechaEmision) : new Date(),
+        fechaVigencia: stepData.fechaVigencia ? new Date(stepData.fechaVigencia) : new Date(),
+        nombreFederatario: stepData.nombreFederatario || '',
+        numeroFederatario: stepData.numeroFederatario ? parseInt(stepData.numeroFederatario) : 0,
+        estadoId: stepData.estado ? parseInt(stepData.estado) : 1,
+        municipioId: stepData.municipio ? parseInt(stepData.municipio) : 1,
+        uriPoderNotarial: stepData.uriPoderNotarial || null
+      };
+
+      if (existingPower) {
+        await prisma.companyNotarialPower.update({
           where: { companyId },
+          data: mappedData
+        });
+      } else {
+        await prisma.companyNotarialPower.create({
           data: {
-            notarialPower: stepData.notarialPower || null,
-            notaryNumber: stepData.notaryNumber || null,
-            notaryName: stepData.notaryName || null
+            companyId,
+            ...mappedData
           }
         });
       }
@@ -369,22 +397,109 @@ export class CompanyWizardService {
   }
 
   static async processTaxObligationsData(companyId: number, stepNumber: number, stepData: any) {
-    const existingInfo = await prisma.companyTaxObligations.findUnique({
-      where: { companyId }
-    });
+    // Paso 1: IMSS Registro Patronal
+    if (stepNumber === 1) {
+      const existingRegistro = await (prisma as any).iMSSRegistroPatronal.findUnique({
+        where: { companyId }
+      });
 
-    if (existingInfo) {
-      await prisma.companyTaxObligations.update({
-        where: { companyId },
-        data: stepData
+      // Mapear los datos del frontend
+      const mappedData = {
+        nomDomicilio: stepData.nomDomicilio || null,
+        actividadEconomica: stepData.actividadEconomica || null,
+        clvRegistroPatronal: stepData.clvRegistroPatronal || null,
+        claseRiesgoId: stepData.claseRiesgoId ? parseInt(stepData.claseRiesgoId) : null,
+        numFraccion: stepData.numFraccion ? parseInt(stepData.numFraccion) : null,
+        numPrismaRiesgo: stepData.numPrismaRiesgo ? parseFloat(stepData.numPrismaRiesgo) : null,
+        fechaVigencia: stepData.fechaVigencia ? new Date(stepData.fechaVigencia) : null,
+        uriRegistroPatronal: stepData.uriRegistroPatronal || null
+      };
+
+      if (existingRegistro) {
+        await (prisma as any).iMSSRegistroPatronal.update({
+          where: { companyId },
+          data: mappedData
+        });
+      } else {
+        await (prisma as any).iMSSRegistroPatronal.create({
+          data: {
+            companyId,
+            ...mappedData
+          }
+        });
+      }
+    }
+    // Paso 2: IMSS Domicilio
+    else if (stepNumber === 2) {
+      // Primero verificar que existe el registro patronal
+      const registroPatronal = await (prisma as any).iMSSRegistroPatronal.findUnique({
+        where: { companyId }
       });
-    } else {
-      await prisma.companyTaxObligations.create({
-        data: {
-          companyId,
-          ...stepData
-        }
+
+      if (!registroPatronal) {
+        throw new Error('Debe completar primero el registro patronal IMSS');
+      }
+
+      // Buscar si ya existe el domicilio IMSS
+      const existingDomicilio = await (prisma as any).iMSSDomicilio.findUnique({
+        where: { imssRegistroPatronalId: registroPatronal.id }
       });
+
+      // Mapear los datos del frontend
+      const mappedData = {
+        usarDomicilioMatriz: stepData.usarDomicilioMatriz || false,
+        codigoPostal: stepData.codigoPostal || null,
+        entidadFederativaCode: stepData.entidadFederativaCode || null,
+        municipioCode: stepData.municipioCode || null,
+        localidad: stepData.localidad || null,
+        coloniaId: stepData.coloniaId ? parseInt(stepData.coloniaId) : null,
+        delegacionId: stepData.delegacionId ? parseInt(stepData.delegacionId) : null,
+        subdelegacionId: stepData.subdelegacionId ? parseInt(stepData.subdelegacionId) : null,
+        calle: stepData.calle || null,
+        numeroExterior: stepData.numeroExterior || null,
+        origenMovimientoId: stepData.origenMovimientoId ? parseInt(stepData.origenMovimientoId) : null
+      };
+
+      if (existingDomicilio) {
+        await (prisma as any).iMSSDomicilio.update({
+          where: { id: existingDomicilio.id },
+          data: mappedData
+        });
+      } else {
+        await (prisma as any).iMSSDomicilio.create({
+          data: {
+            imssRegistroPatronalId: registroPatronal.id,
+            ...mappedData
+          }
+        });
+      }
+    }
+    // Paso 3: FONACOT
+    else if (stepNumber === 3) {
+      const existingInfo = await prisma.fonacot.findUnique({
+        where: { companyId }
+      });
+
+      // Mapear solo los campos de FONACOT
+      const mappedData = {
+        registroPatronal: stepData.registroPatronal || null,
+        fechaAfiliacion: stepData.fechaAfiliacion ? new Date(stepData.fechaAfiliacion) : null,
+        uriArchivoFonacot: stepData.uriArchivoFonacot || null
+      };
+
+      if (existingInfo) {
+        await prisma.fonacot.update({
+          where: { companyId },
+          data: mappedData
+        });
+      } else {
+        await prisma.fonacot.create({
+          data: {
+            companyId,
+            ...mappedData
+          }
+        });
+      }
     }
   }
 
@@ -423,16 +538,25 @@ export class CompanyWizardService {
       where: { companyId }
     });
 
+    // Asegurarse de que las fechas están en formato ISO-8601
+    const certificateData = {
+      certificateFile: stepData.certificateFile || '',
+      keyFile: stepData.keyFile || '',
+      password: stepData.password || '',
+      validFrom: stepData.validFrom ? new Date(stepData.validFrom) : new Date(),
+      validUntil: stepData.validUntil ? new Date(stepData.validUntil) : new Date()
+    };
+
     if (existingCert) {
       await prisma.companyDigitalCertificate.update({
         where: { companyId },
-        data: stepData
+        data: certificateData
       });
     } else {
       await prisma.companyDigitalCertificate.create({
         data: {
           companyId,
-          ...stepData
+          ...certificateData
         }
       });
     }

@@ -18,6 +18,9 @@ COPY prisma ./prisma/
 # Instalar dependencias
 RUN npm ci --only=production && npm cache clean --force
 
+# Instalar multer explícitamente
+RUN npm install multer@2.0.1 --save
+
 # Copiar código fuente
 COPY --chown=mysourcing:nodejs . .
 
@@ -28,7 +31,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Crear directorios necesarios
-RUN mkdir -p logs && chown -R mysourcing:nodejs logs
+RUN mkdir -p logs uploads/certificates && chown -R mysourcing:nodejs logs uploads
 
 # Cambiar a usuario no root
 USER mysourcing

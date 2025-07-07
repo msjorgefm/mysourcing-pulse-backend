@@ -3,3 +3,13 @@ node_modules
 .env
 
 /generated/prisma
+
+# Uploaded files
+/resources/
+
+# Carpetas de build
+/dist/
+/build/
+
+# Logs
+*.log

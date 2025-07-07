@@ -88,16 +88,6 @@ model Company {
   status        CompanyStatus @default(IN_SETUP)
   employeesCount Int     @default(0)
   
-  // Configuración de nómina
-  paymentMethod String?
-  bankAccount   String?
-  taxRegime     String?
-  
-  // Configuración del SAT
-  certificateFile String?
-  keyFile         String?
-  certificatePassword String?
-  
   // Relaciones
   users         User[]
   employees     Employee[]
