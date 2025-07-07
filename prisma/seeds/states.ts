@@ -42,15 +42,29 @@ export async function seedStates() {
   console.log('🌱 Seeding states...');
   
   try {
-    // Limpiar tabla existente
-    await prisma.state.deleteMany();
+    // Usar upsert para evitar problemas con claves foráneas
+    for (const state of statesData) {
+      await prisma.state.upsert({
+        where: { code: state.code },
+        update: {
+          name: state.name,
+          abbreviation: state.abbreviation
+        },
+        create: state
+      });
+    }
     
-    // Insertar nuevos datos
+    console.log('✅ States seeded successfully!');
+    return;
+    
+    // Código anterior comentado para referencia
+    /*
     const result = await prisma.state.createMany({
       data: statesData
     });
     
     console.log(`✅ Created ${result.count} states`);
+    */
   } catch (error) {
     console.error('❌ Error seeding states:', error);
     throw error;

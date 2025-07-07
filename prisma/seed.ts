@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { seedPostalCodes } from './seeds/postalCodes';
 import { seedStates } from './seeds/states';
+import { seedLocations } from './seeds/locations';
+import { seedImssRiskClasses } from './seeders/imssRiskClass';
 
 const prisma = new PrismaClient();
 
@@ -84,11 +86,37 @@ async function main() {
   // Primero, seed de los catálogos
   await seedCatalogs();
   
+  // Seed de tipos de identificación
+  console.log('🆔 Seeding identification types...');
+  const identificationTypes = [
+    { code: 'INE', nombre: 'INE (Instituto Nacional Electoral)' },
+    { code: 'PASAPORTE', nombre: 'Pasaporte' },
+    { code: 'CEDULA', nombre: 'Cédula Profesional' },
+    { code: 'LICENCIA', nombre: 'Licencia de Conducir' },
+    { code: 'CARTILLA', nombre: 'Cartilla del Servicio Militar' },
+    { code: 'FM3', nombre: 'Forma Migratoria (FM3)' },
+    { code: 'RESIDENCIA', nombre: 'Tarjeta de Residencia' },
+  ];
+
+  for (const idType of identificationTypes) {
+    await prisma.identificationType.upsert({
+      where: { code: idType.code },
+      update: { nombre: idType.nombre },
+      create: idType,
+    });
+  }
+  
   // Seed de estados
   await seedStates();
   
+  // Seed de locations (municipios, ciudades, colonias)
+  await seedLocations();
+  
   // Seed de códigos postales
   await seedPostalCodes();
+  
+  // Seed de clases de riesgo IMSS
+  await seedImssRiskClasses();
 
   // Crear usuarios
   const operatorPassword = await bcrypt.hash('operator123', 12);
@@ -194,7 +222,7 @@ async function main() {
   ]);
 
   // Crear empleados para TechCorp
-  const employees = [];
+  const employees: any[] = [];
   for (let i = 1; i <= 45; i++) {
     const employeeNumber = `TC${i.toString().padStart(3, '0')}`;
     const employee = await prisma.employee.upsert({
@@ -276,7 +304,8 @@ async function main() {
           steps = [
             { stepNumber: 1, stepName: 'Información General', isOptional: false },
             { stepNumber: 2, stepName: 'Domicilio', isOptional: false },
-            { stepNumber: 3, stepName: 'Representante Legal', isOptional: false }
+            { stepNumber: 3, stepName: 'Representante Legal', isOptional: false },
+            { stepNumber: 4, stepName: 'Poder Notarial', isOptional: false }
           ];
           break;
         case 2:
@@ -365,6 +394,8 @@ async function main() {
       await prisma.companyAddress.upsert({
         where: { companyId: company.id },
         update: {
+          tipoDomicilio: 'matriz',
+          nombreSucursal: 'Oficina Central',
           street: 'Av. Reforma',
           exteriorNumber: '123',
           interiorNumber: 'Piso 5',
@@ -372,10 +403,12 @@ async function main() {
           city: 'Ciudad de México',
           state: 'CMX',
           zipCode: '06000',
-          country: 'México'
+          municipio: 'Cuauhtémoc'
         },
         create: {
           companyId: company.id,
+          tipoDomicilio: 'matriz',
+          nombreSucursal: 'Oficina Central',
           street: 'Av. Reforma',
           exteriorNumber: '123',
           interiorNumber: 'Piso 5',
@@ -383,59 +416,119 @@ async function main() {
           city: 'Ciudad de México',
           state: 'CMX',
           zipCode: '06000',
-          country: 'México'
+          municipio: 'Cuauhtémoc'
         }
       });
 
       // Paso 3: Representante Legal
+      // Primero buscar un tipo de identificación
+      const tipoIdentificacion = await prisma.identificationType.findFirst({
+        where: { code: 'INE' }
+      });
+
+      // Buscar un estado para el poder notarial
+      const estadoCDMX = await prisma.state.findFirst({
+        where: { code: 'CMX' }
+      });
+      
+      // Buscar un municipio de CDMX
+      const municipioCuauhtemoc = estadoCDMX ? await prisma.municipio.findFirst({
+        where: { 
+          stateCode: estadoCDMX.code,
+          name: { contains: 'Cuauhtémoc' }
+        }
+      }) : null;
+
       await prisma.companyLegalRepresentative.upsert({
         where: { companyId: company.id },
         update: {
-          name: 'Roberto Hernández López',
-          rfc: 'HELR850215HDF',
-          curp: 'HELR850215HDFLPR08',
-          position: 'Representante Legal',
-          notarialPower: 'Escritura Pública No. 12345',
-          notaryNumber: '45',
-          notaryName: 'Lic. María González'
+          name: 'Roberto',
+          primerApellido: 'Hernández',
+          segundoApellido: 'López',
+          tipoIdentificacionId: tipoIdentificacion?.id || null,
+          uriIdentificacion: null
         },
         create: {
           companyId: company.id,
-          name: 'Roberto Hernández López',
-          rfc: 'HELR850215HDF',
-          curp: 'HELR850215HDFLPR08',
-          position: 'Representante Legal',
-          notarialPower: 'Escritura Pública No. 12345',
-          notaryNumber: '45',
-          notaryName: 'Lic. María González'
+          name: 'Roberto',
+          primerApellido: 'Hernández',
+          segundoApellido: 'López',
+          tipoIdentificacionId: tipoIdentificacion?.id || null,
+          uriIdentificacion: null
         }
       });
 
+      // Paso 4: Poder Notarial
+      if (estadoCDMX && municipioCuauhtemoc) {
+        await prisma.companyNotarialPower.upsert({
+          where: { companyId: company.id },
+          update: {
+            folioPoderNotarial: 'NOT-2024-12345',
+            fechaEmision: new Date('2024-01-15'),
+            fechaVigencia: new Date('2029-01-15'),
+            nombreFederatario: 'Lic. Juan Carlos Martínez Sánchez',
+            numeroFederatario: 157,
+            estadoId: estadoCDMX.id,
+            municipioId: municipioCuauhtemoc.id,
+            uriPoderNotarial: null
+          },
+          create: {
+            companyId: company.id,
+            folioPoderNotarial: 'NOT-2024-12345',
+            fechaEmision: new Date('2024-01-15'),
+            fechaVigencia: new Date('2029-01-15'),
+            nombreFederatario: 'Lic. Juan Carlos Martínez Sánchez',
+            numeroFederatario: 157,
+            estadoId: estadoCDMX.id,
+            municipioId: municipioCuauhtemoc.id,
+            uriPoderNotarial: null
+          }
+        });
+      }
+
       // Obligaciones patronales
-      await prisma.companyTaxObligations.upsert({
+      // Buscar clase de riesgo III
+      const claseRiesgoIMSS = await prisma.claseRiesgoIMSS.findFirst({
+        where: { codigo: 'III' }
+      });
+
+      // Crear o actualizar IMSS Registro Patronal
+      await prisma.iMSSRegistroPatronal.upsert({
         where: { companyId: company.id },
         update: {
-          imssRegistration: 'Y12-34567-89-0',
-          imssClassification: 'Clase III',
-          imssRiskClass: '3.54',
-          imssAddress: 'Av. Reforma 123',
-          imssCity: 'Ciudad de México',
-          imssState: 'CDMX',
-          imssZipCode: '06000',
-          fonacotRegistration: 'FON123456',
-          fonacotCenter: 'Centro CDMX'
+          clvRegistroPatronal: 'Y1234567890',
+          actividadEconomica: '54',
+          claseRiesgoId: claseRiesgoIMSS?.id,
+          numFraccion: 1,
+          numPrismaRiesgo: 3.54,
+          fechaVigencia: new Date('2025-12-31'),
+          nomDomicilio: 'Av. Reforma 123, Col. Centro, CDMX'
         },
         create: {
           companyId: company.id,
-          imssRegistration: 'Y12-34567-89-0',
-          imssClassification: 'Clase III',
-          imssRiskClass: '3.54',
-          imssAddress: 'Av. Reforma 123',
-          imssCity: 'Ciudad de México',
-          imssState: 'CDMX',
-          imssZipCode: '06000',
-          fonacotRegistration: 'FON123456',
-          fonacotCenter: 'Centro CDMX'
+          clvRegistroPatronal: 'Y1234567890',
+          actividadEconomica: '54',
+          claseRiesgoId: claseRiesgoIMSS?.id,
+          numFraccion: 1,
+          numPrismaRiesgo: 3.54,
+          fechaVigencia: new Date('2025-12-31'),
+          nomDomicilio: 'Av. Reforma 123, Col. Centro, CDMX'
+        }
+      });
+
+      // Crear o actualizar FONACOT
+      await prisma.fonacot.upsert({
+        where: { companyId: company.id },
+        update: {
+          registroPatronal: 'FON1234',
+          fechaAfiliacion: new Date('2024-01-15'),
+          uriArchivoFonacot: null
+        },
+        create: {
+          companyId: company.id,
+          registroPatronal: 'FON1234',
+          fechaAfiliacion: new Date('2024-01-15'),
+          uriArchivoFonacot: null
         }
       });
 
@@ -684,6 +777,8 @@ async function main() {
       });
     }
   }
+
+  await seedCatalogs();
 
   console.log('✅ Seed completado exitosamente');
   console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${employees.length} empleados`);
