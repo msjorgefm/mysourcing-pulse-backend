@@ -10,8 +10,6 @@ export interface CreateCompanyRequest {
   email: string;
   phone?: string;
   status?: string;
-  paymentMethod?: string;
-  bankAccount?: string;
 }
 
 export interface UpdateCompanyRequest extends Partial<CreateCompanyRequest> {
@@ -65,8 +63,6 @@ export class CompanyService {
       payrollsCount: company._count.payrolls,
       incidencesCount: company._count.incidences,
       calendarsCount: company.calendars.length,
-      paymentMethod: company.paymentMethod,
-      bankAccount: company.bankAccount,
       recentPayrolls: company.payrolls,
       activeCalendars: company.calendars,
       createdAt: company.createdAt,
@@ -116,8 +112,6 @@ export class CompanyService {
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
       employeesCount: (company as any)._count?.employees || 0,
-      paymentMethod: company.paymentMethod,
-      bankAccount: company.bankAccount,
       ...(includeDetails && {
         employees: (company as any).employees || [],
         payrolls: (company as any).payrolls || [],
@@ -147,8 +141,6 @@ export class CompanyService {
         email: data.email,
         phone: data.phone,
         status: (data.status ? this.mapStatusFromFrontend(data.status) : 'IN_SETUP') as any,
-        paymentMethod: data.paymentMethod,
-        bankAccount: data.bankAccount,
         employeesCount: 0
       }
     });
@@ -211,8 +203,6 @@ export class CompanyService {
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
       employeesCount: company.employeesCount,
-      paymentMethod: company.paymentMethod,
-      bankAccount: company.bankAccount,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     };
