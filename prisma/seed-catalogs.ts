@@ -1,4 +1,7 @@
 import { PrismaClient } from '@prisma/client';
+import { seedIMSSOrigenMovimiento } from './seeders/imssOrigenMovimiento';
+import { seedIMSSDelegaciones } from './seeders/imssDelegaciones';
+import { seedIMSSSubdelegaciones } from './seeders/imssSubdelegaciones';
 
 const prisma = new PrismaClient();
 
@@ -69,6 +72,30 @@ async function seedCatalogs() {
       create: activity,
     });
   }
+
+  // Seed Identification Types
+  const identificationTypes = [
+    { code: 'INE', nombre: 'INE (Instituto Nacional Electoral)' },
+    { code: 'PASAPORTE', nombre: 'Pasaporte' },
+    { code: 'CEDULA', nombre: 'Cédula Profesional' },
+    { code: 'LICENCIA', nombre: 'Licencia de Conducir' },
+    { code: 'CARTILLA', nombre: 'Cartilla del Servicio Militar' },
+    { code: 'FM3', nombre: 'Forma Migratoria (FM3)' },
+    { code: 'RESIDENCIA', nombre: 'Tarjeta de Residencia' },
+  ];
+
+  for (const idType of identificationTypes) {
+    await prisma.identificationType.upsert({
+      where: { code: idType.code },
+      update: {},
+      create: idType,
+    });
+  }
+
+  // Seed IMSS Catalogs
+  await seedIMSSOrigenMovimiento();
+  await seedIMSSDelegaciones();
+  await seedIMSSSubdelegaciones();
 
   console.log('Catalogs seeded successfully!');
 }

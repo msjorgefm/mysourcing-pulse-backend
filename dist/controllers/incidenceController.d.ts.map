@@ -1,1 +1,0 @@
-{"version":3,"file":"incidenceController.d.ts","sourceRoot":"","sources":["../../src/controllers/incidenceController.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAQ5C,eAAO,MAAM,mBAAmB;0BAEF,OAAO,OAAO,QAAQ;+BAyBjB,OAAO,OAAO,QAAQ;yBAkC5B,OAAO,OAAO,QAAQ;yBA8DtB,OAAO,OAAO,QAAQ;yBAwDtB,OAAO,OAAO,QAAQ;2BAsBpB,OAAO,OAAO,QAAQ;CAgCpD,CAAC"}

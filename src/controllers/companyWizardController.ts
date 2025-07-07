@@ -175,25 +175,56 @@ export class CompanyWizardController {
           let mappedLegalRep = null;
           if (legalRep) {
             mappedLegalRep = {
-              legalRepName: legalRep.name,
-              legalRepRFC: legalRep.rfc,
-              legalRepCurp: legalRep.curp,
-              legalRepPosition: legalRep.position,
-              notarialPower: legalRep.notarialPower,
-              notaryNumber: legalRep.notaryNumber,
-              notaryName: legalRep.notaryName
+              name: legalRep.name,
+              legalRepName: legalRep.name, // Para compatibilidad con frontend
+              primerApellido: legalRep.primerApellido,
+              segundoApellido: legalRep.segundoApellido,
+              tipoIdentificacion: legalRep.tipoIdentificacionId,
+              uriIdentificacion: legalRep.uriIdentificacion
+            };
+          }
+          
+          // Obtener el poder notarial si existe
+          const notarialPower = await prisma.companyNotarialPower.findUnique({ where: { companyId } });
+          let mappedNotarialPower = null;
+          if (notarialPower) {
+            mappedNotarialPower = {
+              folioPoderNotarial: notarialPower.folioPoderNotarial,
+              fechaEmision: notarialPower.fechaEmision,
+              fechaVigencia: notarialPower.fechaVigencia,
+              nombreFederatario: notarialPower.nombreFederatario,
+              numeroFederatario: notarialPower.numeroFederatario,
+              estado: notarialPower.estadoId,
+              municipio: notarialPower.municipioId,
+              uriPoderNotarial: notarialPower.uriPoderNotarial
             };
           }
           
           return {
             generalInfo,
             address,
-            legalRepresentative: mappedLegalRep
+            legalRepresentative: mappedLegalRep,
+            notarialPower: mappedNotarialPower
           };
         case 2: // Obligaciones Patronales
-          return await prisma.companyTaxObligations.findUnique({
+          const fonacot = await prisma.fonacot.findUnique({
             where: { companyId }
           });
+          
+          const imssRegistro = await prisma.iMSSRegistroPatronal.findUnique({
+            where: { companyId }
+          });
+
+          const imssRegistroPatronalId = imssRegistro?.id;
+          const imssDomicilio = imssRegistroPatronalId 
+            ? await prisma.iMSSDomicilio.findUnique({ where: { imssRegistroPatronalId } })
+            : null;
+          
+          return {
+            fonacot,
+            imssRegistro,
+            imssDomicilio
+          };
         case 3: // Bancos
           const banks = await prisma.companyBank.findMany({
             where: { companyId }
