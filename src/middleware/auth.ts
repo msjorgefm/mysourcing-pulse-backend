@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { User } from '../types';
 
-const prisma = new PrismaClient();
-
 interface AuthRequest extends Request {
   user?: User;
 }
@@ -26,30 +24,35 @@ export const authenticate: RequestHandler = async (req: AuthRequest, res: Respon
 
     const decoded = jwt.verify(token, secret) as any;
     
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      include: {
-        company: true,
-        employee: true
+    const prisma = new PrismaClient();
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        include: {
+          company: true,
+          employee: true
+        }
+      });
+      
+      if (!user || !user.isActive) {
+         res.status(401).json({ error: 'Invalid or inactive user' });
+         return;
       }
-    });
-    
-    if (!user || !user.isActive) {
-       res.status(401).json({ error: 'Invalid or inactive user' });
-       return;
+      
+      req.user = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role as any,
+        companyId: user.companyId || undefined,
+        employeeId: user.employeeId || undefined,
+        isActive: user.isActive
+      };
+      
+      next();
+    } finally {
+      await prisma.$disconnect();
     }
-    
-    req.user = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role as any,
-      companyId: user.companyId || undefined,
-      employeeId: user.employeeId || undefined,
-      isActive: user.isActive
-    };
-    
-    next();
   } catch (error) {
     console.error('Authentication error:', error);
      res.status(401).json({ error: 'Invalid token' });

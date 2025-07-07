@@ -1,0 +1,29 @@
+# Imagen base para desarrollo
+FROM node:18-alpine
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache dumb-init
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar TODAS las dependencias (incluidas las de desarrollo)
+RUN npm ci && npm cache clean --force
+
+# Generar Prisma client
+RUN npx prisma generate
+
+# Exponer puerto
+EXPOSE 3001
+
+# Configurar variables de entorno por defecto
+ENV NODE_ENV=development
+ENV PORT=3001
+
+# Comando por defecto usando dumb-init
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["npm", "run", "dev"]

@@ -221,6 +221,7 @@ const startServer = async () => {
     console.log('✅ Conexión a base de datos establecida');
     
     // Iniciar servidor
+    console.log('🔄 Iniciando servidor en puerto', PORT);
     server.listen(PORT, () => {
       console.log(`
         🚀 Servidor iniciado correctamente
@@ -253,6 +254,7 @@ const startServer = async () => {
     
   } catch (error) {
     console.error('❌ Error al iniciar servidor:', error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
     process.exit(1);
   }
 };

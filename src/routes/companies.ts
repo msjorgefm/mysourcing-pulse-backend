@@ -2,9 +2,6 @@ import express from 'express';
 import { CompanyController } from '../controllers/companyController';
 import { authenticate, authorize } from '../middleware/auth';
 import { CompanyWizardController } from '../controllers/companyWizardController';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 const router = express.Router();
 
@@ -108,19 +105,43 @@ router.post('/:companyId/invite-department-head', authenticate, async (req, res)
     const { email, departmentId } = req.body;
     
     // Verificar que el usuario tenga permisos
-    const userId = (req as any).userId;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { company: true }
-    });
+    const userId = (req as any).user?.id;
+    const { PrismaClient } = await import('@prisma/client');
+    const prisma = new PrismaClient();
     
-    if (!user || user.companyId !== parseInt(companyId) || user.role !== 'OPERATOR') {
-      res.status(403).json({ error: 'No tienes permisos para realizar esta acción' });
-      return;
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: { company: true }
+      });
+      
+      console.log('Permission check debug:', {
+        userId,
+        userFound: !!user,
+        userCompanyId: user?.companyId,
+        requestedCompanyId: parseInt(companyId),
+        userRole: user?.role,
+        companyMatch: user?.companyId === parseInt(companyId),
+        isOperator: user?.role === 'OPERATOR'
+      });
+      
+      // Allow OPERATOR users (system admins) or users who are OPERATOR for the specific company
+      if (!user || (user.role !== 'OPERATOR' && user.role !== 'ADMIN')) {
+        res.status(403).json({ error: 'No tienes permisos para realizar esta acción' });
+        return;
+      }
+      
+      // If user has a companyId, it must match the requested company
+      if (user.companyId && user.companyId !== parseInt(companyId)) {
+        res.status(403).json({ error: 'No tienes permisos para realizar esta acción en esta empresa' });
+        return;
+      }
+      
+      const result = await CompanyController.inviteDepartmentHead(parseInt(companyId), email, departmentId);
+      res.json(result);
+    } finally {
+      await prisma.$disconnect();
     }
-    
-    const result = await CompanyController.inviteDepartmentHead(parseInt(companyId), email, departmentId);
-    res.json(result);
   } catch (error) {
     console.error('Error inviting department head:', error);
     res.status(500).json({ error: 'Error al enviar la invitación' });

@@ -442,3 +442,51 @@ Socket wq7Po0QGDZn_W-gNAAAt se unió a user-1
 [0mGET /api/catalogs/tax-regimes [33m404[0m 16.512 ms - 141[0m
 [0mGET /api/companies/4/wizard/section/1/data [32m200[0m 36.968 ms - 119[0m
 [0mGET /api/companies/4/wizard/section/1/data [32m200[0m 30.287 ms - 119[0m
+[0mPOST /api/auth/logout [32m200[0m 22.738 ms - 31[0m
+Usuario desconectado: wq7Po0QGDZn_W-gNAAAt
+Usuario desconectado: 6G9OLzDDMB8xwkn6AAAr
+🔵 Login request received: carlos@mysourcing.mx
+🔵 Request headers: {
+  host: 'localhost:3001',
+  connection: 'keep-alive',
+  'content-length': '57',
+  pragma: 'no-cache',
+  'cache-control': 'no-cache',
+  'sec-ch-ua-platform': '"macOS"',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+  'content-type': 'application/json',
+  'sec-ch-ua-mobile': '?0',
+  accept: '*/*',
+  origin: 'http://localhost:3000',
+  'sec-fetch-site': 'same-site',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-dest': 'empty',
+  referer: 'http://localhost:3000/',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'es-419,es;q=0.9'
+}
+🔐 Login attempt for: carlos@mysourcing.mx
+✅ Login successful for: carlos@mysourcing.mx
+✅ Login response ready for: carlos@mysourcing.mx
+[0mPOST /api/auth/login [32m200[0m 277.996 ms - 487[0m
+Usuario conectado: 6NYA32HM8dhyco5tAAAv
+Socket 6NYA32HM8dhyco5tAAAv se unió a user-1
+[0mGET /api/incidences [32m200[0m 27.262 ms - 36[0m
+[0mGET /api/calendars [32m200[0m 32.012 ms - 916[0m
+[0mGET /api/notifications [32m200[0m 35.386 ms - 60[0m
+[0mGET /api/payrolls [32m200[0m 41.284 ms - 55[0m
+[0mGET /api/employees [32m200[0m 36.833 ms - -[0m
+[0mGET /api/companies [32m200[0m 46.128 ms - -[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 20.265 ms - -[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 23.383 ms - -[0m
+2025-07-06 22:08:17 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 9.063 ms - 141[0m
+2025-07-06 22:08:17 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 3.579 ms - 141[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 26.137 ms - 119[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 25.586 ms - 119[0m
+Usuario desconectado: 6NYA32HM8dhyco5tAAAv
+Usuario desconectado: CFxoN9JxUJEoFJsEAAAi
+🔄 Recibida señal SIGTERM, cerrando servidor...
+✅ Servidor cerrado correctamente
