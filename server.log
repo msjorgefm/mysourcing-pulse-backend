@@ -1,0 +1,492 @@
+
+> mysourcing-pulse-backend@1.0.0 dev
+> nodemon src/app.ts
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `ts-node src/app.ts`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/app.ts`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/app.ts`[39m
+[dotenv@17.0.1] injecting env (0) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+[dotenv@17.0.1] injecting env (0) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ Conexión a base de datos establecida
+
+        🚀 Servidor iniciado correctamente
+        📍 Entorno: development
+        🌐 URL: http://localhost:3001
+        📊 Health: http://localhost:3001/health
+        🔌 Socket.IO: Habilitado
+        📈 API: http://localhost:3001/api
+      
+Usuario conectado: 6Gio-MXZAnH01E_fAAAB
+Socket 6Gio-MXZAnH01E_fAAAB se unió a user-4
+Socket 6Gio-MXZAnH01E_fAAAB se unió a company-3
+Usuario conectado: KIgnPLduTGfKh476AAAD
+Socket KIgnPLduTGfKh476AAAD se unió a user-6
+Socket KIgnPLduTGfKh476AAAD se unió a company-8
+Usuario conectado: nWfkWydzqCZS1_15AAAF
+Usuario conectado: z3EmxNiygdqu-JptAAAH
+Socket z3EmxNiygdqu-JptAAAH se unió a user-1
+Socket z3EmxNiygdqu-JptAAAH se unió a user-1
+(node:98094) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Servidor SMTP listo para enviar correos
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `ts-node src/app.ts`[39m
+[dotenv@17.0.1] injecting env (0) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+[dotenv@17.0.1] injecting env (0) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ Conexión a base de datos establecida
+
+        🚀 Servidor iniciado correctamente
+        📍 Entorno: development
+        🌐 URL: http://localhost:3001
+        📊 Health: http://localhost:3001/health
+        🔌 Socket.IO: Habilitado
+        📈 API: http://localhost:3001/api
+      
+Usuario conectado: iyew45j-Ns4iiWC9AAAB
+Socket iyew45j-Ns4iiWC9AAAB se unió a user-1
+Usuario conectado: 6hZ4X_5008___VUrAAAD
+Socket 6hZ4X_5008___VUrAAAD se unió a user-4
+Socket 6hZ4X_5008___VUrAAAD se unió a company-3
+Usuario conectado: sOJUXWNXkT3xKqNjAAAF
+Socket iyew45j-Ns4iiWC9AAAB se unió a user-1
+Usuario conectado: -EAyoenQVNuU9txpAAAH
+Socket -EAyoenQVNuU9txpAAAH se unió a user-6
+Socket -EAyoenQVNuU9txpAAAH se unió a company-8
+(node:98207) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Servidor SMTP listo para enviar correos
+Usuario desconectado: -EAyoenQVNuU9txpAAAH
+Authentication error: TokenExpiredError: jwt expired
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:190:21
+    at getSecret (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:97:14)
+    at Object.module.exports [as verify] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:101:10)
+    at authenticate (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/middleware/auth.ts:27:25)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:295:15 {
+  expiredAt: 2025-07-06T21:39:01.000Z
+}
+[0mGET /api/auth/profile [33m401[0m 6.971 ms - 25[0m
+Authentication error: TokenExpiredError: jwt expired
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:190:21
+    at getSecret (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:97:14)
+    at Object.module.exports [as verify] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:101:10)
+    at authenticate (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/middleware/auth.ts:27:25)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:295:15 {
+  expiredAt: 2025-07-06T21:39:01.000Z
+}
+[0mGET /api/auth/profile [33m401[0m 1.020 ms - 25[0m
+[0mPOST /api/auth/refresh [32m200[0m 36.129 ms - 211[0m
+[0mGET /api/auth/profile [32m200[0m 15.915 ms - 144[0m
+[0mGET /api/auth/profile [36m304[0m 4.324 ms - -[0m
+Usuario conectado: hmuuj7iaNlRr39RIAAAJ
+Usuario conectado: GLDiLVdJXMtXxsg3AAAL
+Socket GLDiLVdJXMtXxsg3AAAL se unió a user-4
+Socket GLDiLVdJXMtXxsg3AAAL se unió a company-3
+Socket GLDiLVdJXMtXxsg3AAAL se unió a user-4
+Socket GLDiLVdJXMtXxsg3AAAL se unió a company-3
+[0mGET /api/incidences [36m304[0m 17.980 ms - -[0m
+[0mGET /api/notifications [36m304[0m 23.311 ms - -[0m
+[0mGET /api/calendars [36m304[0m 24.738 ms - -[0m
+[0mGET /api/incidences [36m304[0m 4.437 ms - -[0m
+[0mGET /api/employees [36m304[0m 30.242 ms - -[0m
+[0mGET /api/notifications [36m304[0m 8.597 ms - -[0m
+[0mGET /api/calendars [36m304[0m 3.511 ms - -[0m
+[0mGET /api/companies [36m304[0m 38.499 ms - -[0m
+[0mGET /api/payrolls [36m304[0m 36.974 ms - -[0m
+[0mGET /api/employees [36m304[0m 5.041 ms - -[0m
+[0mGET /api/payrolls [36m304[0m 4.629 ms - -[0m
+[0mGET /api/companies [36m304[0m 7.385 ms - -[0m
+[0mPOST /api/auth/logout [32m200[0m 10.806 ms - 31[0m
+Usuario desconectado: GLDiLVdJXMtXxsg3AAAL
+🔵 Login request received: carlos@mysourcing.mx
+🔵 Request headers: {
+  host: 'localhost:3001',
+  connection: 'keep-alive',
+  'content-length': '57',
+  'sec-ch-ua-platform': '"macOS"',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+  'content-type': 'application/json',
+  'sec-ch-ua-mobile': '?0',
+  accept: '*/*',
+  origin: 'http://localhost:3000',
+  'sec-fetch-site': 'same-site',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-dest': 'empty',
+  referer: 'http://localhost:3000/',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'es-419,es;q=0.9,en;q=0.8'
+}
+🔐 Login attempt for: carlos@mysourcing.mx
+✅ Login successful for: carlos@mysourcing.mx
+✅ Login response ready for: carlos@mysourcing.mx
+[0mPOST /api/auth/login [32m200[0m 251.708 ms - 487[0m
+Usuario conectado: 4rwT1xQgbFSw3lDbAAAN
+Socket 4rwT1xQgbFSw3lDbAAAN se unió a user-1
+[0mGET /api/incidences [36m304[0m 2.312 ms - -[0m
+[0mGET /api/calendars [36m304[0m 5.028 ms - -[0m
+[0mGET /api/payrolls [36m304[0m 6.719 ms - -[0m
+[0mGET /api/employees [36m304[0m 7.966 ms - -[0m
+[0mGET /api/companies [36m304[0m 10.046 ms - -[0m
+[0mGET /api/notifications [36m304[0m 13.640 ms - -[0m
+📧 Intentando enviar email a: admin@gmail.com
+📧 Asunto: Invitación para configurar tu cuenta en MySourcing Pulse
+✅ Email enviado exitosamente
+   Message ID: <a42536c2-bf55-5dea-1a02-6d7372dcd28d@mysourcing.com>
+   Response: 250 2.0.0 Ok: queued
+✅ Invitation sent to admin@gmail.com for company kuchumatan
+🔗 Link de invitación (desarrollo):
+   http://localhost:3000/setup-account?token=9989c5cfa5c3d159495778c930272f970aeb95c2436545ac3da25815f56728aa
+   Token expira en: 48 horas
+[0mPOST /api/companies [32m201[0m 14265.206 ms - 336[0m
+Wizard no encontrado para empresa 4, creando uno nuevo...
+Wizard no encontrado para empresa 4, creando uno nuevo...
+Error initializing wizard: PrismaClientKnownRequestError: 
+Invalid `prisma.companyWizard.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:20:49
+
+  17 }
+  18 
+  19 // Crear wizard y sus secciones
+→ 20 const wizard = await prisma.companyWizard.create(
+Unique constraint failed on the fields: (`companyId`)
+    at Xn.handleRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Function.initializeWizard (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:20:22)
+    at async Function.getWizardStatus (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:144:9)
+    at async Function.getWizardStatus (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/companyWizardController.ts:37:22)
+    at async /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/companies.ts:62:5 {
+  code: 'P2002',
+  meta: { modelName: 'CompanyWizard', target: [ 'companyId' ] },
+  clientVersion: '6.11.1'
+}
+Error getting wizard status: PrismaClientKnownRequestError: 
+Invalid `prisma.companyWizard.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:20:49
+
+  17 }
+  18 
+  19 // Crear wizard y sus secciones
+→ 20 const wizard = await prisma.companyWizard.create(
+Unique constraint failed on the fields: (`companyId`)
+    at Xn.handleRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Function.initializeWizard (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:20:22)
+    at async Function.getWizardStatus (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:144:9)
+    at async Function.getWizardStatus (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/companyWizardController.ts:37:22)
+    at async /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/companies.ts:62:5 {
+  code: 'P2002',
+  meta: { modelName: 'CompanyWizard', target: [ 'companyId' ] },
+  clientVersion: '6.11.1'
+}
+Get wizard status error: PrismaClientKnownRequestError: 
+Invalid `prisma.companyWizard.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:20:49
+
+  17 }
+  18 
+  19 // Crear wizard y sus secciones
+→ 20 const wizard = await prisma.companyWizard.create(
+Unique constraint failed on the fields: (`companyId`)
+    at Xn.handleRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:7459)
+    at Xn.handleAndLogRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Function.initializeWizard (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:20:22)
+    at async Function.getWizardStatus (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/services/companyWizardService.ts:144:9)
+    at async Function.getWizardStatus (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/companyWizardController.ts:37:22)
+    at async /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/companies.ts:62:5 {
+  code: 'P2002',
+  meta: { modelName: 'CompanyWizard', target: [ 'companyId' ] },
+  clientVersion: '6.11.1'
+}
+[0mGET /api/companies/4/wizard/status [31m500[0m 55.235 ms - 345[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 60.835 ms - -[0m
+2025-07-06 17:14:43 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 11.201 ms - 141[0m
+2025-07-06 17:14:43 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 2.537 ms - 141[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 23.957 ms - 119[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 23.384 ms - 119[0m
+[0mPOST /api/auth/logout [32m200[0m 8.033 ms - 31[0m
+Usuario desconectado: 6hZ4X_5008___VUrAAAD
+[0mGET /api/onboarding/validate-token?token=9989c5cfa5c3d159495778c930272f970aeb95c2436545ac3da25815f56728aa [32m200[0m 5.604 ms - 112[0m
+[0mGET /api/onboarding/validate-token?token=9989c5cfa5c3d159495778c930272f970aeb95c2436545ac3da25815f56728aa [36m304[0m 1.812 ms - -[0m
+Usuario desconectado: 4rwT1xQgbFSw3lDbAAAN
+Usuario desconectado: hmuuj7iaNlRr39RIAAAJ
+[0mPOST /api/onboarding/setup-access [32m201[0m 124.576 ms - 123[0m
+🔵 Login request received: kuchu
+🔵 Request headers: {
+  host: 'localhost:3001',
+  connection: 'keep-alive',
+  'content-length': '41',
+  pragma: 'no-cache',
+  'cache-control': 'no-cache',
+  'sec-ch-ua-platform': '"macOS"',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+  'content-type': 'application/json',
+  'sec-ch-ua-mobile': '?0',
+  accept: '*/*',
+  origin: 'http://localhost:3000',
+  'sec-fetch-site': 'same-site',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-dest': 'empty',
+  referer: 'http://localhost:3000/',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'es-419,es;q=0.9,en;q=0.8'
+}
+🔐 Login attempt for: kuchu
+✅ Login successful for: kuchu
+✅ Login response ready for: kuchu
+[0mPOST /api/auth/login [32m200[0m 101.538 ms - 590[0m
+Usuario conectado: ZQjUbksvVbsW0f2eAAAP
+Socket ZQjUbksvVbsW0f2eAAAP se unió a user-5
+Socket ZQjUbksvVbsW0f2eAAAP se unió a company-4
+[0mGET /api/incidences [32m200[0m 5.865 ms - 36[0m
+[0mGET /api/calendars [32m200[0m 7.746 ms - 916[0m
+[0mGET /api/employees [32m200[0m 9.818 ms - -[0m
+[0mGET /api/payrolls [32m200[0m 20.297 ms - 55[0m
+[0mGET /api/notifications [32m200[0m 14.003 ms - 60[0m
+[0mGET /api/companies [32m200[0m 20.262 ms - -[0m
+Usuario desconectado: iyew45j-Ns4iiWC9AAAB
+Usuario desconectado: sOJUXWNXkT3xKqNjAAAF
+Authentication error: TokenExpiredError: jwt expired
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:190:21
+    at getSecret (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:97:14)
+    at Object.module.exports [as verify] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:101:10)
+    at authenticate (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/middleware/auth.ts:27:25)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:295:15 {
+  expiredAt: 2025-07-06T21:32:59.000Z
+}
+[0mGET /api/auth/profile [33m401[0m 1.576 ms - 25[0m
+Authentication error: TokenExpiredError: jwt expired
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:190:21
+    at getSecret (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:97:14)
+    at Object.module.exports [as verify] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:101:10)
+    at authenticate (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/middleware/auth.ts:27:25)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:295:15 {
+  expiredAt: 2025-07-06T21:32:59.000Z
+}
+[0mGET /api/auth/profile [33m401[0m 2.239 ms - 25[0m
+[0mPOST /api/auth/refresh [32m200[0m 4.812 ms - 211[0m
+[0mGET /api/auth/profile [32m200[0m 6.311 ms - 149[0m
+[0mGET /api/auth/profile [32m200[0m 5.398 ms - 149[0m
+Usuario conectado: Cb2-Le-iup0aMLJpAAAR
+Usuario conectado: r8f4Ww7ueHuHojUnAAAT
+[0mGET /api/incidences [32m200[0m 3.964 ms - 36[0m
+Socket r8f4Ww7ueHuHojUnAAAT se unió a user-1
+Socket r8f4Ww7ueHuHojUnAAAT se unió a user-1
+[0mGET /api/calendars [32m200[0m 10.285 ms - 916[0m
+[0mGET /api/payrolls [32m200[0m 17.250 ms - 55[0m
+[0mGET /api/notifications [32m200[0m 18.917 ms - 60[0m
+[0mGET /api/companies [32m200[0m 17.679 ms - -[0m
+[0mGET /api/employees [32m200[0m 19.097 ms - -[0m
+[0mGET /api/calendars [32m200[0m 15.957 ms - 916[0m
+[0mGET /api/payrolls [32m200[0m 21.299 ms - 55[0m
+[0mGET /api/incidences [32m200[0m 2.890 ms - 36[0m
+[0mGET /api/companies [32m200[0m 33.112 ms - -[0m
+[0mGET /api/employees [32m200[0m 23.577 ms - -[0m
+[0mGET /api/notifications [32m200[0m 8.991 ms - 60[0m
+2025-07-06 17:18:09 [WARN]: Route not found: GET /api/api/companies/4/wizard/status
+[0mGET /api/api/companies/4/wizard/status [33m404[0m 1.070 ms - 150[0m
+2025-07-06 17:18:09 [WARN]: Route not found: GET /api/api/companies/4/departments
+[0mGET /api/api/companies/4/departments [33m404[0m 0.776 ms - 148[0m
+2025-07-06 17:19:09 [WARN]: Route not found: GET /api/api/companies/1/wizard/status
+[0mGET /api/api/companies/1/wizard/status [33m404[0m 1.557 ms - 150[0m
+2025-07-06 17:19:09 [WARN]: Route not found: GET /api/api/companies/1/departments
+[0mGET /api/api/companies/1/departments [33m404[0m 0.464 ms - 148[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 35.919 ms - -[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 36.078 ms - -[0m
+2025-07-06 17:23:01 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 10.012 ms - 141[0m
+2025-07-06 17:23:01 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 8.832 ms - 141[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 33.023 ms - 119[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 29.798 ms - 119[0m
+Usuario desconectado: Cb2-Le-iup0aMLJpAAAR
+Usuario desconectado: ZQjUbksvVbsW0f2eAAAP
+Usuario desconectado: r8f4Ww7ueHuHojUnAAAT
+Usuario conectado: r3tPPrDUAaHfYivPAAAV
+Socket r3tPPrDUAaHfYivPAAAV se unió a user-5
+Socket r3tPPrDUAaHfYivPAAAV se unió a company-4
+Usuario conectado: kk5h1xVdt5y1grIAAAAX
+Usuario conectado: q9FkvFjlm4h0QDyKAAAZ
+Socket q9FkvFjlm4h0QDyKAAAZ se unió a user-1
+Socket q9FkvFjlm4h0QDyKAAAZ se unió a user-1
+Usuario desconectado: q9FkvFjlm4h0QDyKAAAZ
+Usuario desconectado: r3tPPrDUAaHfYivPAAAV
+Usuario desconectado: kk5h1xVdt5y1grIAAAAX
+Usuario conectado: myBS2E-91sl7Sv32AAAb
+Usuario conectado: 7W8CYEG_hO6ancpXAAAe
+Usuario conectado: 5yQ5pgZ-07TZuu1jAAAf
+Socket 7W8CYEG_hO6ancpXAAAe se unió a user-1
+Socket 7W8CYEG_hO6ancpXAAAe se unió a user-1
+Socket 5yQ5pgZ-07TZuu1jAAAf se unió a user-5
+Socket 5yQ5pgZ-07TZuu1jAAAf se unió a company-4
+Usuario desconectado: 7W8CYEG_hO6ancpXAAAe
+Usuario desconectado: myBS2E-91sl7Sv32AAAb
+Usuario desconectado: 5yQ5pgZ-07TZuu1jAAAf
+Usuario conectado: CFxoN9JxUJEoFJsEAAAi
+Usuario conectado: BA8k-Hm7FriZ9f5jAAAj
+Socket CFxoN9JxUJEoFJsEAAAi se unió a user-5
+Socket CFxoN9JxUJEoFJsEAAAi se unió a company-4
+Usuario conectado: nKtHI9uZxa2H8THLAAAl
+Socket nKtHI9uZxa2H8THLAAAl se unió a user-1
+Socket nKtHI9uZxa2H8THLAAAl se unió a user-1
+Usuario desconectado: BA8k-Hm7FriZ9f5jAAAj
+Usuario desconectado: nKtHI9uZxa2H8THLAAAl
+Authentication error: TokenExpiredError: jwt expired
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:190:21
+    at getSecret (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:97:14)
+    at Object.module.exports [as verify] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:101:10)
+    at authenticate (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/middleware/auth.ts:27:25)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:295:15 {
+  expiredAt: 2025-07-06T23:17:56.000Z
+}
+[0mGET /api/auth/profile [33m401[0m 9.429 ms - 25[0m
+Authentication error: TokenExpiredError: jwt expired
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:190:21
+    at getSecret (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:97:14)
+    at Object.module.exports [as verify] (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/jsonwebtoken/verify.js:101:10)
+    at authenticate (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/middleware/auth.ts:27:25)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/lib/layer.js:152:17)
+    at /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/router/index.js:295:15 {
+  expiredAt: 2025-07-06T23:17:56.000Z
+}
+[0mGET /api/auth/profile [33m401[0m 1.200 ms - 25[0m
+[0mPOST /api/auth/refresh [32m200[0m 48.216 ms - 211[0m
+[0mGET /api/auth/profile [32m200[0m 12.916 ms - 149[0m
+[0mGET /api/auth/profile [32m200[0m 14.091 ms - 149[0m
+Usuario conectado: tiP4U8G4SGhiyLcNAAAn
+Usuario conectado: lu12i5MPp8z3TXHjAAAp
+Socket lu12i5MPp8z3TXHjAAAp se unió a user-1
+Socket lu12i5MPp8z3TXHjAAAp se unió a user-1
+[0mGET /api/payrolls [32m200[0m 33.449 ms - 55[0m
+[0mGET /api/calendars [32m200[0m 36.511 ms - 916[0m
+[0mGET /api/payrolls [32m200[0m 34.810 ms - 55[0m
+[0mGET /api/incidences [32m200[0m 12.052 ms - 36[0m
+[0mGET /api/companies [32m200[0m 43.674 ms - -[0m
+[0mGET /api/employees [32m200[0m 42.451 ms - -[0m
+[0mGET /api/companies [32m200[0m 42.068 ms - -[0m
+[0mGET /api/employees [32m200[0m 3.833 ms - -[0m
+[0mGET /api/calendars [32m200[0m 5.419 ms - 916[0m
+[0mGET /api/incidences [32m200[0m 3.260 ms - 36[0m
+[0mGET /api/notifications [32m200[0m 16.224 ms - 60[0m
+[0mGET /api/notifications [32m200[0m 8.823 ms - 60[0m
+Usuario desconectado: tiP4U8G4SGhiyLcNAAAn
+Usuario desconectado: lu12i5MPp8z3TXHjAAAp
+[0mGET /api/auth/profile [32m200[0m 7.387 ms - 149[0m
+[0mGET /api/auth/profile [32m200[0m 3.158 ms - 149[0m
+Usuario conectado: 6G9OLzDDMB8xwkn6AAAr
+[0mGET /api/incidences [32m200[0m 1.737 ms - 36[0m
+[0mGET /api/payrolls [32m200[0m 6.797 ms - 55[0m
+[0mGET /api/calendars [32m200[0m 8.050 ms - 916[0m
+[0mGET /api/notifications [32m200[0m 8.515 ms - 60[0m
+[0mGET /api/employees [32m200[0m 7.289 ms - -[0m
+Usuario conectado: wq7Po0QGDZn_W-gNAAAt
+[0mGET /api/companies [32m200[0m 15.991 ms - -[0m
+[0mGET /api/calendars [32m200[0m 4.573 ms - 916[0m
+[0mGET /api/incidences [32m200[0m 2.323 ms - 36[0m
+Socket wq7Po0QGDZn_W-gNAAAt se unió a user-1
+Socket wq7Po0QGDZn_W-gNAAAt se unió a user-1
+[0mGET /api/payrolls [32m200[0m 7.973 ms - 55[0m
+[0mGET /api/companies [32m200[0m 16.794 ms - -[0m
+[0mGET /api/employees [32m200[0m 11.973 ms - -[0m
+[0mGET /api/notifications [32m200[0m 3.550 ms - 60[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 29.863 ms - -[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 31.034 ms - -[0m
+2025-07-06 21:54:23 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 16.085 ms - 141[0m
+2025-07-06 21:54:23 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 16.512 ms - 141[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 36.968 ms - 119[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 30.287 ms - 119[0m
+[0mPOST /api/auth/logout [32m200[0m 22.738 ms - 31[0m
+Usuario desconectado: wq7Po0QGDZn_W-gNAAAt
+Usuario desconectado: 6G9OLzDDMB8xwkn6AAAr
+🔵 Login request received: carlos@mysourcing.mx
+🔵 Request headers: {
+  host: 'localhost:3001',
+  connection: 'keep-alive',
+  'content-length': '57',
+  pragma: 'no-cache',
+  'cache-control': 'no-cache',
+  'sec-ch-ua-platform': '"macOS"',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+  'content-type': 'application/json',
+  'sec-ch-ua-mobile': '?0',
+  accept: '*/*',
+  origin: 'http://localhost:3000',
+  'sec-fetch-site': 'same-site',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-dest': 'empty',
+  referer: 'http://localhost:3000/',
+  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-language': 'es-419,es;q=0.9'
+}
+🔐 Login attempt for: carlos@mysourcing.mx
+✅ Login successful for: carlos@mysourcing.mx
+✅ Login response ready for: carlos@mysourcing.mx
+[0mPOST /api/auth/login [32m200[0m 277.996 ms - 487[0m
+Usuario conectado: 6NYA32HM8dhyco5tAAAv
+Socket 6NYA32HM8dhyco5tAAAv se unió a user-1
+[0mGET /api/incidences [32m200[0m 27.262 ms - 36[0m
+[0mGET /api/calendars [32m200[0m 32.012 ms - 916[0m
+[0mGET /api/notifications [32m200[0m 35.386 ms - 60[0m
+[0mGET /api/payrolls [32m200[0m 41.284 ms - 55[0m
+[0mGET /api/employees [32m200[0m 36.833 ms - -[0m
+[0mGET /api/companies [32m200[0m 46.128 ms - -[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 20.265 ms - -[0m
+[0mGET /api/companies/4/wizard/status [32m200[0m 23.383 ms - -[0m
+2025-07-06 22:08:17 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 9.063 ms - 141[0m
+2025-07-06 22:08:17 [WARN]: Route not found: GET /api/catalogs/tax-regimes
+[0mGET /api/catalogs/tax-regimes [33m404[0m 3.579 ms - 141[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 26.137 ms - 119[0m
+[0mGET /api/companies/4/wizard/section/1/data [32m200[0m 25.586 ms - 119[0m
+Usuario desconectado: 6NYA32HM8dhyco5tAAAv
+Usuario desconectado: CFxoN9JxUJEoFJsEAAAi
+🔄 Recibida señal SIGTERM, cerrando servidor...
+✅ Servidor cerrado correctamente

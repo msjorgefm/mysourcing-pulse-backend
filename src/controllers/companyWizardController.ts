@@ -252,10 +252,48 @@ export class CompanyWizardController {
             where: { companyId }
           });
         case 5: // Estructura Organizacional
+          // Obtener datos del wizard para extraer stepData
+          const wizard = await prisma.companyWizard.findUnique({
+            where: { companyId },
+            include: {
+              sectionProgress: {
+                where: { sectionNumber: 5 },
+                include: {
+                  steps: true
+                }
+              }
+            }
+          });
+
+          if (!wizard || !wizard.sectionProgress[0]) {
+            return {
+              areas: [],
+              departments: [],
+              positions: []
+            };
+          }
+
+          const section = wizard.sectionProgress[0];
+          const steps = section.steps;
+
+          // Extraer datos de cada paso
+          const areasStep = steps.find(s => s.stepNumber === 1);
+          const departmentsStep = steps.find(s => s.stepNumber === 2);
+          const positionsStep = steps.find(s => s.stepNumber === 3);
+
+          // Extraer los datos del stepData
+          const areasData = areasStep?.stepData as any;
+          const departmentsData = departmentsStep?.stepData as any;
+          const positionsData = positionsStep?.stepData as any;
+
+          const areas = areasData?.['áreas'] || areasData?.['areas'] || [];
+          const departments = departmentsData?.['departamentos'] || departmentsData?.['departments'] || [];
+          const positions = positionsData?.['puestos'] || positionsData?.['positions'] || [];
+
           return {
-            areas: await prisma.companyArea.findMany({ where: { companyId } }),
-            departments: await prisma.companyDepartment.findMany({ where: { companyId } }),
-            positions: await prisma.companyPosition.findMany({ where: { companyId } })
+            areas,
+            departments,
+            positions
           };
         case 6: // Prestaciones
           return {

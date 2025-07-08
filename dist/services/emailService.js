@@ -1,0 +1,206 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.emailService = void 0;
+const nodemailer_1 = __importDefault(require("nodemailer"));
+const config_1 = require("../config");
+class EmailService {
+    constructor() {
+        // Modo desarrollo: simular envío de emails
+        if (config_1.config.env === 'development' && (!config_1.config.smtp.user || !config_1.config.smtp.pass)) {
+            console.log('⚠️  Modo desarrollo: Los emails se simularán, no se enviarán realmente');
+            this.transporter = null;
+            return;
+        }
+        // Puerto 465 requiere secure: true
+        const isSecure = config_1.config.smtp.port === 465;
+        this.transporter = nodemailer_1.default.createTransport({
+            host: config_1.config.smtp.host,
+            port: config_1.config.smtp.port,
+            secure: isSecure, // true para puerto 465, false para otros
+            auth: {
+                user: config_1.config.smtp.user,
+                pass: config_1.config.smtp.pass,
+            },
+            tls: {
+                // No fallar en certificados inválidos (solo para desarrollo)
+                rejectUnauthorized: false
+            }
+        });
+        // Verificar la configuración
+        this.transporter.verify((error, success) => {
+            if (error) {
+                console.error('❌ Error en configuración SMTP:', error);
+                console.error('⚠️  Los emails no se podrán enviar. Verifica las credenciales SMTP.');
+            }
+            else {
+                console.log('✅ Servidor SMTP listo para enviar correos');
+            }
+        });
+    }
+    async sendEmail(options) {
+        try {
+            console.log('📧 Intentando enviar email a:', options.to);
+            console.log('📧 Asunto:', options.subject);
+            // Modo desarrollo sin transporter
+            if (!this.transporter) {
+                console.log('🔧 MODO DESARROLLO - Email simulado:');
+                console.log('   Para:', options.to);
+                console.log('   De:', config_1.config.smtp.from);
+                console.log('   Asunto:', options.subject);
+                console.log('   ---');
+                console.log('   El email se habría enviado en producción.');
+                console.log('   Configura las credenciales SMTP para envío real.');
+                return true;
+            }
+            const mailOptions = {
+                from: config_1.config.smtp.from,
+                to: options.to,
+                subject: options.subject,
+                html: options.html,
+                text: options.text || this.htmlToText(options.html),
+            };
+            const info = await this.transporter.sendMail(mailOptions);
+            console.log('✅ Email enviado exitosamente');
+            console.log('   Message ID:', info.messageId);
+            console.log('   Response:', info.response);
+            return true;
+        }
+        catch (error) {
+            console.error('❌ Error al enviar email:');
+            console.error('   Error:', error.message);
+            console.error('   Código:', error.code);
+            console.error('   Comando:', error.command);
+            if (error.response) {
+                console.error('   Respuesta SMTP:', error.response);
+            }
+            return false;
+        }
+    }
+    async sendInvitationEmail(email, companyName, invitationLink) {
+        const subject = `Invitación para configurar tu cuenta en MySourcing Pulse`;
+        const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invitación MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #4F46E5;
+            margin: 0;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #4F46E5;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+          }
+          .button:hover {
+            background-color: #4338CA;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+          }
+          .warning {
+            background-color: #FEF3C7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #F59E0B;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Bienvenido a MySourcing Pulse!</h2>
+            
+            <p>Hola,</p>
+            
+            <p>La empresa <strong>${companyName}</strong> ha sido registrada en nuestro sistema y has sido designado como administrador.</p>
+            
+            <p>Para completar la configuración de tu cuenta y establecer tus credenciales de acceso, por favor haz clic en el siguiente enlace:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Configurar mi cuenta</a>
+            </div>
+            
+            <h3>¿Qué sucederá después?</h3>
+            <ol>
+              <li>Al hacer clic en el enlace, serás dirigido a una página de configuración</li>
+              <li>Deberás crear un nombre de usuario único</li>
+              <li>Establecerás una contraseña segura</li>
+              <li>Una vez completado, podrás acceder al portal de administración</li>
+            </ol>
+            
+            <div class="warning">
+              <strong>Importante:</strong> Este enlace es válido por 48 horas. Si expira, deberás solicitar uno nuevo al operador del sistema.
+            </div>
+            
+            <p>Si no esperabas recibir este correo o tienes alguna pregunta, por favor contacta a nuestro equipo de soporte.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+        return await this.sendEmail({
+            to: email,
+            subject,
+            html,
+        });
+    }
+    htmlToText(html) {
+        return html
+            .replace(/<style[^>]*>.*?<\/style>/gi, '')
+            .replace(/<script[^>]*>.*?<\/script>/gi, '')
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+}
+exports.emailService = new EmailService();
+//# sourceMappingURL=emailService.js.map

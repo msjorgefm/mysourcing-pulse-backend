@@ -563,26 +563,35 @@ export class CompanyWizardService {
   }
 
   static async processOrganizationalData(companyId: number, stepNumber: number, stepData: any) {
-    if (stepNumber === 1 && stepData.areas) { // Areas
-      await prisma.companyArea.deleteMany({ where: { companyId } });
-      for (const area of stepData.areas) {
-        await prisma.companyArea.create({
-          data: { companyId, ...area }
-        });
+    if (stepNumber === 1) { // Areas
+      const areas = stepData.áreas || stepData.areas;
+      if (areas) {
+        await prisma.companyArea.deleteMany({ where: { companyId } });
+        for (const area of areas) {
+          await prisma.companyArea.create({
+            data: { companyId, ...area }
+          });
+        }
       }
-    } else if (stepNumber === 2 && stepData.departments) { // Departamentos
-      await prisma.companyDepartment.deleteMany({ where: { companyId } });
-      for (const dept of stepData.departments) {
-        await prisma.companyDepartment.create({
-          data: { companyId, ...dept }
-        });
+    } else if (stepNumber === 2) { // Departamentos
+      const departments = stepData.departamentos || stepData.departments;
+      if (departments) {
+        await prisma.companyDepartment.deleteMany({ where: { companyId } });
+        for (const dept of departments) {
+          await prisma.companyDepartment.create({
+            data: { companyId, ...dept }
+          });
+        }
       }
-    } else if (stepNumber === 3 && stepData.positions) { // Puestos
-      await prisma.companyPosition.deleteMany({ where: { companyId } });
-      for (const position of stepData.positions) {
-        await prisma.companyPosition.create({
-          data: { companyId, ...position }
-        });
+    } else if (stepNumber === 3) { // Puestos
+      const positions = stepData.puestos || stepData.positions;
+      if (positions) {
+        await prisma.companyPosition.deleteMany({ where: { companyId } });
+        for (const position of positions) {
+          await prisma.companyPosition.create({
+            data: { companyId, ...position }
+          });
+        }
       }
     }
   }

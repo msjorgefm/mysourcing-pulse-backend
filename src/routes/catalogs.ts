@@ -8,7 +8,7 @@ const router = Router();
 router.use(authenticate);
 
 // Obtener regímenes fiscales
-router.get('/catalogs/tax-regimes', async (req, res, next) => {
+router.get('/tax-regimes', async (req, res, next) => {
   try {
     await CatalogsController.getTaxRegimes(req, res);
   } catch (err) {
@@ -17,7 +17,7 @@ router.get('/catalogs/tax-regimes', async (req, res, next) => {
 });
 
 // Obtener actividades económicas
-router.get('/catalogs/economic-activities', async (req, res, next) => {
+router.get('/economic-activities', async (req, res, next) => {
   try {
     await CatalogsController.getEconomicActivities(req, res);
   } catch (err) {
