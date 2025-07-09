@@ -4,6 +4,10 @@ import { seedPostalCodes } from './seeds/postalCodes';
 import { seedStates } from './seeds/states';
 import { seedLocations } from './seeds/locations';
 import { seedImssRiskClasses } from './seeders/imssRiskClass';
+import { seedBanks } from './seeders/banks';
+import { seedIMSSDelegaciones } from './seeders/imssDelegaciones';
+import { seedIMSSOrigenMovimiento } from './seeders/imssOrigenMovimiento';
+import { seedIMSSSubdelegaciones } from './seeders/imssSubdelegaciones';
 
 const prisma = new PrismaClient();
 
@@ -117,6 +121,14 @@ async function main() {
   
   // Seed de clases de riesgo IMSS
   await seedImssRiskClasses();
+  
+  // Seed de catálogo de bancos
+  await seedBanks();
+
+  // Seed IMSS Catalogs
+  await seedIMSSOrigenMovimiento();
+  await seedIMSSDelegaciones();
+  await seedIMSSSubdelegaciones();
 
   // Crear usuarios
   const operatorPassword = await bcrypt.hash('operator123', 12);
@@ -283,9 +295,8 @@ async function main() {
         { sectionNumber: 3, sectionName: 'Bancos', isOptional: false },
         { sectionNumber: 4, sectionName: 'Sellos Digitales', isOptional: false },
         { sectionNumber: 5, sectionName: 'Estructura Organizacional', isOptional: false },
-        { sectionNumber: 6, sectionName: 'Prestaciones', isOptional: false },
-        { sectionNumber: 7, sectionName: 'Nómina', isOptional: false },
-        { sectionNumber: 8, sectionName: 'Talento Humano', isOptional: true }
+        { sectionNumber: 6, sectionName: 'Nómina', isOptional: false },
+        { sectionNumber: 7, sectionName: 'Talento Humano', isOptional: true }
       ];
 
       for (const section of sections) {
@@ -326,24 +337,18 @@ async function main() {
           break;
         case 5:
           steps = [
-            { stepNumber: 1, stepName: 'Áreas', isOptional: false },
-            { stepNumber: 2, stepName: 'Departamentos', isOptional: false },
+            { stepNumber: 1, stepName: 'Áreas', isOptional: true },
+            { stepNumber: 2, stepName: 'Departamentos', isOptional: true },
             { stepNumber: 3, stepName: 'Puestos', isOptional: false }
           ];
           break;
         case 6:
           steps = [
-            { stepNumber: 1, stepName: 'Prestaciones', isOptional: false },
-            { stepNumber: 2, stepName: 'Grupos de Prestaciones', isOptional: true }
-          ];
-          break;
-        case 7:
-          steps = [
             { stepNumber: 1, stepName: 'Calendario Laboral', isOptional: false },
             { stepNumber: 2, stepName: 'Configuración de Nómina', isOptional: false }
           ];
           break;
-        case 8:
+        case 7:
           steps = [
             { stepNumber: 1, stepName: 'Horarios', isOptional: false },
             { stepNumber: 2, stepName: 'Políticas', isOptional: true }
@@ -532,19 +537,38 @@ async function main() {
         }
       });
 
-      // Bancos
-      // Primero eliminar bancos existentes
-      await prisma.companyBank.deleteMany({ where: { companyId: company.id } });
-      await prisma.companyBank.create({
-        data: {
-          companyId: company.id,
-          bankName: 'BBVA México',
-          bankType: 'PAYROLL',
-          accountNumber: '0123456789',
-          clabe: '012180001234567890',
-          isPrimary: true
-        }
+      // Bancos (ahora es un solo registro por empresa)
+      // Buscar el banco BBVA
+      const bancoBBVA = await prisma.bank.findFirst({
+        where: { codigo: '012' } // BBVA México
       });
+
+      if (bancoBBVA) {
+        await prisma.companyBank.upsert({
+          where: { companyId: company.id },
+          update: {
+            nomCuentaBancaria: 'Cuenta Nómina Principal',
+            bankId: bancoBBVA.id,
+            numCuentaBancaria: '0123456789',
+            numClabeInterbancaria: '012180001234567890',
+            numSucursal: '1234',
+            clvDispersion: 40012,
+            desCuentaBancaria: 'Cuenta principal para pago de nómina',
+            opcCuentaBancariaPrincipal: true
+          },
+          create: {
+            companyId: company.id,
+            nomCuentaBancaria: 'Cuenta Nómina Principal',
+            bankId: bancoBBVA.id,
+            numCuentaBancaria: '0123456789',
+            numClabeInterbancaria: '012180001234567890',
+            numSucursal: '1234',
+            clvDispersion: 40012,
+            desCuentaBancaria: 'Cuenta principal para pago de nómina',
+            opcCuentaBancariaPrincipal: true
+          }
+        });
+      }
 
       // Certificado digital
       await prisma.companyDigitalCertificate.upsert({
@@ -568,134 +592,103 @@ async function main() {
 
       // Áreas
       // Primero eliminar áreas existentes
-      await prisma.companyArea.deleteMany({ where: { companyId: company.id } });
+      await prisma.area.deleteMany({ where: { empresaId: company.id } });
       const areas = await Promise.all([
-        prisma.companyArea.create({
+        prisma.area.create({
           data: {
-            companyId: company.id,
-            name: 'Tecnología',
-            description: 'Área de desarrollo y soporte técnico',
-            isActive: true
+            empresaId: company.id,
+            nombre: 'Tecnología',
+            descripcion: 'Área de desarrollo y soporte técnico',
+            activo: true
           }
         }),
-        prisma.companyArea.create({
+        prisma.area.create({
           data: {
-            companyId: company.id,
-            name: 'Ventas',
-            description: 'Área comercial y ventas',
-            isActive: true
+            empresaId: company.id,
+            nombre: 'Ventas',
+            descripcion: 'Área comercial y ventas',
+            activo: true
           }
         }),
-        prisma.companyArea.create({
+        prisma.area.create({
           data: {
-            companyId: company.id,
-            name: 'Administración',
-            description: 'Área administrativa y finanzas',
-            isActive: true
+            empresaId: company.id,
+            nombre: 'Administración',
+            descripcion: 'Área administrativa y finanzas',
+            activo: true
           }
         })
       ]);
 
       // Departamentos
-      const departments = await Promise.all([
-        prisma.companyDepartment.create({
+      const departamentos = await Promise.all([
+        prisma.departamento.create({
           data: {
-            companyId: company.id,
+            empresaId: company.id,
             areaId: areas[0].id,
-            name: 'Desarrollo',
-            description: 'Desarrollo de software',
-            isActive: true
+            nombre: 'Desarrollo',
+            descripcion: 'Desarrollo de software',
+            activo: true
           }
         }),
-        prisma.companyDepartment.create({
+        prisma.departamento.create({
           data: {
-            companyId: company.id,
+            empresaId: company.id,
             areaId: areas[0].id,
-            name: 'Soporte',
-            description: 'Soporte técnico',
-            isActive: true
+            nombre: 'Soporte',
+            descripcion: 'Soporte técnico',
+            activo: true
           }
         }),
-        prisma.companyDepartment.create({
+        prisma.departamento.create({
           data: {
-            companyId: company.id,
+            empresaId: company.id,
             areaId: areas[1].id,
-            name: 'Ventas Directas',
-            description: 'Ventas al cliente final',
-            isActive: true
+            nombre: 'Ventas Directas',
+            descripcion: 'Ventas al cliente final',
+            activo: true
           }
         })
       ]);
 
-      // Puestos
+      // Puestos (REQUERIDO - mínimo uno)
       await Promise.all([
-        prisma.companyPosition.create({
+        prisma.puesto.create({
           data: {
-            companyId: company.id,
-            departmentId: departments[0].id,
-            name: 'Desarrollador Jr',
-            description: 'Desarrollador nivel junior',
-            minSalary: 15000,
-            maxSalary: 25000,
-            isActive: true
+            empresaId: company.id,
+            areaId: areas[0].id,
+            departamentoId: departamentos[0].id,
+            nombre: 'Desarrollador Jr',
+            activo: true
           }
         }),
-        prisma.companyPosition.create({
+        prisma.puesto.create({
           data: {
-            companyId: company.id,
-            departmentId: departments[0].id,
-            name: 'Desarrollador Sr',
-            description: 'Desarrollador nivel senior',
-            minSalary: 30000,
-            maxSalary: 50000,
-            isActive: true
+            empresaId: company.id,
+            areaId: areas[0].id,
+            departamentoId: departamentos[0].id,
+            nombre: 'Desarrollador Sr',
+            activo: true
+          }
+        }),
+        prisma.puesto.create({
+          data: {
+            empresaId: company.id,
+            areaId: areas[1].id,
+            departamentoId: departamentos[2].id,
+            nombre: 'Ejecutivo de Ventas',
+            activo: true
+          }
+        }),
+        prisma.puesto.create({
+          data: {
+            empresaId: company.id,
+            nombre: 'Gerente General',
+            activo: true
           }
         })
       ]);
 
-      // Prestaciones
-      const benefits = await Promise.all([
-        prisma.companyBenefit.create({
-          data: {
-            companyId: company.id,
-            name: 'Aguinaldo',
-            type: 'DAYS',
-            isLegal: true,
-            amount: 15,
-            description: 'Días de aguinaldo por ley'
-          }
-        }),
-        prisma.companyBenefit.create({
-          data: {
-            companyId: company.id,
-            name: 'Prima Vacacional',
-            type: 'PERCENTAGE',
-            isLegal: true,
-            percentage: 25,
-            description: 'Prima vacacional del 25%'
-          }
-        }),
-        prisma.companyBenefit.create({
-          data: {
-            companyId: company.id,
-            name: 'Vales de Despensa',
-            type: 'FIXED_AMOUNT',
-            isLegal: false,
-            amount: 2000,
-            description: 'Vales de despensa mensuales'
-          }
-        })
-      ]);
-
-      // Grupo de prestaciones
-      await prisma.companyBenefitGroup.create({
-        data: {
-          companyId: company.id,
-          name: 'Paquete Básico',
-          description: 'Prestaciones básicas de ley',
-          benefits: benefits.map(b => b.id)
-        }
-      });
 
       // Horarios
       // Primero eliminar horarios existentes
@@ -777,8 +770,6 @@ async function main() {
       });
     }
   }
-
-  await seedCatalogs();
 
   console.log('✅ Seed completado exitosamente');
   console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${employees.length} empleados`);

@@ -7,6 +7,7 @@ import postalCodeRoutes from './postalCodeRoutes';
 import stateRoutes from './stateRoutes';
 import locationRoutes from './locations';
 import companyRoutes from './companies';
+import bankRoutes from './bankRoutes';
 import payrollRoutes from './payrolls';
 import notificationRoutes from './notifications';
 import uploadRoutes from './upload';
@@ -37,6 +38,7 @@ router.use('/notifications', notificationRoutes);
 router.use('/postal-codes', postalCodeRoutes);
 router.use('/states', stateRoutes);
 router.use('/locations', locationRoutes);
+router.use('/banks', bankRoutes);
 
 // Rutas que se montan en la raíz de /api
 router.use('/', uploadRoutes);

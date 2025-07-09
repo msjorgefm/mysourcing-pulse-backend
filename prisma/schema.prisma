@@ -99,15 +99,15 @@ model Company {
   fonacot       Fonacot?
   
   // Sección 3: Bancos
-  banks         CompanyBank[]
+  bank          CompanyBank?
   
   // Sección 4: Sellos Digitales
   digitalCertificate CompanyDigitalCertificate?
   
   // Sección 5: Estructura Organizacional
-  areas         CompanyArea[]
-  departments   CompanyDepartment[]
-  positions     CompanyPosition[]
+  areas         Area[]
+  departamentos Departamento[]
+  puestos       Puesto[]
   
   // Sección 6: Prestaciones
   benefits      CompanyBenefit[]
@@ -521,7 +521,7 @@ model CompanyGeneralInfo {
   tipoPersona     String?  // FISICA o MORAL
   actividadEconomica String?
   taxRegime       String
-  startDate       DateTime
+  startDate       DateTime?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -577,15 +577,15 @@ model CompanyNotarialPower {
   companyId          Int        @unique
   company            Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
   
-  folioPoderNotarial String     @db.VarChar(25)
-  fechaEmision       DateTime
-  fechaVigencia      DateTime
-  nombreFederatario  String
-  numeroFederatario  Int
-  estadoId           Int
-  estado             State      @relation(fields: [estadoId], references: [id])
-  municipioId        Int
-  municipio          Municipio  @relation(fields: [municipioId], references: [id])
+  folioPoderNotarial String?    @db.VarChar(25)
+  fechaEmision       DateTime?
+  fechaVigencia      DateTime?
+  nombreFederatario  String?
+  numeroFederatario  Int?
+  estadoId           Int?
+  estado             State?     @relation(fields: [estadoId], references: [id])
+  municipioId        Int?
+  municipio          Municipio? @relation(fields: [municipioId], references: [id])
   uriPoderNotarial   String?
   
   createdAt          DateTime   @default(now())
@@ -645,20 +645,43 @@ model Fonacot {
 // MODELOS DEL WIZARD - SECCIÓN 3: BANCOS
 // ================================
 
+// Catálogo de Bancos
+model Bank {
+  id              Int      @id @default(autoincrement())
+  codigo          String   @unique @db.VarChar(10)
+  nombre          String   @db.VarChar(200)
+  nombreCorto     String?  @db.VarChar(50)
+  activo          Boolean  @default(true)
+  fechaCreacion   DateTime @default(now())
+  fechaActualizacion DateTime @updatedAt
+  
+  // Relaciones
+  companyBanks    CompanyBank[]
+  
+  @@map("cat_banks")
+}
+
 // Paso 1: Cuentas Bancarias
 model CompanyBank {
-  id              Int      @id @default(autoincrement())
-  companyId       Int
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  id                        Int      @id @default(autoincrement())
+  companyId                 Int      @unique
+  company                   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   
-  bankName        String
-  bankType        BankType
-  accountNumber   String
-  clabe           String?
-  isPrimary       Boolean  @default(false)
+  // Relación con el catálogo de bancos
+  bankId                    Int
+  bank                      Bank     @relation(fields: [bankId], references: [id])
   
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  // Campos nuevos
+  nomCuentaBancaria         String                    // 1. Nombre de la cuenta bancaria
+  numCuentaBancaria         String                    // 3. Número de cuenta bancaria
+  numClabeInterbancaria     String   @db.VarChar(18) // 4. CLABE interbancaria (18 dígitos)
+  numSucursal               String?  @db.VarChar(6)  // 5. Número de sucursal (3-6 dígitos)
+  clvDispersion             Int?                      // 6. Clave de dispersión
+  desCuentaBancaria         String?                   // 7. Descripción de la cuenta (opcional)
+  opcCuentaBancariaPrincipal Boolean? @default(false) // 8. Cuenta principal
+  
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
   
   @@map("company_banks")
 }
@@ -675,9 +698,9 @@ model CompanyDigitalCertificate {
   
   certificateFile String
   keyFile         String
-  password        String
-  validFrom       DateTime
-  validUntil      DateTime
+  password        String?
+  validFrom       DateTime?
+  validUntil      DateTime?
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -690,65 +713,70 @@ model CompanyDigitalCertificate {
 // ================================
 
 // Paso 1: Áreas
-model CompanyArea {
+model Area {
   id              Int                 @id @default(autoincrement())
-  companyId       Int
-  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  empresaId       Int
+  empresa         Company             @relation(fields: [empresaId], references: [id], onDelete: Cascade)
   
-  name            String
-  description     String?
-  isActive        Boolean             @default(true)
+  nombre          String
+  descripcion     String?
+  activo          Boolean             @default(true)
   
   // Relaciones
-  departments     CompanyDepartment[]
+  departamentos   Departamento[]
+  puestos         Puesto[]
   
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   
-  @@map("company_areas")
+  @@unique([empresaId, nombre])
+  @@map("areas")
 }
 
 // Paso 2: Departamentos
-model CompanyDepartment {
+model Departamento {
   id              Int                 @id @default(autoincrement())
-  companyId       Int
-  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  empresaId       Int
+  empresa         Company             @relation(fields: [empresaId], references: [id], onDelete: Cascade)
   
   areaId          Int?
-  area            CompanyArea?        @relation(fields: [areaId], references: [id])
+  area            Area?               @relation(fields: [areaId], references: [id])
   
-  name            String
-  description     String?
-  isActive        Boolean             @default(true)
+  nombre          String
+  descripcion     String?
+  activo          Boolean             @default(true)
   
   // Relaciones
-  positions       CompanyPosition[]
+  puestos         Puesto[]
   
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   
-  @@map("company_departments")
+  @@unique([empresaId, nombre])
+  @@map("departamentos")
 }
 
-// Paso 3: Puestos
-model CompanyPosition {
+// Paso 3: Puestos (REQUERIDO)
+model Puesto {
   id              Int                 @id @default(autoincrement())
-  companyId       Int
-  company         Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  empresaId       Int
+  empresa         Company             @relation(fields: [empresaId], references: [id], onDelete: Cascade)
   
-  departmentId    Int
-  department      CompanyDepartment   @relation(fields: [departmentId], references: [id])
+  // Relaciones opcionales para permitir flexibilidad
+  areaId          Int?
+  area            Area?               @relation(fields: [areaId], references: [id])
   
-  name            String
-  description     String?
-  minSalary       Decimal?            @db.Decimal(10, 2)
-  maxSalary       Decimal?            @db.Decimal(10, 2)
-  isActive        Boolean             @default(true)
+  departamentoId  Int?
+  departamento    Departamento?       @relation(fields: [departamentoId], references: [id])
+  
+  nombre          String
+  activo          Boolean             @default(true)
   
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   
-  @@map("company_positions")
+  @@unique([empresaId, nombre])
+  @@map("puestos")
 }
 
 // ================================

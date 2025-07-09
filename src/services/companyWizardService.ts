@@ -41,14 +41,14 @@ export class CompanyWizardService {
                 steps: {
                   create: [
                     { stepNumber: 1, stepName: 'IMSS Registro Patronal' },
-                    { stepNumber: 2, stepName: 'IMSS Domicilio' },
-                    { stepNumber: 3, stepName: 'FONACOT' }
+                    { stepNumber: 2, stepName: 'FONACOT' }
                   ]
                 }
               },
               {
                 sectionNumber: 3,
                 sectionName: 'Bancos',
+                isOptional: true,
                 steps: {
                   create: [
                     { stepNumber: 1, stepName: 'Tipos de Bancos' }
@@ -78,16 +78,6 @@ export class CompanyWizardService {
               },
               {
                 sectionNumber: 6,
-                sectionName: 'Prestaciones',
-                steps: {
-                  create: [
-                    { stepNumber: 1, stepName: 'Prestaciones de Ley' },
-                    { stepNumber: 2, stepName: 'Gestión de Grupo de Prestaciones', isOptional: true }
-                  ]
-                }
-              },
-              {
-                sectionNumber: 7,
                 sectionName: 'Nómina',
                 steps: {
                   create: [
@@ -96,7 +86,7 @@ export class CompanyWizardService {
                 }
               },
               {
-                sectionNumber: 8,
+                sectionNumber: 7,
                 sectionName: 'Talento Humano',
                 steps: {
                   create: [
@@ -257,13 +247,10 @@ export class CompanyWizardService {
         case 5: // Estructura Organizacional
           await this.processOrganizationalData(companyId, stepNumber, stepData);
           break;
-        case 6: // Prestaciones
-          await this.processBenefitsData(companyId, stepNumber, stepData);
-          break;
-        case 7: // Nómina
+        case 6: // Nómina
           await this.processPayrollData(companyId, stepData);
           break;
-        case 8: // Talento Humano
+        case 7: // Talento Humano
           await this.processHRData(companyId, stepNumber, stepData);
           break;
       }
@@ -429,53 +416,14 @@ export class CompanyWizardService {
         });
       }
     }
+    /* Comentado temporalmente - IMSS Domicilio
     // Paso 2: IMSS Domicilio
     else if (stepNumber === 2) {
-      // Primero verificar que existe el registro patronal
-      const registroPatronal = await (prisma as any).iMSSRegistroPatronal.findUnique({
-        where: { companyId }
-      });
-
-      if (!registroPatronal) {
-        throw new Error('Debe completar primero el registro patronal IMSS');
-      }
-
-      // Buscar si ya existe el domicilio IMSS
-      const existingDomicilio = await (prisma as any).iMSSDomicilio.findUnique({
-        where: { imssRegistroPatronalId: registroPatronal.id }
-      });
-
-      // Mapear los datos del frontend
-      const mappedData = {
-        usarDomicilioMatriz: stepData.usarDomicilioMatriz || false,
-        codigoPostal: stepData.codigoPostal || null,
-        entidadFederativaCode: stepData.entidadFederativaCode || null,
-        municipioCode: stepData.municipioCode || null,
-        localidad: stepData.localidad || null,
-        coloniaId: stepData.coloniaId ? parseInt(stepData.coloniaId) : null,
-        delegacionId: stepData.delegacionId ? parseInt(stepData.delegacionId) : null,
-        subdelegacionId: stepData.subdelegacionId ? parseInt(stepData.subdelegacionId) : null,
-        calle: stepData.calle || null,
-        numeroExterior: stepData.numeroExterior || null,
-        origenMovimientoId: stepData.origenMovimientoId ? parseInt(stepData.origenMovimientoId) : null
-      };
-
-      if (existingDomicilio) {
-        await (prisma as any).iMSSDomicilio.update({
-          where: { id: existingDomicilio.id },
-          data: mappedData
-        });
-      } else {
-        await (prisma as any).iMSSDomicilio.create({
-          data: {
-            imssRegistroPatronalId: registroPatronal.id,
-            ...mappedData
-          }
-        });
-      }
+      // Código de IMSS Domicilio...
     }
-    // Paso 3: FONACOT
-    else if (stepNumber === 3) {
+    */
+    // Paso 2: FONACOT
+    else if (stepNumber === 2) {
       const existingInfo = await prisma.fonacot.findUnique({
         where: { companyId }
       });
@@ -504,32 +452,63 @@ export class CompanyWizardService {
   }
 
   static async processBankData(companyId: number, stepData: any) {
-    if (stepData.banks && Array.isArray(stepData.banks)) {
-      // Eliminar bancos existentes
-      await prisma.companyBank.deleteMany({
-        where: { companyId }
-      });
+    // Si no hay datos bancarios, no hacer nada
+    if (!stepData || (!stepData.nomCuentaBancaria && !stepData.bankId)) {
+      console.log('No bank data to process, skipping...');
+      return;
+    }
 
-      // Mapeo de tipos del frontend al backend
-      const bankTypeMap: { [key: string]: 'CHECKING' | 'SAVINGS' | 'PAYROLL' } = {
-        'OPERACION': 'CHECKING',
-        'AHORRO': 'SAVINGS',
-        'NOMINA': 'PAYROLL'
-      };
-
-      // Crear nuevos bancos
-      for (const bank of stepData.banks) {
-        await prisma.companyBank.create({
-          data: {
-            companyId,
-            bankName: bank.name,
-            bankType: bankTypeMap[bank.type] || 'CHECKING',
-            accountNumber: bank.accountNumber,
-            clabe: bank.clabe || null,
-            isPrimary: bank.isDefault || false
-          }
-        });
+    // Validar datos requeridos solo si se está intentando guardar información bancaria
+    if (stepData.nomCuentaBancaria) {
+      if (!stepData.bankId || !stepData.numCuentaBancaria || !stepData.numClabeInterbancaria) {
+        throw new Error('Faltan datos bancarios requeridos: banco, número de cuenta y CLABE son obligatorios');
       }
+    }
+
+    // Ahora es un solo formulario, no un arreglo
+    const existingBank = await prisma.companyBank.findUnique({
+      where: { companyId }
+    });
+
+    // Preparar datos validando tipos
+    const bankIdValue = stepData.bankId || stepData.bancoId;
+    if (!bankIdValue) {
+      throw new Error('El ID del banco es requerido');
+    }
+    
+    const bankId = parseInt(bankIdValue);
+    if (isNaN(bankId)) {
+      throw new Error('El ID del banco debe ser un número válido');
+    }
+
+    const bankData = {
+      nomCuentaBancaria: stepData.nomCuentaBancaria,
+      bankId: bankId,
+      numCuentaBancaria: stepData.numCuentaBancaria,
+      numClabeInterbancaria: stepData.numClabeInterbancaria,
+      numSucursal: stepData.numSucursal || null,
+      clvDispersion: stepData.clvDispersion ? parseInt(stepData.clvDispersion) : null,
+      desCuentaBancaria: stepData.desCuentaBancaria || null,
+      opcCuentaBancariaPrincipal: stepData.opcCuentaBancariaPrincipal === true
+    };
+
+    // Validar clvDispersion si se proporciona
+    if (bankData.clvDispersion !== null && isNaN(bankData.clvDispersion)) {
+      bankData.clvDispersion = null;
+    }
+
+    if (existingBank) {
+      await prisma.companyBank.update({
+        where: { companyId },
+        data: bankData
+      });
+    } else {
+      await prisma.companyBank.create({
+        data: {
+          companyId,
+          ...bankData
+        }
+      });
     }
   }
 
@@ -563,45 +542,58 @@ export class CompanyWizardService {
   }
 
   static async processOrganizationalData(companyId: number, stepNumber: number, stepData: any) {
-    if (stepNumber === 1 && stepData.areas) { // Areas
-      await prisma.companyArea.deleteMany({ where: { companyId } });
+    if (stepNumber === 1 && stepData.areas) { // Áreas
+      await prisma.area.deleteMany({ where: { empresaId: companyId } });
+      
       for (const area of stepData.areas) {
-        await prisma.companyArea.create({
-          data: { companyId, ...area }
+        await prisma.area.create({
+          data: { 
+            empresaId: companyId,
+            nombre: area.nombre,
+            descripcion: area.descripcion || null,
+            activo: true
+          }
         });
       }
-    } else if (stepNumber === 2 && stepData.departments) { // Departamentos
-      await prisma.companyDepartment.deleteMany({ where: { companyId } });
-      for (const dept of stepData.departments) {
-        await prisma.companyDepartment.create({
-          data: { companyId, ...dept }
+    } else if (stepNumber === 2 && stepData.departamentos) { // Departamentos
+      await prisma.departamento.deleteMany({ where: { empresaId: companyId } });
+      
+      for (const dept of stepData.departamentos) {
+        await prisma.departamento.create({
+          data: { 
+            empresaId: companyId,
+            areaId: dept.areaId ? parseInt(dept.areaId) : null,
+            nombre: dept.nombre,
+            descripcion: dept.descripcion || null,
+            activo: true
+          }
         });
       }
-    } else if (stepNumber === 3 && stepData.positions) { // Puestos
-      await prisma.companyPosition.deleteMany({ where: { companyId } });
-      for (const position of stepData.positions) {
-        await prisma.companyPosition.create({
-          data: { companyId, ...position }
+    } else if (stepNumber === 3 && stepData.puestos) { // Puestos (REQUERIDO)
+      // Validar que haya al menos un puesto
+      if (!stepData.puestos || stepData.puestos.length === 0) {
+        throw new Error('Debe agregar al menos un puesto para continuar');
+      }
+      
+      await prisma.puesto.deleteMany({ where: { empresaId: companyId } });
+      
+      for (const puesto of stepData.puestos) {
+        // No enviar el ID temporal del frontend
+        const { id, areaNombre, departamentoNombre, ...puestoData } = puesto;
+        
+        await prisma.puesto.create({
+          data: { 
+            empresaId: companyId,
+            areaId: puestoData.areaId ? parseInt(puestoData.areaId) : null,
+            departamentoId: puestoData.departamentoId ? parseInt(puestoData.departamentoId) : null,
+            nombre: puestoData.nombre,
+            activo: true
+          }
         });
       }
     }
   }
 
-  static async processBenefitsData(companyId: number, stepNumber: number, stepData: any) {
-    if (stepNumber === 1 && stepData.benefits) { // Prestaciones de Ley
-      for (const benefit of stepData.benefits) {
-        await prisma.companyBenefit.create({
-          data: { companyId, isLegal: true, ...benefit }
-        });
-      }
-    } else if (stepNumber === 2 && stepData.benefitGroups) { // Grupos de Prestaciones
-      for (const group of stepData.benefitGroups) {
-        await prisma.companyBenefitGroup.create({
-          data: { companyId, ...group }
-        });
-      }
-    }
-  }
 
   static async processPayrollData(companyId: number, stepData: any) {
     if (stepData.calendar) {
