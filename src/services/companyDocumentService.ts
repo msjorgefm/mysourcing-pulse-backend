@@ -1,18 +1,19 @@
 import { PrismaClient, DocumentType, UserRole } from '@prisma/client';
 import path from 'path';
 import fs from 'fs/promises';
-import multer from 'multer';
+const multer = require('multer');
+import { Request } from 'express';
 
 const prisma = new PrismaClient();
 
 // Configuración de multer para la carga de archivos
 const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
+  destination: async (req: any, file: any, cb: any) => {
     const uploadPath = path.join(process.cwd(), 'uploads', 'company-documents');
     await fs.mkdir(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
-  filename: (req, file, cb) => {
+  filename: (req: any, file: any, cb: any) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`);
   }
@@ -23,7 +24,7 @@ export const upload = multer({
   limits: {
     fileSize: 10 * 1024 * 1024 // 10MB
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req: any, file: any, cb: any) => {
     const allowedMimes = [
       'application/pdf',
       'application/vnd.ms-excel',
@@ -38,7 +39,7 @@ export const upload = multer({
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Tipo de archivo no permitido'));
+      cb(new Error('Tipo de archivo no permitido'), false);
     }
   }
 });

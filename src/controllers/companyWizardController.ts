@@ -226,27 +226,28 @@ export class CompanyWizardController {
             imssDomicilio
           };
         case 3: // Bancos
-          const banks = await prisma.companyBank.findMany({
-            where: { companyId }
+          const bankData = await prisma.companyBank.findFirst({
+            where: { companyId },
+            include: { bank: true }
           });
           
-          // Mapeo inverso de tipos del backend al frontend
-          const bankTypeMapReverse: { [key: string]: string } = {
-            'CHECKING': 'OPERACION',
-            'SAVINGS': 'AHORRO',
-            'PAYROLL': 'NOMINA'
-          };
+          // Si existe, retornar los datos con la información del banco
+          if (bankData) {
+            return {
+              bankId: bankData.bankId,
+              bancoId: bankData.bankId, // Para compatibilidad temporal
+              nombreBanco: bankData.bank?.nombre || '',
+              nomCuentaBancaria: bankData.nomCuentaBancaria,
+              numCuentaBancaria: bankData.numCuentaBancaria,
+              numClabeInterbancaria: bankData.numClabeInterbancaria,
+              numSucursal: bankData.numSucursal,
+              clvDispersion: bankData.clvDispersion,
+              desCuentaBancaria: bankData.desCuentaBancaria,
+              opcCuentaBancariaPrincipal: bankData.opcCuentaBancariaPrincipal
+            };
+          }
           
-          // Mapear los datos para el frontend
-          return {
-            banks: banks.map(bank => ({
-              name: bank.bankName,
-              type: bankTypeMapReverse[bank.bankType] || 'OPERACION',
-              accountNumber: bank.accountNumber,
-              clabe: bank.clabe || '',
-              isDefault: bank.isPrimary
-            }))
-          };
+          return null;
         case 4: // Sellos Digitales
           return await prisma.companyDigitalCertificate.findUnique({
             where: { companyId }
@@ -291,20 +292,15 @@ export class CompanyWizardController {
           const positions = positionsData?.['puestos'] || positionsData?.['positions'] || [];
 
           return {
-            areas,
-            departments,
-            positions
+            areas: await prisma.area.findMany({ where: { empresaId: companyId } }),
+            departamentos: await prisma.departamento.findMany({ where: { empresaId: companyId } }),
+            puestos: await prisma.puesto.findMany({ where: { empresaId: companyId } })
           };
-        case 6: // Prestaciones
-          return {
-            benefits: await prisma.companyBenefit.findMany({ where: { companyId } }),
-            benefitGroups: await prisma.companyBenefitGroup.findMany({ where: { companyId } })
-          };
-        case 7: // Nómina
+        case 6: // Nómina
           return await prisma.calendar.findMany({
             where: { companyId }
           });
-        case 8: // Talento Humano
+        case 7: // Talento Humano
           return {
             schedules: await prisma.companySchedule.findMany({ where: { companyId } }),
             employees: await prisma.employee.findMany({ where: { companyId } })
@@ -368,6 +364,201 @@ export class CompanyWizardController {
     } catch (error: any) {
       console.error('Skip section error:', error);
       res.status(500).json({ error: error.message || 'Failed to skip section' });
+    }
+  }
+
+  // Obtener todas las áreas de una empresa
+  static async getCompanyAreas(req: Request, res: Response) {
+    try {
+      const { companyId } = req.params;
+      
+      if (!companyId || isNaN(Number(companyId))) {
+        return res.status(400).json({ error: 'Valid company ID is required' });
+      }
+
+      const prisma = new PrismaClient();
+
+      try {
+        const areas = await prisma.area.findMany({
+          where: { 
+            empresaId: Number(companyId),
+            activo: true
+          },
+          orderBy: { nombre: 'asc' }
+        });
+
+        res.json({ areas });
+      } finally {
+        await prisma.$disconnect();
+      }
+    } catch (error: any) {
+      console.error('Get areas error:', error);
+      res.status(500).json({ error: error.message || 'Failed to get areas' });
+    }
+  }
+
+  // Obtener todos los departamentos de una empresa (opcionalmente filtrados por área)
+  static async getCompanyDepartamentos(req: Request, res: Response) {
+    try {
+      const { companyId } = req.params;
+      const { areaId } = req.query;
+      
+      if (!companyId || isNaN(Number(companyId))) {
+        return res.status(400).json({ error: 'Valid company ID is required' });
+      }
+
+      const prisma = new PrismaClient();
+
+      try {
+        const whereClause: any = {
+          empresaId: Number(companyId),
+          activo: true
+        };
+
+        if (areaId && !isNaN(Number(areaId))) {
+          whereClause.areaId = Number(areaId);
+        }
+
+        const departamentos = await prisma.departamento.findMany({
+          where: whereClause,
+          include: {
+            area: {
+              select: {
+                id: true,
+                nombre: true
+              }
+            }
+          },
+          orderBy: { nombre: 'asc' }
+        });
+
+        res.json({ departamentos });
+      } finally {
+        await prisma.$disconnect();
+      }
+    } catch (error: any) {
+      console.error('Get departamentos error:', error);
+      res.status(500).json({ error: error.message || 'Failed to get departamentos' });
+    }
+  }
+
+  // Eliminar un área
+  static async deleteArea(req: Request, res: Response) {
+    try {
+      const { companyId, areaId } = req.params;
+      
+      if (!companyId || isNaN(Number(companyId)) || !areaId || isNaN(Number(areaId))) {
+        return res.status(400).json({ error: 'Valid company ID and area ID are required' });
+      }
+
+      const prisma = new PrismaClient();
+
+      try {
+        // Verificar que el área pertenezca a la empresa
+        const area = await prisma.area.findFirst({
+          where: {
+            id: Number(areaId),
+            empresaId: Number(companyId)
+          }
+        });
+
+        if (!area) {
+          return res.status(404).json({ error: 'Área no encontrada' });
+        }
+
+        // Eliminar el área
+        await prisma.area.delete({
+          where: { id: Number(areaId) }
+        });
+
+        res.json({ message: 'Área eliminada exitosamente' });
+      } finally {
+        await prisma.$disconnect();
+      }
+    } catch (error: any) {
+      console.error('Delete area error:', error);
+      res.status(500).json({ error: error.message || 'Failed to delete area' });
+    }
+  }
+
+  // Eliminar un departamento
+  static async deleteDepartamento(req: Request, res: Response) {
+    try {
+      const { companyId, departamentoId } = req.params;
+      
+      if (!companyId || isNaN(Number(companyId)) || !departamentoId || isNaN(Number(departamentoId))) {
+        return res.status(400).json({ error: 'Valid company ID and departamento ID are required' });
+      }
+
+      const prisma = new PrismaClient();
+
+      try {
+        // Verificar que el departamento pertenezca a la empresa
+        const departamento = await prisma.departamento.findFirst({
+          where: {
+            id: Number(departamentoId),
+            empresaId: Number(companyId)
+          }
+        });
+
+        if (!departamento) {
+          return res.status(404).json({ error: 'Departamento no encontrado' });
+        }
+
+        // Eliminar el departamento
+        await prisma.departamento.delete({
+          where: { id: Number(departamentoId) }
+        });
+
+        res.json({ message: 'Departamento eliminado exitosamente' });
+      } finally {
+        await prisma.$disconnect();
+      }
+    } catch (error: any) {
+      console.error('Delete departamento error:', error);
+      res.status(500).json({ error: error.message || 'Failed to delete departamento' });
+    }
+  }
+
+  // Eliminar un puesto
+  static async deletePuesto(req: Request, res: Response) {
+    try {
+      const { companyId, puestoId } = req.params;
+      
+      if (!companyId || isNaN(Number(companyId)) || !puestoId || isNaN(Number(puestoId))) {
+        return res.status(400).json({ error: 'Valid company ID and puesto ID are required' });
+      }
+
+      const prisma = new PrismaClient();
+
+      try {
+        // Verificar que el puesto pertenezca a la empresa
+        const puesto = await prisma.puesto.findFirst({
+          where: {
+            id: Number(puestoId),
+            empresaId: Number(companyId)
+          }
+        });
+
+        if (!puesto) {
+          return res.status(404).json({ error: 'Puesto no encontrado' });
+        }
+
+        // Permitir eliminar cualquier puesto, incluso el último
+        // La validación de tener al menos un puesto se manejará en el frontend si es necesaria
+
+        // Eliminar el puesto
+        await prisma.puesto.delete({
+          where: { id: Number(puestoId) }
+        });
+
+        res.json({ message: 'Puesto eliminado exitosamente' });
+      } finally {
+        await prisma.$disconnect();
+      }
+    } catch (error: any) {
+      console.error('Delete puesto error:', error);
+      res.status(500).json({ error: error.message || 'Failed to delete puesto' });
     }
   }
 }

@@ -141,9 +141,9 @@ export class InvitationService {
         select: { name: true }
       });
       
-      const department = await prisma.companyDepartment.findUnique({
+      const department = await prisma.departamento.findUnique({
         where: { id: departmentId },
-        select: { name: true }
+        select: { nombre: true }
       });
       
       if (!company || !department) {
@@ -160,7 +160,7 @@ export class InvitationService {
           metadata: {
             role: 'DEPARTMENT_HEAD',
             departmentId: departmentId,
-            departmentName: department.name
+            departmentName: department.nombre
           }
         },
       });
@@ -172,12 +172,12 @@ export class InvitationService {
       const emailSent = await emailService.sendDepartmentHeadInvitationEmail(
         email, 
         company.name,
-        department.name,
+        department.nombre,
         invitationLink
       );
       
       if (emailSent) {
-        console.log(`✅ Department head invitation sent to ${email} for department ${department.name} at ${company.name}`);
+        console.log(`✅ Department head invitation sent to ${email} for department ${department.nombre} at ${company.name}`);
       }
       
       // En desarrollo, mostrar el link en consola

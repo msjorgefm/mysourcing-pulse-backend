@@ -92,11 +92,6 @@ async function seedCatalogs() {
     });
   }
 
-  // Seed IMSS Catalogs
-  await seedIMSSOrigenMovimiento();
-  await seedIMSSDelegaciones();
-  await seedIMSSSubdelegaciones();
-
   console.log('Catalogs seeded successfully!');
 }
 

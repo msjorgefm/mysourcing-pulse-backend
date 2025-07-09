@@ -393,18 +393,18 @@ export class CompanyService {
   }
   
   static async getCompanyDepartments(companyId: number) {
-    const departments = await prisma.companyDepartment.findMany({
+    const departments = await prisma.departamento.findMany({
       where: { 
-        companyId,
-        isActive: true
+        empresaId: companyId,
+        activo: true
       },
       include: {
         area: true,
-        positions: {
-          where: { isActive: true }
+        puestos: {
+          where: { activo: true }
         }
       },
-      orderBy: { name: 'asc' }
+      orderBy: { nombre: 'asc' }
     });
     
     return departments;
@@ -412,11 +412,11 @@ export class CompanyService {
   
   static async inviteDepartmentHead(companyId: number, email: string, departmentId: number) {
     // Verificar que el departamento pertenezca a la empresa
-    const department = await prisma.companyDepartment.findFirst({
+    const department = await prisma.departamento.findFirst({
       where: {
         id: departmentId,
-        companyId,
-        isActive: true
+        empresaId: companyId,
+        activo: true
       }
     });
     

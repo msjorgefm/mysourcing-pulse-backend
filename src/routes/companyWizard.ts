@@ -61,4 +61,49 @@ router.post('/:companyId/wizard/complete', async (req, res, next) => {
   }
 });
 
+// Obtener todas las áreas de una empresa
+router.get('/companies/:companyId/areas', async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyAreas(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Obtener todos los departamentos de una empresa (opcionalmente filtrados por área)
+router.get('/companies/:companyId/departamentos', async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyDepartamentos(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Eliminar un área
+router.delete('/companies/:companyId/areas/:areaId', async (req, res, next) => {
+  try {
+    await CompanyWizardController.deleteArea(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Eliminar un departamento
+router.delete('/companies/:companyId/departamentos/:departamentoId', async (req, res, next) => {
+  try {
+    await CompanyWizardController.deleteDepartamento(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Eliminar un puesto
+router.delete('/companies/:companyId/puestos/:puestoId', async (req, res, next) => {
+  try {
+    await CompanyWizardController.deletePuesto(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

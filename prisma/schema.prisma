@@ -58,54 +58,6 @@ model InvitationToken {
   @@map("invitation_tokens")
 }
 
-model Company {
-  id                        Int                         @id @default(autoincrement())
-  name                      String
-  rfc                       String                      @unique
-  legalName                 String
-  address                   String
-  email                     String
-  phone                     String?
-  status                    CompanyStatus               @default(IN_SETUP)
-  employeesCount            Int                         @default(0)
-  createdAt                 DateTime                    @default(now())
-  updatedAt                 DateTime                    @updatedAt
-  calendars                 Calendar[]
-  companyAddress            CompanyAddress?
-  areas                     CompanyArea[]
-  banks                     CompanyBank[]
-  benefitGroups             CompanyBenefitGroup[]
-  benefits                  CompanyBenefit[]
-  departments               CompanyDepartment[]
-  digitalCertificate        CompanyDigitalCertificate?
-  documentChecklist         CompanyDocumentChecklist?
-  companyDocuments          CompanyDocument[]
-  generalInfo               CompanyGeneralInfo?
-  legalRepresentative       CompanyLegalRepresentative?
-  notarialPower             CompanyNotarialPower?
-  policies                  CompanyPolicy[]
-  positions                 CompanyPosition[]
-  schedules                 CompanySchedule[]
-  wizard                    CompanyWizard?
-  employees                 Employee[]
-  fonacot                   Fonacot?
-  imssRegistroPatronal      IMSSRegistroPatronal?
-  incidences                Incidence[]
-  invitationTokens          InvitationToken[]
-  notifications             Notification[]
-  organizationalAreas       OrganizationalArea[]
-  organizationalDepartments OrganizationalDepartment[]
-  organizationalPositions   OrganizationalPosition[]
-  payrolls                  Payroll[]
-  users                     User[]
-  wizardProgress            WizardProgress?
-  workSchedules             WorkSchedule[]
-  workerDetails             WorkerDetails[]
-
-  @@index([status])
-  @@map("companies")
-}
-
 model Employee {
   id               Int            @id @default(autoincrement())
   employeeNumber   String         @unique
@@ -252,245 +204,6 @@ model Notification {
   @@map("notifications")
 }
 
-model CompanyWizard {
-  id              Int                    @id @default(autoincrement())
-  companyId       Int                    @unique
-  status          WizardStatus           @default(IN_PROGRESS)
-  currentSection  Int                    @default(1)
-  currentStep     Int                    @default(1)
-  wizardData      Json                   @default("{}")
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
-  completedAt     DateTime?
-  sectionProgress CompanyWizardSection[]
-  company         Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_wizards")
-}
-
-model CompanyWizardSection {
-  id            Int                 @id @default(autoincrement())
-  wizardId      Int
-  sectionNumber Int
-  sectionName   String
-  status        SectionStatus       @default(PENDING)
-  isOptional    Boolean             @default(false)
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  completedAt   DateTime?
-  wizard        CompanyWizard       @relation(fields: [wizardId], references: [id], onDelete: Cascade)
-  steps         CompanyWizardStep[]
-
-  @@unique([wizardId, sectionNumber])
-  @@map("company_wizard_sections")
-}
-
-model CompanyWizardStep {
-  id          Int                  @id @default(autoincrement())
-  sectionId   Int
-  stepNumber  Int
-  stepName    String
-  status      StepStatus           @default(PENDING)
-  isOptional  Boolean              @default(false)
-  stepData    Json                 @default("{}")
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-  completedAt DateTime?
-  section     CompanyWizardSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-
-  @@unique([sectionId, stepNumber])
-  @@map("company_wizard_steps")
-}
-
-model CompanyGeneralInfo {
-  id                 Int      @id @default(autoincrement())
-  companyId          Int      @unique
-  businessName       String   @db.VarChar(100)
-  commercialName     String?
-  rfc                String
-  tipoPersona        String?
-  actividadEconomica String?
-  taxRegime          String
-  startDate          DateTime
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  company            Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_general_info")
-}
-
-model CompanyAddress {
-  id             Int      @id @default(autoincrement())
-  companyId      Int      @unique
-  street         String
-  exteriorNumber String
-  interiorNumber String?
-  neighborhood   String
-  city           String
-  state          String
-  zipCode        String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  tipoDomicilio  String   @default("matriz")
-  nombreSucursal String
-  municipio      String?
-  company        Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_address")
-}
-
-model CompanyLegalRepresentative {
-  id                   Int                 @id @default(autoincrement())
-  companyId            Int                 @unique
-  name                 String
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
-  primerApellido       String?
-  segundoApellido      String?
-  tipoIdentificacionId Int?
-  uriIdentificacion    String?
-  company              Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  tipoIdentificacion   IdentificationType? @relation(fields: [tipoIdentificacionId], references: [id])
-
-  @@map("company_legal_representative")
-}
-
-model CompanyBank {
-  id            Int      @id @default(autoincrement())
-  companyId     Int
-  bankName      String
-  bankType      BankType
-  accountNumber String
-  clabe         String?
-  isPrimary     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_banks")
-}
-
-model CompanyDigitalCertificate {
-  id              Int      @id @default(autoincrement())
-  companyId       Int      @unique
-  certificateFile String
-  keyFile         String
-  password        String
-  validFrom       DateTime
-  validUntil      DateTime
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_digital_certificates")
-}
-
-model CompanyArea {
-  id          Int                 @id @default(autoincrement())
-  companyId   Int
-  name        String
-  description String?
-  isActive    Boolean             @default(true)
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  departments CompanyDepartment[]
-
-  @@map("company_areas")
-}
-
-model CompanyDepartment {
-  id          Int               @id @default(autoincrement())
-  companyId   Int
-  areaId      Int?
-  name        String
-  description String?
-  isActive    Boolean           @default(true)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  area        CompanyArea?      @relation(fields: [areaId], references: [id])
-  company     Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  positions   CompanyPosition[]
-
-  @@map("company_departments")
-}
-
-model CompanyPosition {
-  id           Int               @id @default(autoincrement())
-  companyId    Int
-  departmentId Int
-  name         String
-  description  String?
-  minSalary    Decimal?          @db.Decimal(10, 2)
-  maxSalary    Decimal?          @db.Decimal(10, 2)
-  isActive     Boolean           @default(true)
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  company      Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  department   CompanyDepartment @relation(fields: [departmentId], references: [id])
-
-  @@map("company_positions")
-}
-
-model CompanyBenefit {
-  id          Int         @id @default(autoincrement())
-  companyId   Int
-  name        String
-  type        BenefitType
-  isLegal     Boolean     @default(false)
-  percentage  Decimal?    @db.Decimal(5, 2)
-  amount      Decimal?    @db.Decimal(10, 2)
-  description String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_benefits")
-}
-
-model CompanyBenefitGroup {
-  id          Int      @id @default(autoincrement())
-  companyId   Int
-  name        String
-  description String?
-  benefits    Json
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_benefit_groups")
-}
-
-model CompanySchedule {
-  id        Int      @id @default(autoincrement())
-  companyId Int
-  name      String
-  startTime String
-  endTime   String
-  breakTime Int?
-  workDays  Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_schedules")
-}
-
-model CompanyPolicy {
-  id          Int        @id @default(autoincrement())
-  companyId   Int
-  name        String
-  type        PolicyType
-  description String?
-  content     String
-  isActive    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  company     Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_policies")
-}
-
 model TaxRegime {
   id          Int      @id @default(autoincrement())
   code        String   @unique
@@ -617,26 +330,6 @@ model Colonia {
   @@map("cat_colonias")
 }
 
-model CompanyNotarialPower {
-  id                 Int       @id @default(autoincrement())
-  companyId          Int       @unique
-  folioPoderNotarial String    @db.VarChar(25)
-  fechaEmision       DateTime
-  fechaVigencia      DateTime
-  nombreFederatario  String
-  numeroFederatario  Int
-  estadoId           Int
-  municipioId        Int
-  uriPoderNotarial   String?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  company            Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  estado             State     @relation(fields: [estadoId], references: [id])
-  municipio          Municipio @relation(fields: [municipioId], references: [id])
-
-  @@map("company_notarial_power")
-}
-
 model ClaseRiesgoIMSS {
   id                  Int                    @id @default(autoincrement())
   codigo              String                 @unique @map("codigo")
@@ -647,39 +340,6 @@ model ClaseRiesgoIMSS {
   registrosPatronales IMSSRegistroPatronal[]
 
   @@map("clase_riesgo_imss")
-}
-
-model IMSSRegistroPatronal {
-  id                  Int              @id @default(autoincrement())
-  companyId           Int              @unique
-  nomDomicilio        String?          @map("nomDomicilio")
-  actividadEconomica  String?          @map("actividadEconomica")
-  clvRegistroPatronal String?          @map("clvRegistroPatronal")
-  claseRiesgoId       Int?             @map("claseRiesgoId")
-  numFraccion         Int?             @map("numFraccion")
-  numPrismaRiesgo     Decimal?         @map("numPrismaRiesgo") @db.Decimal(5, 2)
-  fechaVigencia       DateTime?        @map("fechaVigencia")
-  uriRegistroPatronal String?          @map("uriRegistroPatronal")
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  imssDomicilio       IMSSDomicilio?
-  claseRiesgo         ClaseRiesgoIMSS? @relation(fields: [claseRiesgoId], references: [id])
-  company             Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("imss_registro_patronal")
-}
-
-model Fonacot {
-  id                Int       @id @default(autoincrement())
-  companyId         Int       @unique
-  registroPatronal  String?   @db.VarChar(7)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  fechaAfiliacion   DateTime?
-  uriArchivoFonacot String?
-  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("fonacot")
 }
 
 model IMSSDelegacion {
@@ -1115,6 +775,80 @@ enum UserRole {
   DEPARTMENT_HEAD
 }
 
+// ================================
+// EMPRESAS
+// ================================
+model Company {
+  id             Int           @id @default(autoincrement())
+  name           String
+  rfc            String        @unique
+  legalName      String
+  address        String
+  email          String
+  phone          String?
+  status         CompanyStatus @default(IN_SETUP)
+  employeesCount Int           @default(0)
+
+  // Relaciones
+  calendars               Calendar[]
+  documentChecklist       CompanyDocumentChecklist?
+  companyDocuments        CompanyDocument[]
+  employees               Employee[]
+  incidences              Incidence[]
+  invitationTokens        InvitationToken[]
+  notifications           Notification[]
+  workSchedules           WorkSchedule[]
+  organizationalPositions OrganizationalPosition[]
+  payrolls                Payroll[]
+  users                   User[]
+  wizardProgress          WizardProgress?
+  workerDetails           WorkerDetails[]
+
+  // Wizard y configuración
+  wizard CompanyWizard?
+
+  // Sección 1: Datos Generales
+  generalInfo         CompanyGeneralInfo?
+  companyAddress      CompanyAddress?
+  legalRepresentative CompanyLegalRepresentative?
+  notarialPower       CompanyNotarialPower?
+
+  // Sección 2: Obligaciones Patronales
+  imssRegistroPatronal IMSSRegistroPatronal?
+  fonacot              Fonacot?
+
+  // Sección 3: Bancos
+  bank CompanyBank?
+
+  // Sección 4: Sellos Digitales
+  digitalCertificate CompanyDigitalCertificate?
+
+  // Sección 5: Estructura Organizacional
+  areas                     Area[]
+  departamentos             Departamento[]
+  puestos                   Puesto[]
+  organizationalAreas       OrganizationalArea[]
+  organizationalDepartments OrganizationalDepartment[]
+
+  // Sección 6: Prestaciones
+  benefits      CompanyBenefit[]
+  benefitGroups CompanyBenefitGroup[]
+
+  // Sección 7: Nómina (usa el modelo Calendar existente)
+
+  // Sección 8: Talento Humano
+  schedules CompanySchedule[]
+  policies  CompanyPolicy[]
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Índices
+  @@index([status])
+  @@map("companies")
+}
+
 enum CompanyStatus {
   IN_SETUP
   CONFIGURED
@@ -1187,6 +921,443 @@ enum NotificationPriority {
   URGENT
 }
 
+// ================================
+// WIZARD DE CONFIGURACIÓN DE EMPRESAS
+// ================================
+model CompanyWizard {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // Estado general del wizard
+  status         WizardStatus @default(IN_PROGRESS)
+  currentSection Int          @default(1)
+  currentStep    Int          @default(1)
+
+  // Datos del wizard (JSON para flexibilidad)
+  wizardData Json @default("{}")
+
+  // Progreso por secciones
+  sectionProgress CompanyWizardSection[]
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  @@map("company_wizards")
+}
+
+model CompanyWizardSection {
+  id       Int           @id @default(autoincrement())
+  wizardId Int
+  wizard   CompanyWizard @relation(fields: [wizardId], references: [id], onDelete: Cascade)
+
+  // Identificación de la sección
+  sectionNumber Int // 1-8
+  sectionName   String // "Datos Generales", "Obligaciones Patronales", etc.
+
+  // Estado de la sección
+  status     SectionStatus @default(PENDING)
+  isOptional Boolean       @default(false)
+
+  // Pasos de la sección
+  steps CompanyWizardStep[]
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  @@unique([wizardId, sectionNumber])
+  @@map("company_wizard_sections")
+}
+
+model CompanyWizardStep {
+  id        Int                  @id @default(autoincrement())
+  sectionId Int
+  section   CompanyWizardSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  // Identificación del paso
+  stepNumber Int // 1-n
+  stepName   String // "Información General", "Domicilio", etc.
+
+  // Estado del paso
+  status     StepStatus @default(PENDING)
+  isOptional Boolean    @default(false)
+
+  // Datos del paso (JSON)
+  stepData Json @default("{}")
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  @@unique([sectionId, stepNumber])
+  @@map("company_wizard_steps")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 1: DATOS GENERALES
+// ================================
+
+// Paso 1: Información General
+model CompanyGeneralInfo {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  businessName       String    @db.VarChar(100)
+  commercialName     String?
+  rfc                String
+  tipoPersona        String? // FISICA o MORAL
+  actividadEconomica String?
+  taxRegime          String
+  startDate          DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_general_info")
+}
+
+// Paso 2: Domicilio
+model CompanyAddress {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  tipoDomicilio  String  @default("matriz")
+  nombreSucursal String
+  street         String
+  exteriorNumber String
+  interiorNumber String?
+  neighborhood   String
+  city           String
+  state          String
+  zipCode        String
+  municipio      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_address")
+}
+
+// Paso 3: Representante Legal
+model CompanyLegalRepresentative {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name                 String
+  primerApellido       String?
+  segundoApellido      String?
+  tipoIdentificacionId Int?
+  tipoIdentificacion   IdentificationType? @relation(fields: [tipoIdentificacionId], references: [id])
+  uriIdentificacion    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_legal_representative")
+}
+
+// Paso 4: Poder Notarial
+model CompanyNotarialPower {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  folioPoderNotarial String?    @db.VarChar(25)
+  fechaEmision       DateTime?
+  fechaVigencia      DateTime?
+  nombreFederatario  String?
+  numeroFederatario  Int?
+  estadoId           Int?
+  estado             State?     @relation(fields: [estadoId], references: [id])
+  municipioId        Int?
+  municipio          Municipio? @relation(fields: [municipioId], references: [id])
+  uriPoderNotarial   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_notarial_power")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 2: OBLIGACIONES PATRONALES
+// ================================
+
+// Paso 1: IMSS Registro Patronal
+model IMSSRegistroPatronal {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // Campos IMSS
+  nomDomicilio        String?          @map("nomDomicilio")
+  actividadEconomica  String?          @map("actividadEconomica")
+  clvRegistroPatronal String?          @map("clvRegistroPatronal")
+  claseRiesgoId       Int?             @map("claseRiesgoId")
+  claseRiesgo         ClaseRiesgoIMSS? @relation(fields: [claseRiesgoId], references: [id])
+  numFraccion         Int?             @map("numFraccion")
+  numPrismaRiesgo     Decimal?         @map("numPrismaRiesgo") @db.Decimal(5, 2)
+  fechaVigencia       DateTime?        @map("fechaVigencia")
+  uriRegistroPatronal String?          @map("uriRegistroPatronal")
+
+  // Relación con domicilio IMSS
+  imssDomicilio IMSSDomicilio?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("imss_registro_patronal")
+}
+
+// Modelo para otros datos de obligaciones fiscales (IMSS Domicilio, FONACOT, etc.)
+model Fonacot {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // Registro Patronal FONACOT
+  registroPatronal  String?   @db.VarChar(7)
+  fechaAfiliacion   DateTime?
+  uriArchivoFonacot String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("fonacot")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 3: BANCOS
+// ================================
+
+// Catálogo de Bancos
+model Bank {
+  id                 Int      @id @default(autoincrement())
+  codigo             String   @unique @db.VarChar(10)
+  nombre             String   @db.VarChar(200)
+  nombreCorto        String?  @db.VarChar(50)
+  activo             Boolean  @default(true)
+  fechaCreacion      DateTime @default(now())
+  fechaActualizacion DateTime @updatedAt
+
+  // Relaciones
+  companyBanks CompanyBank[]
+
+  @@map("cat_banks")
+}
+
+// Paso 1: Cuentas Bancarias
+model CompanyBank {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  // Relación con el catálogo de bancos
+  bankId Int
+  bank   Bank @relation(fields: [bankId], references: [id])
+
+  // Campos nuevos
+  nomCuentaBancaria          String // 1. Nombre de la cuenta bancaria
+  numCuentaBancaria          String // 3. Número de cuenta bancaria
+  numClabeInterbancaria      String   @db.VarChar(18) // 4. CLABE interbancaria (18 dígitos)
+  numSucursal                String?  @db.VarChar(6) // 5. Número de sucursal (3-6 dígitos)
+  clvDispersion              Int? // 6. Clave de dispersión
+  desCuentaBancaria          String? // 7. Descripción de la cuenta (opcional)
+  opcCuentaBancariaPrincipal Boolean? @default(false) // 8. Cuenta principal
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_banks")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 4: SELLOS DIGITALES
+// ================================
+
+// Paso 1: Certificados SAT
+model CompanyDigitalCertificate {
+  id        Int     @id @default(autoincrement())
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  certificateFile String
+  keyFile         String
+  password        String?
+  validFrom       DateTime?
+  validUntil      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_digital_certificates")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 5: ESTRUCTURA ORGANIZACIONAL
+// ================================
+
+// Paso 1: Áreas
+model Area {
+  id        Int     @id @default(autoincrement())
+  empresaId Int
+  empresa   Company @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  nombre      String
+  descripcion String?
+  activo      Boolean @default(true)
+
+  // Relaciones
+  departamentos Departamento[]
+  puestos       Puesto[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([empresaId, nombre])
+  @@map("areas")
+}
+
+// Paso 2: Departamentos
+model Departamento {
+  id        Int     @id @default(autoincrement())
+  empresaId Int
+  empresa   Company @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  areaId Int?
+  area   Area? @relation(fields: [areaId], references: [id])
+
+  nombre      String
+  descripcion String?
+  activo      Boolean @default(true)
+
+  // Relaciones
+  puestos Puesto[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([empresaId, nombre])
+  @@map("departamentos")
+}
+
+// Paso 3: Puestos (REQUERIDO)
+model Puesto {
+  id        Int     @id @default(autoincrement())
+  empresaId Int
+  empresa   Company @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  // Relaciones opcionales para permitir flexibilidad
+  areaId Int?
+  area   Area? @relation(fields: [areaId], references: [id])
+
+  departamentoId Int?
+  departamento   Departamento? @relation(fields: [departamentoId], references: [id])
+
+  nombre String
+  activo Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([empresaId, nombre])
+  @@map("puestos")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 6: PRESTACIONES
+// ================================
+
+// Paso 1: Prestaciones
+model CompanyBenefit {
+  id        Int     @id @default(autoincrement())
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name        String
+  type        BenefitType
+  isLegal     Boolean     @default(false) // Prestación de ley
+  percentage  Decimal?    @db.Decimal(5, 2)
+  amount      Decimal?    @db.Decimal(10, 2)
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_benefits")
+}
+
+// Paso 2: Grupos de Prestaciones
+model CompanyBenefitGroup {
+  id        Int     @id @default(autoincrement())
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  benefits    Json // Array de IDs de beneficios
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_benefit_groups")
+}
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 7: NÓMINA
+// ================================
+// Usa el modelo Calendar existente para Calendario Laboral
+// La configuración de nómina se maneja en el modelo Company
+
+// ================================
+// MODELOS DEL WIZARD - SECCIÓN 8: TALENTO HUMANO
+// ================================
+
+// Paso 1: Horarios
+model CompanySchedule {
+  id        Int     @id @default(autoincrement())
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name      String
+  startTime String // "08:00"
+  endTime   String // "17:00"
+  breakTime Int? // minutos
+  workDays  Json // [1,2,3,4,5] = lunes a viernes
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_schedules")
+}
+
+// Paso 2: Políticas
+model CompanyPolicy {
+  id        Int     @id @default(autoincrement())
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name        String
+  type        PolicyType
+  description String?
+  content     String     @db.Text
+  isActive    Boolean    @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_policies")
+}
+
+// Enums para el wizard
 enum WizardStatus {
   IN_PROGRESS
   COMPLETED
