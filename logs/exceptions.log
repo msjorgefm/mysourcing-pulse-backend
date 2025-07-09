@@ -299,3 +299,286 @@ src/controllers/companyWizardController.ts(220,28): error TS2339: Property 'iMSS
     at Module.load (node:internal/modules/cjs/loader:1203:32)
     at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
     at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-08 23:34:49 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(156,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(161,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(187,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(156,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(161,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(187,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(156,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(161,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(187,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-08 23:35:10 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-08 23:35:37 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-08 23:35:48 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-09 00:02:38 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-09 00:05:45 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/services/companyService.ts(42,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(158,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)'.
+src/services/companyService.ts(163,9): error TS2353: Object literal may only specify known properties, and 'documentChecklist' does not exist in type 'CompanyInclude<DefaultArgs>'.
+src/services/companyService.ts(189,34): error TS2339: Property 'documentChecklist' does not exist on type '{ email: string; name: string; id: number; createdAt: Date; updatedAt: Date; phone: string | null; rfc: string; legalName: string; address: string; status: CompanyStatus; employeesCount: number; }'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-09 01:27:30 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companyDocumentRoutes.ts(3,32): error TS2307: Cannot find module '../middleware/authMiddleware' or its corresponding type declarations.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companyDocumentRoutes.ts(3,32): error TS2307: Cannot find module '../middleware/authMiddleware' or its corresponding type declarations.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companyDocumentRoutes.ts(3,32): error TS2307: Cannot find module '../middleware/authMiddleware' or its corresponding type declarations.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+2025-07-09 01:30:52 [[31MERROR[39M]: uncaughtException: ⨯ Unable to compile TypeScript:
+src/routes/companyDocumentRoutes.ts(9,12): error TS2304: Cannot find name 'authMiddleware'.
+
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companyDocumentRoutes.ts(9,12): error TS2304: Cannot find name 'authMiddleware'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+TSError: ⨯ Unable to compile TypeScript:
+src/routes/companyDocumentRoutes.ts(9,12): error TS2304: Cannot find name 'authMiddleware'.
+
+    at createTSError (/app/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/app/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/app/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/app/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/app/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Object.require.extensions.<computed> [as .ts] (/app/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)

@@ -84,7 +84,6 @@ model Company {
   policies            CompanyPolicy[]
   positions           CompanyPosition[]
   schedules           CompanySchedule[]
-  taxObligations      CompanyTaxObligations?
   imssRegistroPatronal IMSSRegistroPatronal?
   fonacot             Fonacot?
   wizard              CompanyWizard?
@@ -96,11 +95,14 @@ model Company {
   users               User[]
   
   // Nuevas relaciones para el wizard y configuración de empresa
-  wizardStatus        WizardStatus?
+  wizardProgress      WizardProgress?
   organizationalAreas OrganizationalArea[]
   organizationalDepartments OrganizationalDepartment[]
   organizationalPositions OrganizationalPosition[]
   workSchedules       WorkSchedule[]
+  documentChecklist   CompanyDocumentChecklist?
+  companyDocuments    CompanyDocument[]
+  workerDetails       WorkerDetails[]
 
   @@index([status])
   @@map("companies")
@@ -357,24 +359,6 @@ model CompanyLegalRepresentative {
   @@map("company_legal_representative")
 }
 
-model CompanyTaxObligations {
-  id                  Int      @id @default(autoincrement())
-  companyId           Int      @unique
-  imssRegistration    String?
-  imssClassification  String?
-  imssRiskClass       String?
-  imssAddress         String?
-  imssCity            String?
-  imssState           String?
-  imssZipCode         String?
-  fonacotRegistration String?
-  fonacotCenter       String?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  company             Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@map("company_tax_obligations")
-}
 
 model CompanyBank {
   id            Int      @id @default(autoincrement())
@@ -1075,7 +1059,7 @@ enum TipoDocumento {
 //====================================================
 
 // Modelo para tracking del estado del wizard
-model WizardStatus {
+model WizardProgress {
   id              Int              @id @default(autoincrement())
   company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId       Int              @unique
@@ -1088,13 +1072,13 @@ model WizardStatus {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   
-  @@map("wizard_status")
+  @@map("wizard_progress")
 }
 
 model SectionProgress {
   id              Int            @id @default(autoincrement())
-  wizardStatus    WizardStatus   @relation(fields: [wizardStatusId], references: [id], onDelete: Cascade)
-  wizardStatusId  Int
+  wizardProgress  WizardProgress @relation(fields: [wizardProgressId], references: [id], onDelete: Cascade)
+  wizardProgressId Int
   sectionNumber   Int
   name            String
   status          String         @default("PENDING") // "PENDING", "IN_PROGRESS", "COMPLETED", "SKIPPED"
@@ -1104,7 +1088,7 @@ model SectionProgress {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   
-  @@index([wizardStatusId])
+  @@index([wizardProgressId])
   @@map("section_progress")
 }
 
@@ -1389,4 +1373,58 @@ model WorkerDocument {
   
   @@index([workerDetailsId])
   @@map("worker_documents")
+}
+
+model CompanyDocumentChecklist {
+  id                           Int      @id @default(autoincrement())
+  companyId                    Int      @unique
+  company                      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  constanciaSituacionFiscal    Boolean  @default(false)
+  altaPatronal                 Boolean  @default(false)
+  altaFonacot                  Boolean  @default(false)
+  sellosDigitales              Boolean  @default(false)
+  catalogoTrabajadores         Boolean  @default(false)
+  plantillaIncidencias         Boolean  @default(false)
+  identificacion               Boolean  @default(false)
+  cuentaBancaria               Boolean  @default(false)
+  representanteLegal           Boolean  @default(false)
+  actaConstitutiva             Boolean  @default(false)
+  allDocumentsUploaded         Boolean  @default(false)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+
+  @@map("company_document_checklist")
+}
+
+model CompanyDocument {
+  id               Int              @id @default(autoincrement())
+  companyId        Int
+  company          Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  documentType     DocumentType
+  fileName         String
+  filePath         String
+  fileSize         Int
+  mimeType         String
+  uploadedBy       UserRole
+  uploadedByUserId Int
+  notes            String?
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([companyId])
+  @@map("company_documents")
+}
+
+enum DocumentType {
+  CONSTANCIA_SITUACION_FISCAL
+  ALTA_PATRONAL
+  ALTA_FONACOT
+  SELLOS_DIGITALES
+  CATALOGO_TRABAJADORES
+  PLANTILLA_INCIDENCIAS
+  IDENTIFICACION
+  CUENTA_BANCARIA
+  REPRESENTANTE_LEGAL
+  ACTA_CONSTITUTIVA
 }

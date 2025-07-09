@@ -16,6 +16,7 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 // Importar rutas
 import authRoutes from './routes/auth';
 import companyRoutes from './routes/companies';
+import companyDocumentRoutes from './routes/companyDocumentRoutes';
 import employeeRoutes from './routes/employees';
 import payrollRoutes from './routes/payrolls';
 import calendarRoutes from './routes/calendars';
@@ -134,6 +135,7 @@ app.get('/api/health', (req, res) => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/companies', companyRoutes);
+app.use('/api/companies', companyDocumentRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/payrolls', payrollRoutes);
 app.use('/api/calendars', calendarRoutes);
