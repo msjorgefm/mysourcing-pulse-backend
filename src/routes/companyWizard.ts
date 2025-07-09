@@ -8,7 +8,7 @@ const router = Router();
 router.use(authenticate);
 
 // Inicializar wizard para una empresa
-router.post('/companies/:companyId/wizard/initialize', async (req, res, next) => {
+router.post('/:companyId/wizard/initialize', async (req, res, next) => {
   try {
     await CompanyWizardController.initializeWizard(req, res);
   } catch (err) {
@@ -17,7 +17,7 @@ router.post('/companies/:companyId/wizard/initialize', async (req, res, next) =>
 });
 
 // Obtener estado del wizard
-router.get('/companies/:companyId/wizard/status', async (req, res, next) => {
+router.get('/:companyId/wizard/status', async (req, res, next) => {
   try {
     await CompanyWizardController.getWizardStatus(req, res);
   } catch (err) {
@@ -26,7 +26,7 @@ router.get('/companies/:companyId/wizard/status', async (req, res, next) => {
 });
 
 // Actualizar paso del wizard
-router.put('/companies/:companyId/wizard/section/:sectionNumber/step/:stepNumber', async (req, res, next) => {
+router.put('/:companyId/wizard/section/:sectionNumber/step/:stepNumber', async (req, res, next) => {
   try {
     await CompanyWizardController.updateWizardStep(req, res);
   } catch (err) {
@@ -35,7 +35,7 @@ router.put('/companies/:companyId/wizard/section/:sectionNumber/step/:stepNumber
 });
 
 // Obtener datos específicos de una sección
-router.get('/companies/:companyId/wizard/section/:sectionNumber/data', async (req, res, next) => {
+router.get('/:companyId/wizard/section/:sectionNumber/data', async (req, res, next) => {
   try {
     await CompanyWizardController.getSectionData(req, res);
   } catch (err) {
@@ -44,7 +44,7 @@ router.get('/companies/:companyId/wizard/section/:sectionNumber/data', async (re
 });
 
 // Saltar sección opcional
-router.put('/companies/:companyId/wizard/section/:sectionNumber/skip', async (req, res, next) => {
+router.put('/:companyId/wizard/section/:sectionNumber/skip', async (req, res, next) => {
   try {
     await CompanyWizardController.skipSection(req, res);
   } catch (err) {
@@ -53,7 +53,7 @@ router.put('/companies/:companyId/wizard/section/:sectionNumber/skip', async (re
 });
 
 // Completar wizard
-router.post('/companies/:companyId/wizard/complete', async (req, res, next) => {
+router.post('/:companyId/wizard/complete', async (req, res, next) => {
   try {
     await CompanyWizardController.completeWizard(req, res);
   } catch (err) {

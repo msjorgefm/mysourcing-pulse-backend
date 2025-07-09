@@ -10,21 +10,40 @@ export interface CreateNotificationRequest {
   payrollId?: number;
   priority?: string;
   metadata?: any;
+  targetRole?: string;
+  userId?: number;
+  createdBy?: number;
 }
 
 export class NotificationService {
   
   static async createNotification(data: CreateNotificationRequest) {
+    const notificationData: any = {
+      type: data.type,
+      title: data.title,
+      message: data.message,
+      priority: data.priority || 'NORMAL',
+      companyId: data.companyId,
+      payrollId: data.payrollId,
+      metadata: data.metadata || {}
+    };
+
+    // Agregar targetRole y userId al metadata si se proporcionan
+    if (data.targetRole) {
+      notificationData.metadata = {
+        ...notificationData.metadata,
+        targetRole: data.targetRole
+      };
+    }
+    if (data.userId) {
+      notificationData.metadata = {
+        ...notificationData.metadata,
+        userId: data.userId
+      };
+    }
+
     const notification = await prisma.notification.create({
-      data: {
-        type: data.type as any,
-        title: data.title,
-        message: data.message,
-        priority: (data.priority as any) || 'NORMAL',
-        companyId: data.companyId,
-        payrollId: data.payrollId,
-        metadata: data.metadata
-      }
+      data: notificationData
     });
     
     return {
@@ -37,6 +56,8 @@ export class NotificationService {
       companyId: notification.companyId,
       payrollId: notification.payrollId,
       metadata: notification.metadata,
+      targetRole: (notification.metadata as any)?.targetRole,
+      userId: (notification.metadata as any)?.userId,
       createdAt: notification.createdAt
     };
   }
@@ -80,6 +101,8 @@ export class NotificationService {
       payrollId: notification.payrollId,
       payrollInfo: notification.payroll,
       metadata: notification.metadata,
+      targetRole: (notification.metadata as any)?.targetRole,
+      userId: (notification.metadata as any)?.userId,
       createdAt: notification.createdAt,
       readAt: notification.readAt
     }));

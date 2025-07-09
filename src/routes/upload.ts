@@ -196,7 +196,7 @@ const handleMulterError = (err: any, req: Request, res: Response, next: any) => 
 };
 
 // Endpoint para subir certificados
-router.post('/upload/certificate', 
+router.post('/certificate', 
   upload.fields([
     { name: 'certificate', maxCount: 1 },
     { name: 'key', maxCount: 1 }

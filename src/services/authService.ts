@@ -13,9 +13,12 @@ export class AuthService {
     
     console.log('🔐 Login attempt for:', email);
     
-    // Buscar usuario
-    const user = await prisma.user.findUnique({
-      where: { email },
+    // Buscar usuario por email
+    const user = await prisma.user.findFirst({
+      where: {
+        email: email,
+        isActive: true
+      },
       include: {
         company: true,
         employee: true
@@ -65,8 +68,13 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        firstName: user.firstName || undefined,
+        lastName: user.lastName || undefined,
+        phone: user.phone || undefined,
+        photoUrl: user.photoUrl || undefined,
         role: user.role as any,
         companyId: user.companyId || undefined,
+        companyName: user.company?.name || undefined,
         employeeId: user.employeeId || undefined,
         isActive: user.isActive
       },

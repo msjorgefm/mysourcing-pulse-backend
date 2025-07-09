@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { InvitationService } from './invitationService';
 
 const prisma = new PrismaClient();
 
@@ -38,6 +39,7 @@ export class CompanyService {
         calendars: {
           select: { id: true, name: true, year: true }
         },
+        documentChecklist: true,
         _count: {
           select: {
             employees: { where: { status: 'ACTIVE' } },
@@ -65,6 +67,7 @@ export class CompanyService {
       calendarsCount: company.calendars.length,
       recentPayrolls: company.payrolls,
       activeCalendars: company.calendars,
+      documentChecklist: company.documentChecklist,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     }));
@@ -132,6 +135,15 @@ export class CompanyService {
       throw new Error('RFC already exists');
     }
     
+    // Verificar si ya existe un usuario con ese email
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email }
+    });
+    
+    if (existingUser) {
+      throw new Error('Ya existe un usuario registrado con ese correo electrónico');
+    }
+    
     const company = await prisma.company.create({
       data: {
         name: data.name,
@@ -140,10 +152,29 @@ export class CompanyService {
         address: data.address,
         email: data.email,
         phone: data.phone,
-        status: (data.status ? this.mapStatusFromFrontend(data.status) : 'IN_SETUP') as any,
-        employeesCount: 0
+        status: 'IN_SETUP', // Siempre crear con estado "en configuración"
+        employeesCount: 0,
+        // Crear el checklist vacío por defecto
+        documentChecklist: {
+          create: {}
+        }
+      },
+      include: {
+        documentChecklist: true
       }
     });
+    
+    // Enviar invitación por correo electrónico
+    try {
+      await InvitationService.createAndSendInvitation(
+        company.id,
+        company.email,
+        company.name
+      );
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      // No fallar la creación de la empresa si falla el envío del correo
+    }
     
     return {
       id: company.id,
@@ -155,6 +186,7 @@ export class CompanyService {
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
       employeesCount: 0,
+      documentChecklist: company.documentChecklist,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     };
@@ -358,5 +390,60 @@ export class CompanyService {
     };
     
     return statusMap[status] || 'IN_SETUP';
+  }
+  
+  static async getCompanyDepartments(companyId: number) {
+    const departments = await prisma.departamento.findMany({
+      where: { 
+        empresaId: companyId,
+        activo: true
+      },
+      include: {
+        area: true,
+        puestos: {
+          where: { activo: true }
+        }
+      },
+      orderBy: { nombre: 'asc' }
+    });
+    
+    return departments;
+  }
+  
+  static async inviteDepartmentHead(companyId: number, email: string, departmentId: number) {
+    // Verificar que el departamento pertenezca a la empresa
+    const department = await prisma.departamento.findFirst({
+      where: {
+        id: departmentId,
+        empresaId: companyId,
+        activo: true
+      }
+    });
+    
+    if (!department) {
+      throw new Error('Departamento no encontrado o no pertenece a esta empresa');
+    }
+    
+    // Verificar que no exista ya un usuario con ese email
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
+    
+    if (existingUser) {
+      throw new Error('Ya existe un usuario con ese correo electrónico');
+    }
+    
+    // Crear invitación
+    const invitation = await InvitationService.createDepartmentHeadInvitation(
+      companyId,
+      email,
+      departmentId
+    );
+    
+    return {
+      success: true,
+      message: 'Invitación enviada exitosamente',
+      invitation
+    };
   }
 }

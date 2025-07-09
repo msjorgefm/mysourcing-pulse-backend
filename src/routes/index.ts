@@ -8,6 +8,7 @@ import stateRoutes from './stateRoutes';
 import locationRoutes from './locations';
 import companyRoutes from './companies';
 import bankRoutes from './bankRoutes';
+import companyDocumentRoutes from './companyDocumentRoutes';
 import payrollRoutes from './payrolls';
 import notificationRoutes from './notifications';
 import uploadRoutes from './upload';
@@ -30,6 +31,7 @@ router.use(authenticate);
 
 // Rutas principales
 router.use('/companies', companyRoutes);
+router.use('/companies', companyDocumentRoutes);
 router.use('/employees', employeeRoutes);
 router.use('/payrolls', payrollRoutes);
 router.use('/calendars', calendarRoutes);

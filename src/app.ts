@@ -15,7 +15,21 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 
 // Importar rutas
 import authRoutes from './routes/auth';
-import apiRoutes from './routes';
+import companyRoutes from './routes/companies';
+import companyDocumentRoutes from './routes/companyDocumentRoutes';
+import employeeRoutes from './routes/employees';
+import payrollRoutes from './routes/payrolls';
+import calendarRoutes from './routes/calendars';
+import incidenceRoutes from './routes/incidences';
+import notificationRoutes from './routes/notifications';
+import onboardingRoutes from './routes/onboardingRoutes';
+import testRoutes from './routes/testRoutes';
+import uploadRoutes from './routes/upload';
+import catalogRoutes from './routes/catalogs';
+import companyWizardRoutes from './routes/companyWizard';
+import postalCodeRoutes from './routes/postalCodeRoutes';
+import stateRoutes from './routes/stateRoutes';
+import userRoutes from './routes/users';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -107,9 +121,38 @@ app.get('/health', (req, res) => {
   });
 });
 
+// API Health check
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    version: process.env.npm_package_version || '1.0.0'
+  });
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api', apiRoutes);
+app.use('/api/companies', companyRoutes);
+app.use('/api/companies', companyDocumentRoutes);
+app.use('/api/employees', employeeRoutes);
+app.use('/api/payrolls', payrollRoutes);
+app.use('/api/calendars', calendarRoutes);
+app.use('/api/incidences', incidenceRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/catalogs', catalogRoutes);
+app.use('/api/company-wizard', companyWizardRoutes);
+app.use('/api/postal-codes', postalCodeRoutes);
+app.use('/api/states', stateRoutes);
+app.use('/api/users', userRoutes);
+
+// Rutas de prueba (solo en desarrollo)
+if (process.env.NODE_ENV === 'development') {
+  app.use('/api/test', testRoutes);
+}
 
 // ================================
 // SOCKET.IO PARA TIEMPO REAL
@@ -180,6 +223,7 @@ const startServer = async () => {
     console.log('✅ Conexión a base de datos establecida');
     
     // Iniciar servidor
+    console.log('🔄 Iniciando servidor en puerto', PORT);
     server.listen(PORT, () => {
       console.log(`
         🚀 Servidor iniciado correctamente
@@ -212,6 +256,7 @@ const startServer = async () => {
     
   } catch (error) {
     console.error('❌ Error al iniciar servidor:', error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
     process.exit(1);
   }
 };
