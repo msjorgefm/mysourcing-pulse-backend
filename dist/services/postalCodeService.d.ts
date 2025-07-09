@@ -6,12 +6,12 @@ export declare class PostalCodeService {
      */
     static searchByPostalCode(postalCode: string): Promise<{
         id: number;
+        postalCode: string;
         neighborhood: string;
         city: string;
         state: string;
-        country: string;
-        postalCode: string;
         municipality: string;
+        country: string;
     }[]>;
     /**
      * Obtiene información completa de un código postal específico
@@ -20,12 +20,12 @@ export declare class PostalCodeService {
      */
     static getByPostalCode(postalCode: string): Promise<{
         id: number;
+        postalCode: string;
         neighborhood: string;
         city: string;
         state: string;
-        country: string;
-        postalCode: string;
         municipality: string;
+        country: string;
     } | null>;
     /**
      * Obtiene todos los colonias/barrios para un código postal
@@ -36,5 +36,28 @@ export declare class PostalCodeService {
         id: number;
         neighborhood: string;
     }[]>;
+    /**
+     * Crea un nuevo código postal si no existe
+     * @param data - Datos del nuevo código postal
+     * @returns El código postal creado o el existente
+     */
+    static createPostalCodeIfNotExists(data: {
+        postalCode: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        municipality?: string;
+    }): Promise<{
+        id: number;
+        isActive: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+        postalCode: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        municipality: string;
+        country: string;
+    }>;
 }
 //# sourceMappingURL=postalCodeService.d.ts.map

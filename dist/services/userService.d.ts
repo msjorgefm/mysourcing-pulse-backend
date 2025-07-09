@@ -3,6 +3,9 @@ export interface CreateUserData {
     email: string;
     password: string;
     name: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
     role: UserRole;
     companyId?: number;
     employeeId?: number;
@@ -11,6 +14,10 @@ export interface UpdateUserData {
     email?: string;
     password?: string;
     name?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    photoUrl?: string;
     role?: UserRole;
     isActive?: boolean;
 }
@@ -22,10 +29,10 @@ export declare class UserService {
             name: string;
             createdAt: Date;
             updatedAt: Date;
+            phone: string | null;
             rfc: string;
             legalName: string;
             address: string;
-            phone: string | null;
             status: import(".prisma/client").$Enums.CompanyStatus;
             employeesCount: number;
         } | null;
@@ -36,9 +43,9 @@ export declare class UserService {
             companyId: number;
             createdAt: Date;
             updatedAt: Date;
+            phone: string | null;
             rfc: string;
             address: string | null;
-            phone: string | null;
             status: import(".prisma/client").$Enums.EmployeeStatus;
             employeeNumber: string;
             position: string;
@@ -66,18 +73,22 @@ export declare class UserService {
         createdAt: Date;
         updatedAt: Date;
         lastLoginAt: Date | null;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        photoUrl: string | null;
     }) | null>;
-    static getUserById(id: number): Promise<({
+    static getUserById(id: number, includePassword?: boolean): Promise<{
         company: {
             email: string;
             id: number;
             name: string;
             createdAt: Date;
             updatedAt: Date;
+            phone: string | null;
             rfc: string;
             legalName: string;
             address: string;
-            phone: string | null;
             status: import(".prisma/client").$Enums.CompanyStatus;
             employeesCount: number;
         } | null;
@@ -88,9 +99,63 @@ export declare class UserService {
             companyId: number;
             createdAt: Date;
             updatedAt: Date;
+            phone: string | null;
             rfc: string;
             address: string | null;
+            status: import(".prisma/client").$Enums.EmployeeStatus;
+            employeeNumber: string;
+            position: string;
+            department: string;
+            hireDate: Date;
+            contractType: import(".prisma/client").$Enums.ContractType;
+            workSchedule: string | null;
+            baseSalary: import("@prisma/client/runtime/library").Decimal;
+            dateOfBirth: Date | null;
+            emergencyContact: string | null;
+            bankName: string | null;
+            bankAccount: string | null;
+            clabe: string | null;
+            taxRegime: string | null;
+        } | null;
+        email: string;
+        id: number;
+        name: string;
+        role: import(".prisma/client").$Enums.UserRole;
+        isActive: boolean;
+        companyId: number | null;
+        employeeId: number | null;
+        createdAt: Date;
+        updatedAt: Date;
+        lastLoginAt: Date | null;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        photoUrl: string | null;
+    } | null>;
+    static getUserByIdWithPassword(id: number): Promise<({
+        company: {
+            email: string;
+            id: number;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
             phone: string | null;
+            rfc: string;
+            legalName: string;
+            address: string;
+            status: import(".prisma/client").$Enums.CompanyStatus;
+            employeesCount: number;
+        } | null;
+        employee: {
+            email: string | null;
+            id: number;
+            name: string;
+            companyId: number;
+            createdAt: Date;
+            updatedAt: Date;
+            phone: string | null;
+            rfc: string;
+            address: string | null;
             status: import(".prisma/client").$Enums.EmployeeStatus;
             employeeNumber: string;
             position: string;
@@ -118,6 +183,10 @@ export declare class UserService {
         createdAt: Date;
         updatedAt: Date;
         lastLoginAt: Date | null;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        photoUrl: string | null;
     }) | null>;
     static createUser(data: CreateUserData): Promise<{
         email: string;
@@ -128,6 +197,9 @@ export declare class UserService {
         companyId: number | null;
         employeeId: number | null;
         createdAt: Date;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
     }>;
     static updateUser(id: number, data: UpdateUserData): Promise<{
         email: string;
@@ -138,6 +210,10 @@ export declare class UserService {
         companyId: number | null;
         employeeId: number | null;
         updatedAt: Date;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        photoUrl: string | null;
     }>;
     static deleteUser(id: number): Promise<{
         email: string;
@@ -151,6 +227,10 @@ export declare class UserService {
         createdAt: Date;
         updatedAt: Date;
         lastLoginAt: Date | null;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        photoUrl: string | null;
     }>;
     static getUsersByCompany(companyId: number): Promise<{
         email: string;
@@ -179,6 +259,10 @@ export declare class UserService {
         createdAt: Date;
         updatedAt: Date;
         lastLoginAt: Date | null;
+        firstName: string | null;
+        lastName: string | null;
+        phone: string | null;
+        photoUrl: string | null;
     }>;
     static checkUsernameAvailable(username: string, excludeUserId?: number): Promise<boolean>;
     static getCompanyById(companyId: number): Promise<{

@@ -47,7 +47,10 @@ class OnboardingController {
                 token: joi_1.default.string().required(),
                 username: joi_1.default.string().min(3).max(50).required(),
                 password: joi_1.default.string().min(8).required(),
-                confirmPassword: joi_1.default.string().valid(joi_1.default.ref('password')).required()
+                confirmPassword: joi_1.default.string().valid(joi_1.default.ref('password')).required(),
+                firstName: joi_1.default.string().min(2).max(50).required(),
+                lastName: joi_1.default.string().min(2).max(50).required(),
+                phone: joi_1.default.string().pattern(/^[0-9\-\+\(\)\s]+$/).optional()
             });
             const { error, value } = schema.validate(req.body);
             if (error) {
@@ -56,7 +59,7 @@ class OnboardingController {
                     error: error.details[0].message
                 });
             }
-            const { token, username, password } = value;
+            const { token, username, password, firstName, lastName, phone } = value;
             // Validar token
             const validation = await invitationService_1.InvitationService.validateToken(token);
             if (!validation.valid) {
@@ -83,12 +86,20 @@ class OnboardingController {
             }
             // Hashear contraseña
             const hashedPassword = await bcrypt_1.default.hash(password, 10);
-            // Crear usuario con rol CLIENT
+            // Obtener detalles completos de la invitación para verificar metadata
+            const fullInvitationDetails = await invitationService_1.InvitationService.getFullInvitationDetails(token);
+            const metadata = fullInvitationDetails?.metadata;
+            const isDepartmentHead = metadata?.role === 'DEPARTMENT_HEAD';
+            // Crear usuario con el rol apropiado
+            const fullName = `${firstName} ${lastName}`;
             const newUser = await userService_1.UserService.createUser({
                 email: username,
                 password: hashedPassword,
-                name: invitationDetails.company.name,
-                role: 'CLIENT',
+                name: fullName,
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
+                role: isDepartmentHead ? 'DEPARTMENT_HEAD' : 'CLIENT',
                 companyId: invitationDetails.company.id
             });
             // Marcar token como usado

@@ -7,6 +7,13 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get('/', NotificationController.getNotifications);
+router.post('/', async (req, res, next) => {
+  try {
+    await NotificationController.createNotification(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 router.patch('/:id/read', async (req, res, next) => {
   try {
     await NotificationController.markAsRead(req, res);

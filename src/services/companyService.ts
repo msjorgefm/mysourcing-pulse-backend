@@ -39,6 +39,7 @@ export class CompanyService {
         calendars: {
           select: { id: true, name: true, year: true }
         },
+        documentChecklist: true,
         _count: {
           select: {
             employees: { where: { status: 'ACTIVE' } },
@@ -66,6 +67,7 @@ export class CompanyService {
       calendarsCount: company.calendars.length,
       recentPayrolls: company.payrolls,
       activeCalendars: company.calendars,
+      documentChecklist: company.documentChecklist,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     }));
@@ -133,6 +135,15 @@ export class CompanyService {
       throw new Error('RFC already exists');
     }
     
+    // Verificar si ya existe un usuario con ese email
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email }
+    });
+    
+    if (existingUser) {
+      throw new Error('Ya existe un usuario registrado con ese correo electrónico');
+    }
+    
     const company = await prisma.company.create({
       data: {
         name: data.name,
@@ -141,8 +152,15 @@ export class CompanyService {
         address: data.address,
         email: data.email,
         phone: data.phone,
-        status: (data.status ? this.mapStatusFromFrontend(data.status) : 'IN_SETUP') as any,
-        employeesCount: 0
+        status: 'IN_SETUP', // Siempre crear con estado "en configuración"
+        employeesCount: 0,
+        // Crear el checklist vacío por defecto
+        documentChecklist: {
+          create: {}
+        }
+      },
+      include: {
+        documentChecklist: true
       }
     });
     
@@ -168,6 +186,7 @@ export class CompanyService {
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
       employeesCount: 0,
+      documentChecklist: company.documentChecklist,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     };

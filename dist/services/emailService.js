@@ -201,6 +201,138 @@ class EmailService {
             .replace(/\s+/g, ' ')
             .trim();
     }
+    async sendDepartmentHeadInvitationEmail(email, companyName, departmentName, invitationLink) {
+        const subject = `Invitación para ser Jefe de Departamento en ${companyName}`;
+        const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invitación MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #4F46E5;
+            margin: 0;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #4F46E5;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+          }
+          .button:hover {
+            background-color: #4338CA;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+          }
+          .warning {
+            background-color: #FEF3C7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #F59E0B;
+          }
+          .department-info {
+            background-color: #EBF8FF;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3182CE;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Has sido invitado como Jefe de Departamento!</h2>
+            
+            <p>Hola,</p>
+            
+            <p>La empresa <strong>${companyName}</strong> te ha invitado a formar parte de su equipo como Jefe de Departamento.</p>
+            
+            <div class="department-info">
+              <strong>Departamento asignado:</strong> ${departmentName}
+            </div>
+            
+            <p>Como Jefe de Departamento, tendrás las siguientes responsabilidades:</p>
+            <ul>
+              <li>Gestionar las incidencias de los empleados a tu cargo</li>
+              <li>Revisar y aprobar reportes de tu departamento</li>
+              <li>Coordinar con el área de nómina para el procesamiento correcto</li>
+            </ul>
+            
+            <p>Para aceptar esta invitación y configurar tu cuenta, haz clic en el siguiente enlace:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Aceptar invitación</a>
+            </div>
+            
+            <h3>Próximos pasos:</h3>
+            <ol>
+              <li>Haz clic en el enlace para aceptar la invitación</li>
+              <li>Completa tu información personal</li>
+              <li>Crea tu nombre de usuario y contraseña</li>
+              <li>Accede al portal y comienza a gestionar tu departamento</li>
+            </ol>
+            
+            <div class="warning">
+              <strong>Importante:</strong> Este enlace es válido por 48 horas. Si expira, deberás solicitar uno nuevo al administrador del sistema.
+            </div>
+            
+            <p>Si no esperabas recibir este correo o tienes alguna pregunta, por favor contacta al administrador de ${companyName}.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+        return await this.sendEmail({
+            to: email,
+            subject,
+            html,
+        });
+    }
 }
 exports.emailService = new EmailService();
 //# sourceMappingURL=emailService.js.map

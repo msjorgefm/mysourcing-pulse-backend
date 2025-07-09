@@ -17,7 +17,21 @@ class UserService {
             }
         });
     }
-    static async getUserById(id) {
+    static async getUserById(id, includePassword = false) {
+        const user = await prisma.user.findUnique({
+            where: { id },
+            include: {
+                company: true,
+                employee: true
+            }
+        });
+        if (user && !includePassword) {
+            const { password, ...userWithoutPassword } = user;
+            return userWithoutPassword;
+        }
+        return user;
+    }
+    static async getUserByIdWithPassword(id) {
         return await prisma.user.findUnique({
             where: { id },
             include: {
@@ -37,6 +51,9 @@ class UserService {
                 email: data.email,
                 password: data.password, // Ya debe venir hasheada
                 name: data.name,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                phone: data.phone,
                 role: data.role,
                 companyId: data.companyId,
                 employeeId: data.employeeId,
@@ -46,6 +63,9 @@ class UserService {
                 id: true,
                 email: true,
                 name: true,
+                firstName: true,
+                lastName: true,
+                phone: true,
                 role: true,
                 isActive: true,
                 companyId: true,
@@ -67,6 +87,10 @@ class UserService {
                 id: true,
                 email: true,
                 name: true,
+                firstName: true,
+                lastName: true,
+                phone: true,
+                photoUrl: true,
                 role: true,
                 isActive: true,
                 companyId: true,
