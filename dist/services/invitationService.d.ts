@@ -14,5 +14,31 @@ export declare class InvitationService {
             rfc: string;
         };
     } | null>;
+    static getFullInvitationDetails(token: string): Promise<({
+        company: {
+            email: string;
+            id: number;
+            name: string;
+            createdAt: Date;
+            updatedAt: Date;
+            phone: string | null;
+            rfc: string;
+            legalName: string;
+            address: string;
+            status: import(".prisma/client").$Enums.CompanyStatus;
+            employeesCount: number;
+        };
+    } & {
+        email: string;
+        id: number;
+        companyId: number;
+        createdAt: Date;
+        token: string;
+        expiresAt: Date;
+        used: boolean;
+        usedAt: Date | null;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+    }) | null>;
+    static createDepartmentHeadInvitation(companyId: number, email: string, departmentId: number): Promise<any>;
 }
 //# sourceMappingURL=invitationService.d.ts.map

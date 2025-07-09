@@ -7,6 +7,48 @@ interface AuthRequest extends Request {
 
 export class NotificationController {
   
+  static async createNotification(req: AuthRequest, res: Response) {
+    try {
+      const {
+        type,
+        title,
+        message,
+        priority = 'medium',
+        companyId,
+        targetRole,
+        userId
+      } = req.body;
+
+      // Validaciones básicas
+      if (!type || !title || !message) {
+        return res.status(400).json({ 
+          error: 'Type, title and message are required' 
+        });
+      }
+
+      const notification = await NotificationService.createNotification({
+        type,
+        title,
+        message,
+        priority,
+        companyId,
+        targetRole,
+        userId,
+        createdBy: req.user!.id
+      });
+
+      res.status(201).json({
+        message: 'Notification created successfully',
+        data: notification
+      });
+    } catch (error: any) {
+      console.error('Create notification error:', error);
+      res.status(500).json({ 
+        error: error.message || 'Failed to create notification' 
+      });
+    }
+  }
+  
   static async getNotifications(req: AuthRequest, res: Response) {
     try {
       const unreadOnly = req.query.unread === 'true';
