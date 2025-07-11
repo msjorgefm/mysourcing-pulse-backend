@@ -202,7 +202,7 @@ class EmailService {
             .trim();
     }
     async sendDepartmentHeadInvitationEmail(email, companyName, departmentName, invitationLink) {
-        const subject = `Invitación para ser Jefe de Departamento en ${companyName}`;
+        const subject = `Invitación para Vinculación de Jefe en ${companyName}`;
         const html = `
       <!DOCTYPE html>
       <html>
@@ -281,17 +281,17 @@ class EmailService {
           </div>
           
           <div class="content">
-            <h2>¡Has sido invitado como Jefe de Departamento!</h2>
+            <h2>¡Has sido invitado para una Vinculación de Jefe!</h2>
             
             <p>Hola,</p>
             
-            <p>La empresa <strong>${companyName}</strong> te ha invitado a formar parte de su equipo como Jefe de Departamento.</p>
+            <p>La empresa <strong>${companyName}</strong> te ha invitado a formar parte de su equipo con una Vinculación de Jefe.</p>
             
             <div class="department-info">
               <strong>Departamento asignado:</strong> ${departmentName}
             </div>
             
-            <p>Como Jefe de Departamento, tendrás las siguientes responsabilidades:</p>
+            <p>Con tu Vinculación de Jefe, tendrás las siguientes responsabilidades:</p>
             <ul>
               <li>Gestionar las incidencias de los empleados a tu cargo</li>
               <li>Revisar y aprobar reportes de tu departamento</li>
@@ -321,6 +321,158 @@ class EmailService {
           
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+        return await this.sendEmail({
+            to: email,
+            subject,
+            html,
+        });
+    }
+    async sendVinculacionJefeEmail(email, employeeName, companyName, setupLink, areasAsignadas = [], departamentosAsignados = [], empleadosACargo = 0) {
+        const subject = `Has sido designado con una Vinculación de Jefe en ${companyName}`;
+        const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Designación como Jefe - MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #6B46C1;
+            margin: 0;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #6B46C1;
+            color: white;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+          }
+          .button:hover {
+            background-color: #553C9A;
+          }
+          .info-box {
+            background-color: #F3F4F6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #6B46C1;
+          }
+          .responsibility-list {
+            background-color: #EDE9FE;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+          }
+          .responsibility-list ul {
+            margin: 10px 0;
+            padding-left: 20px;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+          }
+          .warning {
+            background-color: #FEF3C7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #F59E0B;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Felicidades ${employeeName}!</h2>
+            
+            <p>Has sido designado con una <strong>Vinculación de Jefe</strong> en <strong>${companyName}</strong>.</p>
+            
+            <div class="info-box">
+              <h3>Tu nueva asignación incluye:</h3>
+              ${areasAsignadas.length > 0 ? `<p><strong>Áreas:</strong> ${areasAsignadas.join(', ')}</p>` : ''}
+              ${departamentosAsignados.length > 0 ? `<p><strong>Departamentos:</strong> ${departamentosAsignados.join(', ')}</p>` : ''}
+              <p><strong>Empleados a cargo:</strong> ${empleadosACargo} empleados</p>
+            </div>
+            
+            <div class="responsibility-list">
+              <h3>Con tu Vinculación de Jefe podrás:</h3>
+              <ul>
+                <li>Registrar y gestionar incidencias laborales de tu equipo</li>
+                <li>Aprobar solicitudes de permisos y vacaciones</li>
+                <li>Visualizar reportes y estadísticas de tu área</li>
+                <li>Coordinar con el departamento de nómina</li>
+                <li>Gestionar la información de los empleados a tu cargo</li>
+              </ul>
+            </div>
+            
+            <p><strong>Para comenzar, necesitas configurar tu acceso al portal de jefes:</strong></p>
+            
+            <div style="text-align: center;">
+              <a href="${setupLink}" class="button">Configurar mi Acceso</a>
+            </div>
+            
+            <h3>¿Qué necesitarás hacer?</h3>
+            <ol>
+              <li>Hacer clic en el botón "Configurar mi Acceso"</li>
+              <li>Crear tu nombre de usuario único</li>
+              <li>Establecer una contraseña segura</li>
+              <li>Confirmar tu contraseña</li>
+              <li>¡Listo! Podrás acceder al portal de jefes</li>
+            </ol>
+            
+            <div class="warning">
+              <strong>⚠️ Importante:</strong> Este enlace es válido por 48 horas. Si expira, contacta al administrador del sistema para solicitar uno nuevo.
+            </div>
+            
+            <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactar al departamento de recursos humanos o al administrador del sistema.</p>
+            
+            <p style="margin-top: 30px;">¡Bienvenido a tu nuevo rol!</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>Si no solicitaste este acceso o crees que es un error, contacta inmediatamente al administrador.</p>
             <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
           </div>
         </div>
