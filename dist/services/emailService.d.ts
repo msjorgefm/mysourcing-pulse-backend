@@ -11,6 +11,7 @@ declare class EmailService {
     sendInvitationEmail(email: string, companyName: string, invitationLink: string): Promise<boolean>;
     private htmlToText;
     sendDepartmentHeadInvitationEmail(email: string, companyName: string, departmentName: string, invitationLink: string): Promise<boolean>;
+    sendVinculacionJefeEmail(email: string, employeeName: string, companyName: string, setupLink: string, areasAsignadas?: string[], departamentosAsignados?: string[], empleadosACargo?: number): Promise<boolean>;
 }
 export declare const emailService: EmailService;
 export {};

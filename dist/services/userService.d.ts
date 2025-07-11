@@ -77,6 +77,8 @@ export declare class UserService {
         lastName: string | null;
         phone: string | null;
         photoUrl: string | null;
+        setupToken: string | null;
+        setupTokenExpiry: Date | null;
     }) | null>;
     static getUserById(id: number, includePassword?: boolean): Promise<{
         company: {
@@ -131,6 +133,8 @@ export declare class UserService {
         lastName: string | null;
         phone: string | null;
         photoUrl: string | null;
+        setupToken: string | null;
+        setupTokenExpiry: Date | null;
     } | null>;
     static getUserByIdWithPassword(id: number): Promise<({
         company: {
@@ -187,6 +191,8 @@ export declare class UserService {
         lastName: string | null;
         phone: string | null;
         photoUrl: string | null;
+        setupToken: string | null;
+        setupTokenExpiry: Date | null;
     }) | null>;
     static createUser(data: CreateUserData): Promise<{
         email: string;
@@ -231,6 +237,8 @@ export declare class UserService {
         lastName: string | null;
         phone: string | null;
         photoUrl: string | null;
+        setupToken: string | null;
+        setupTokenExpiry: Date | null;
     }>;
     static getUsersByCompany(companyId: number): Promise<{
         email: string;
@@ -263,6 +271,8 @@ export declare class UserService {
         lastName: string | null;
         phone: string | null;
         photoUrl: string | null;
+        setupToken: string | null;
+        setupTokenExpiry: Date | null;
     }>;
     static checkUsernameAvailable(username: string, excludeUserId?: number): Promise<boolean>;
     static getCompanyById(companyId: number): Promise<{

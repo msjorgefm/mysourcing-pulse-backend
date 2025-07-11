@@ -23,9 +23,12 @@ model User {
   lastName      String?
   phone         String?
   photoUrl      String?
+  setupToken    String?        @unique
+  setupTokenExpiry DateTime?
   refreshTokens RefreshToken[]
   company       Company?       @relation(fields: [companyId], references: [id])
   employee      Employee?      @relation(fields: [employeeId], references: [id])
+  vinculacionesJefe VinculacionJefe[]
 
   @@index([email, isActive])
   @@map("users")
@@ -87,6 +90,8 @@ model Employee {
   payrollItems     PayrollItem[]
   user             User?
   workerDetails    WorkerDetails?
+  esJefe           VinculacionJefe?
+  jefeAsignado     VinculacionJefeEmpleado[]
 
   @@index([companyId, status])
   @@map("employees")
@@ -476,6 +481,7 @@ model OrganizationalArea {
   company            Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
   departments        OrganizationalDepartment[]
   contractConditions WorkerContractCondition[]
+  vinculacionesJefe  VinculacionJefeArea[]
 
   @@index([companyId])
   @@map("organizational_areas")
@@ -493,6 +499,7 @@ model OrganizationalDepartment {
   company            Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   positions          OrganizationalPosition[]
   contractConditions WorkerContractCondition[]
+  vinculacionesJefe  VinculacionJefeDepartamento[]
 
   @@index([companyId])
   @@index([areaId])
@@ -512,6 +519,7 @@ model OrganizationalPosition {
   company            Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   department         OrganizationalDepartment? @relation(fields: [departmentId], references: [id])
   contractConditions WorkerContractCondition[]
+  vinculacionesJefe  VinculacionJefePuesto[]
 
   @@index([companyId])
   @@index([departmentId])
@@ -829,6 +837,7 @@ model Company {
   puestos                   Puesto[]
   organizationalAreas       OrganizationalArea[]
   organizationalDepartments OrganizationalDepartment[]
+  vinculacionesJefe         VinculacionJefe[]
 
   // Sección 6: Prestaciones
   benefits      CompanyBenefit[]
@@ -1544,4 +1553,91 @@ enum DocumentType {
   CUENTA_BANCARIA
   REPRESENTANTE_LEGAL
   ACTA_CONSTITUTIVA
+}
+// ================================
+// VINCULACIÓN DE JEFES
+// ================================
+
+model VinculacionJefe {
+  id         Int      @id @default(autoincrement())
+  empresaId  Int
+  usuarioId  Int
+  empleadoId Int      @unique
+  activo     Boolean  @default(true)
+  creadoEn   DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  // Relaciones
+  empresa  Company  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  usuario  User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  empleado Employee @relation(fields: [empleadoId], references: [id], onDelete: Cascade)
+
+  // Relaciones con áreas, departamentos, puestos y empleados
+  areas        VinculacionJefeArea[]
+  departamentos VinculacionJefeDepartamento[]
+  puestos      VinculacionJefePuesto[]
+  empleadosACargo VinculacionJefeEmpleado[]
+
+  @@index([empresaId])
+  @@index([usuarioId])
+  @@map("vinculacion_jefes")
+}
+
+model VinculacionJefeArea {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  areaId           Int
+  creadoEn         DateTime        @default(now())
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe     @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  area            OrganizationalArea  @relation(fields: [areaId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, areaId])
+  @@map("vinculacion_jefe_areas")
+}
+
+model VinculacionJefeDepartamento {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  departamentoId   Int
+  creadoEn         DateTime        @default(now())
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe           @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  departamento    OrganizationalDepartment  @relation(fields: [departamentoId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, departamentoId])
+  @@map("vinculacion_jefe_departamentos")
+}
+
+model VinculacionJefePuesto {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  puestoId         Int
+  creadoEn         DateTime        @default(now())
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe         @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  puesto          OrganizationalPosition  @relation(fields: [puestoId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, puestoId])
+  @@map("vinculacion_jefe_puestos")
+}
+
+model VinculacionJefeEmpleado {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  empleadoId       Int
+  activo           Boolean         @default(true)
+  creadoEn         DateTime        @default(now())
+  actualizadoEn    DateTime        @updatedAt
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  empleado        Employee        @relation(fields: [empleadoId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, empleadoId])
+  @@index([empleadoId])
+  @@map("vinculacion_jefe_empleados")
 }

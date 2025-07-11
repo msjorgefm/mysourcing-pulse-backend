@@ -97,4 +97,56 @@ export class AuthController {
       res.status(500).json({ error: 'Failed to get profile' });
     }
   }
+  
+  static async validateSetupToken(req: Request, res: Response) {
+    try {
+      const { token } = req.body;
+      
+      if (!token) {
+        return res.status(400).json({ error: 'Token requerido' });
+      }
+      
+      const user = await AuthService.validateSetupToken(token);
+      
+      res.json({
+        message: 'Token válido',
+        data: {
+          email: user.email,
+          name: user.name
+        }
+      });
+    } catch (error: any) {
+      console.error('Error validating setup token:', error);
+      res.status(400).json({ error: error.message || 'Token inválido o expirado' });
+    }
+  }
+  
+  static async completeAccountSetup(req: Request, res: Response) {
+    try {
+      const { token, username, password, confirmPassword } = req.body;
+      
+      // Validaciones básicas
+      if (!token || !username || !password || !confirmPassword) {
+        return res.status(400).json({ error: 'Todos los campos son requeridos' });
+      }
+      
+      if (password !== confirmPassword) {
+        return res.status(400).json({ error: 'Las contraseñas no coinciden' });
+      }
+      
+      if (password.length < 8) {
+        return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+      }
+      
+      const result = await AuthService.completeAccountSetup(token, username, password);
+      
+      res.json({
+        message: 'Cuenta configurada exitosamente',
+        data: result
+      });
+    } catch (error: any) {
+      console.error('Error completing account setup:', error);
+      res.status(400).json({ error: error.message || 'Error al configurar la cuenta' });
+    }
+  }
 }

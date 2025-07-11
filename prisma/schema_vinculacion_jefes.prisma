@@ -1,0 +1,87 @@
+// ================================
+// VINCULACIÓN DE JEFES
+// ================================
+
+model VinculacionJefe {
+  id         Int      @id @default(autoincrement())
+  empresaId  Int
+  usuarioId  Int
+  empleadoId Int      @unique
+  activo     Boolean  @default(true)
+  creadoEn   DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  // Relaciones
+  empresa  Company  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  usuario  User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  empleado Employee @relation(fields: [empleadoId], references: [id], onDelete: Cascade)
+
+  // Relaciones con áreas, departamentos, puestos y empleados
+  areas        VinculacionJefeArea[]
+  departamentos VinculacionJefeDepartamento[]
+  puestos      VinculacionJefePuesto[]
+  empleadosACargo VinculacionJefeEmpleado[]
+
+  @@index([empresaId])
+  @@index([usuarioId])
+  @@map("vinculacion_jefes")
+}
+
+model VinculacionJefeArea {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  areaId           Int
+  creadoEn         DateTime        @default(now())
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe     @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  area            OrganizationalArea  @relation(fields: [areaId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, areaId])
+  @@map("vinculacion_jefe_areas")
+}
+
+model VinculacionJefeDepartamento {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  departamentoId   Int
+  creadoEn         DateTime        @default(now())
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe           @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  departamento    OrganizationalDepartment  @relation(fields: [departamentoId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, departamentoId])
+  @@map("vinculacion_jefe_departamentos")
+}
+
+model VinculacionJefePuesto {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  puestoId         Int
+  creadoEn         DateTime        @default(now())
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe         @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  puesto          OrganizationalPosition  @relation(fields: [puestoId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, puestoId])
+  @@map("vinculacion_jefe_puestos")
+}
+
+model VinculacionJefeEmpleado {
+  id               Int             @id @default(autoincrement())
+  vinculacionJefeId Int
+  empleadoId       Int
+  activo           Boolean         @default(true)
+  creadoEn         DateTime        @default(now())
+  actualizadoEn    DateTime        @updatedAt
+
+  // Relaciones
+  vinculacionJefe VinculacionJefe @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
+  empleado        Employee        @relation(fields: [empleadoId], references: [id], onDelete: Cascade)
+
+  @@unique([vinculacionJefeId, empleadoId])
+  @@index([empleadoId])
+  @@map("vinculacion_jefe_empleados")
+}
