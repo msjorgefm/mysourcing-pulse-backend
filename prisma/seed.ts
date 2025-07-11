@@ -344,14 +344,12 @@ async function main() {
           break;
         case 6:
           steps = [
-            { stepNumber: 1, stepName: 'Calendario Laboral', isOptional: false },
-            { stepNumber: 2, stepName: 'Configuración de Nómina', isOptional: false }
+            { stepNumber: 1, stepName: 'Calendario', isOptional: false }
           ];
           break;
         case 7:
           steps = [
-            { stepNumber: 1, stepName: 'Horarios', isOptional: false },
-            { stepNumber: 2, stepName: 'Políticas', isOptional: true }
+            { stepNumber: 1, stepName: 'Alta Trabajadores', isOptional: false }
           ];
           break;
       }

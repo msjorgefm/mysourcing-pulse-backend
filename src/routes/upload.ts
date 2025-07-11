@@ -246,7 +246,7 @@ router.post('/certificate',
 );
 
 // Endpoint para subir archivos de identificación - Simplificado
-router.post('/upload/identification', 
+router.post('/identification', 
   uploadIdentification.any(), // Acepta cualquier campo
   handleMulterError,
   async (req: Request, res: Response): Promise<void> => {
@@ -307,7 +307,7 @@ router.get('/download/certificate/:filename', async (req: Request, res: Response
 });
 
 // Endpoint para subir archivos de poder notarial - Simplificado
-router.post('/upload/notarial-power', 
+router.post('/notarial-power', 
   uploadNotarialPower.any(), // Acepta cualquier campo
   handleMulterError,
   async (req: Request, res: Response): Promise<void> => {
@@ -368,7 +368,7 @@ router.get('/download/identification/:filename', async (req: Request, res: Respo
 });
 
 // Endpoint para subir archivos de registro patronal - Simplificado
-router.post('/upload/registro-patronal', 
+router.post('/registro-patronal', 
   uploadRegistroPatronal.any(), // Acepta cualquier campo
   handleMulterError,
   async (req: Request, res: Response): Promise<void> => {
@@ -485,7 +485,7 @@ const uploadFonacot = multer({
 });
 
 // Endpoint para subir archivos FONACOT
-router.post('/upload/fonacot', 
+router.post('/fonacot', 
   uploadFonacot.any(), // Acepta cualquier campo
   handleMulterError,
   async (req: Request, res: Response): Promise<void> => {

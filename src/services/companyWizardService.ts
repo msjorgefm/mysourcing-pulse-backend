@@ -90,8 +90,7 @@ export class CompanyWizardService {
                 sectionName: 'Talento Humano',
                 steps: {
                   create: [
-                    { stepNumber: 1, stepName: 'Horarios' },
-                    { stepNumber: 2, stepName: 'Alta Trabajadores' }
+                    { stepNumber: 1, stepName: 'Alta Trabajadores' }
                   ]
                 }
               }
@@ -594,27 +593,15 @@ export class CompanyWizardService {
     }
   }
 
-
   static async processPayrollData(companyId: number, stepData: any) {
-    if (stepData.calendar) {
-      await prisma.calendar.create({
-        data: {
-          companyId,
-          ...stepData.calendar
-        }
-      });
-    }
+    // Los calendarios de nómina ahora se manejan directamente a través del endpoint /calendars
+    // No se necesita procesamiento adicional aquí
+    console.log('Payroll calendar is handled through /calendars endpoint');
   }
 
   static async processHRData(companyId: number, stepNumber: number, stepData: any) {
-    if (stepNumber === 1 && stepData.schedules) { // Horarios
-      for (const schedule of stepData.schedules) {
-        await prisma.companySchedule.create({
-          data: { companyId, ...schedule }
-        });
-      }
-    }
-    // stepNumber === 2 sería para Alta Trabajadores, que se manejará en el frontend
+    // stepNumber === 1 es para Alta Trabajadores, que se manejará en el frontend
+    // No hay procesamiento de datos necesario para este paso
   }
 
   // Completar wizard
