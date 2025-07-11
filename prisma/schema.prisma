@@ -108,6 +108,23 @@ model Calendar {
   @@map("calendars")
 }
 
+// Modelo para Calendario de Nómina (Payroll Calendar)
+model PayrollCalendar {
+  id               Int      @id @default(autoincrement())
+  companyId        Int      
+  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name             String
+  payFrequency     String   // semanal, quincenal, mensual, decenal, catorcenal
+  daysBeforeClose  Int      @default(0)
+  startDate        DateTime
+  periodNumber     Int      @default(1)
+  payNaturalDays   Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("payroll_calendars")
+}
+
 model Payroll {
   id              Int            @id @default(autoincrement())
   period          String
@@ -791,6 +808,7 @@ model Company {
 
   // Relaciones
   calendars               Calendar[]
+  payrollCalendars        PayrollCalendar[]
   documentChecklist       CompanyDocumentChecklist?
   companyDocuments        CompanyDocument[]
   employees               Employee[]

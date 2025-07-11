@@ -56,5 +56,23 @@ router.get('/:id/incidences', async (req, res, next) => {
   }
 });
 
+// POST /api/employees/company/:companyId/validate
+router.post('/company/:companyId/validate', async (req, res, next) => {
+  try {
+    await employeeController.validateBulkEmployees(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/employees/company/:companyId/bulk
+router.post('/company/:companyId/bulk', async (req, res, next) => {
+  try {
+    await employeeController.createBulkEmployees(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 export default router;

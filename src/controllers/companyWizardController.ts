@@ -254,7 +254,7 @@ export class CompanyWizardController {
           });
         case 5: // Estructura Organizacional
           // Obtener datos del wizard para extraer stepData
-          const wizard = await prisma.companyWizard.findUnique({
+          const wizardForStructure = await prisma.companyWizard.findUnique({
             where: { companyId },
             include: {
               sectionProgress: {
@@ -266,7 +266,7 @@ export class CompanyWizardController {
             }
           });
 
-          if (!wizard || !wizard.sectionProgress[0]) {
+          if (!wizardForStructure || !wizardForStructure.sectionProgress[0]) {
             return {
               areas: [],
               departments: [],
@@ -274,32 +274,21 @@ export class CompanyWizardController {
             };
           }
 
-          const section = wizard.sectionProgress[0];
-          const steps = section.steps;
+          const section = wizardForStructure.sectionProgress[0];
 
-          // Extraer datos de cada paso
-          const areasStep = steps.find(s => s.stepNumber === 1);
-          const departmentsStep = steps.find(s => s.stepNumber === 2);
-          const positionsStep = steps.find(s => s.stepNumber === 3);
-
-          // Extraer los datos del stepData
-          const areasData = areasStep?.stepData as any;
-          const departmentsData = departmentsStep?.stepData as any;
-          const positionsData = positionsStep?.stepData as any;
-
-          const areas = areasData?.['áreas'] || areasData?.['areas'] || [];
-          const departments = departmentsData?.['departamentos'] || departmentsData?.['departments'] || [];
-          const positions = positionsData?.['puestos'] || positionsData?.['positions'] || [];
-
+          // Retornar directamente los datos de la base de datos
           return {
             areas: await prisma.area.findMany({ where: { empresaId: companyId } }),
             departamentos: await prisma.departamento.findMany({ where: { empresaId: companyId } }),
             puestos: await prisma.puesto.findMany({ where: { empresaId: companyId } })
           };
         case 6: // Nómina
-          return await prisma.calendar.findMany({
+          // Obtener los calendarios de nómina desde la tabla payrollCalendar
+          const payrollCalendars = await prisma.payrollCalendar.findMany({
             where: { companyId }
           });
+          
+          return payrollCalendars;
         case 7: // Talento Humano
           return {
             schedules: await prisma.companySchedule.findMany({ where: { companyId } }),
