@@ -40,5 +40,9 @@ export declare class InvitationService {
         metadata: import("@prisma/client/runtime/library").JsonValue | null;
     }) | null>;
     static createDepartmentHeadInvitation(companyId: number, email: string, departmentId: number): Promise<any>;
+    static resendInvitation(companyId: number): Promise<{
+        sent: boolean;
+        message: string;
+    }>;
 }
 //# sourceMappingURL=invitationService.d.ts.map

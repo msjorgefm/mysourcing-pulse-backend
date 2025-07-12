@@ -4,6 +4,16 @@ import * as vinculacionJefesService from '../services/vinculacionJefesService';
 export const getOrganizationalData = async (req: Request, res: Response) => {
   try {
     const { companyId } = req.params;
+    const user = (req as any).user;
+    
+    // Verificar permisos: solo operadores o usuarios de la misma empresa
+    if (user.role !== 'OPERATOR' && user.companyId !== parseInt(companyId)) {
+      return res.status(403).json({
+        success: false,
+        error: 'No tienes permisos para acceder a esta información'
+      });
+    }
+    
     const data = await vinculacionJefesService.getOrganizationalData(parseInt(companyId));
     res.json(data);
   } catch (error) {
@@ -18,6 +28,16 @@ export const getOrganizationalData = async (req: Request, res: Response) => {
 export const getVinculacionesByCompany = async (req: Request, res: Response) => {
   try {
     const { companyId } = req.params;
+    const user = (req as any).user;
+    
+    // Verificar permisos: solo operadores o usuarios de la misma empresa
+    if (user.role !== 'OPERATOR' && user.companyId !== parseInt(companyId)) {
+      return res.status(403).json({
+        success: false,
+        error: 'No tienes permisos para acceder a esta información'
+      });
+    }
+    
     const vinculaciones = await vinculacionJefesService.getVinculacionesByCompany(parseInt(companyId));
     res.json({
       success: true,
@@ -59,6 +79,25 @@ export const getVinculacionById = async (req: Request, res: Response) => {
 
 export const createVinculacion = async (req: Request, res: Response) => {
   try {
+    const user = (req as any).user;
+    const { empresaId } = req.body;
+    
+    // Verificar permisos: solo operadores o clientes de la misma empresa
+    if (user.role !== 'OPERATOR' && user.role !== 'CLIENT') {
+      return res.status(403).json({
+        success: false,
+        error: 'No tienes permisos para crear vinculaciones'
+      });
+    }
+    
+    // Si es cliente, solo puede crear vinculaciones para su propia empresa
+    if (user.role === 'CLIENT' && user.companyId !== empresaId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Solo puedes crear vinculaciones para tu propia empresa'
+      });
+    }
+    
     const vinculacion = await vinculacionJefesService.createVinculacion(req.body);
     res.status(201).json({
       success: true,
@@ -78,14 +117,27 @@ export const createVinculacion = async (req: Request, res: Response) => {
 export const updateVinculacion = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const vinculacion = await vinculacionJefesService.updateVinculacion(parseInt(id), req.body);
+    const user = (req as any).user;
     
-    if (!vinculacion) {
+    // Primero obtener la vinculación para verificar permisos
+    const vinculacionExistente = await vinculacionJefesService.getVinculacionById(parseInt(id));
+    
+    if (!vinculacionExistente) {
       return res.status(404).json({ 
         success: false, 
         error: 'Vinculación no encontrada' 
       });
     }
+    
+    // Verificar permisos: operadores o clientes de la misma empresa
+    if (user.role !== 'OPERATOR' && user.companyId !== vinculacionExistente.empresaId) {
+      return res.status(403).json({
+        success: false,
+        error: 'No tienes permisos para actualizar esta vinculación'
+      });
+    }
+    
+    const vinculacion = await vinculacionJefesService.updateVinculacion(parseInt(id), req.body);
     
     res.json({
       success: true,
@@ -103,6 +155,26 @@ export const updateVinculacion = async (req: Request, res: Response) => {
 export const deleteVinculacion = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const user = (req as any).user;
+    
+    // Primero obtener la vinculación para verificar permisos
+    const vinculacionExistente = await vinculacionJefesService.getVinculacionById(parseInt(id));
+    
+    if (!vinculacionExistente) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Vinculación no encontrada' 
+      });
+    }
+    
+    // Verificar permisos: operadores o clientes de la misma empresa
+    if (user.role !== 'OPERATOR' && user.companyId !== vinculacionExistente.empresaId) {
+      return res.status(403).json({
+        success: false,
+        error: 'No tienes permisos para eliminar esta vinculación'
+      });
+    }
+    
     await vinculacionJefesService.deleteVinculacion(parseInt(id));
     res.json({
       success: true,

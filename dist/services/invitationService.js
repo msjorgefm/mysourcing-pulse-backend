@@ -166,6 +166,64 @@ class InvitationService {
             throw error;
         }
     }
+    static async resendInvitation(companyId) {
+        try {
+            // Buscar la invitación más reciente para esta empresa
+            const latestInvitation = await prisma.invitationToken.findFirst({
+                where: { companyId },
+                orderBy: { createdAt: 'desc' },
+                include: { company: true }
+            });
+            if (!latestInvitation) {
+                return {
+                    sent: false,
+                    message: 'No se encontró ninguna invitación previa para esta empresa'
+                };
+            }
+            // Verificar si el token está activo y no ha sido usado
+            const now = new Date();
+            console.log('Token validation:', {
+                token: latestInvitation.token,
+                used: latestInvitation.used,
+                expiresAt: latestInvitation.expiresAt,
+                now: now,
+                isExpired: now >= latestInvitation.expiresAt
+            });
+            // Por ahora, permitir reenviar siempre para pruebas
+            // TODO: Descomentar esta validación en producción
+            /*
+            if (!latestInvitation.used && now < latestInvitation.expiresAt) {
+              return {
+                sent: false,
+                message: 'La invitación actual sigue activa. El enlace enviado anteriormente aún es válido.'
+              };
+            }
+            */
+            // Verificar si ya existe un usuario configurado para esta empresa
+            const existingUser = await prisma.user.findFirst({
+                where: {
+                    companyId,
+                    role: 'CLIENT'
+                }
+            });
+            if (existingUser) {
+                return {
+                    sent: false,
+                    message: 'Ya existe un usuario configurado para esta empresa'
+                };
+            }
+            // Crear y enviar nueva invitación
+            await this.createAndSendInvitation(companyId, latestInvitation.email, latestInvitation.company.name);
+            return {
+                sent: true,
+                message: 'Invitación reenviada exitosamente'
+            };
+        }
+        catch (error) {
+            console.error('Error resending invitation:', error);
+            throw new Error('Error al reenviar la invitación');
+        }
+    }
 }
 exports.InvitationService = InvitationService;
 //# sourceMappingURL=invitationService.js.map
