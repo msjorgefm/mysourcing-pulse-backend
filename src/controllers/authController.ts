@@ -106,15 +106,37 @@ export class AuthController {
         return res.status(400).json({ error: 'Token requerido' });
       }
       
-      const user = await AuthService.validateSetupToken(token);
+      // Primero intentar con el setupToken de User
+      try {
+        const user = await AuthService.validateSetupToken(token);
+        res.json({
+          message: 'Token válido',
+          data: {
+            email: user.email,
+            name: user.name
+          }
+        });
+        return;
+      } catch (userTokenError) {
+        // Si no se encuentra en User, buscar en InvitationToken
+        console.log('Token no encontrado en User, buscando en InvitationToken...');
+      }
       
-      res.json({
-        message: 'Token válido',
-        data: {
-          email: user.email,
-          name: user.name
-        }
-      });
+      // Buscar en InvitationToken
+      const { InvitationService } = await import('../services/invitationService');
+      const invitationDetails = await InvitationService.getInvitationDetails(token);
+      
+      if (invitationDetails) {
+        res.json({
+          message: 'Token válido',
+          data: {
+            email: invitationDetails.email,
+            name: invitationDetails.company.name
+          }
+        });
+      } else {
+        throw new Error('Token inválido o expirado');
+      }
     } catch (error: any) {
       console.error('Error validating setup token:', error);
       res.status(400).json({ error: error.message || 'Token inválido o expirado' });
@@ -138,7 +160,58 @@ export class AuthController {
         return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
       }
       
-      const result = await AuthService.completeAccountSetup(token, username, password);
+      // Primero intentar con el setupToken de User
+      try {
+        const result = await AuthService.completeAccountSetup(token, username, password);
+        res.json({
+          message: 'Cuenta configurada exitosamente',
+          data: result
+        });
+        return;
+      } catch (userTokenError) {
+        // Si no se encuentra en User, manejar con InvitationToken
+        console.log('Token no encontrado en User, procesando como InvitationToken...');
+      }
+      
+      // Manejar InvitationToken (para empresas nuevas)
+      const { InvitationService } = await import('../services/invitationService');
+      const { UserService } = await import('../services/userService');
+      const bcrypt = await import('bcrypt');
+      
+      // Validar token de invitación
+      const invitationDetails = await InvitationService.getInvitationDetails(token);
+      if (!invitationDetails) {
+        throw new Error('Token inválido o expirado');
+      }
+      
+      // Verificar que no exista un usuario con ese email
+      const existingUser = await UserService.getUserByEmail(username);
+      if (existingUser) {
+        throw new Error('El nombre de usuario ya está en uso');
+      }
+      
+      // Crear el usuario
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const { PrismaClient } = await import('@prisma/client');
+      const prisma = new PrismaClient();
+      
+      const newUser = await prisma.user.create({
+        data: {
+          email: username,
+          password: hashedPassword,
+          name: invitationDetails.company.name,
+          role: 'CLIENT',
+          companyId: invitationDetails.company.id,
+          firstName: '',
+          lastName: ''
+        }
+      });
+      
+      // Marcar el token como usado
+      await InvitationService.markTokenAsUsed(token);
+      
+      // Generar tokens de autenticación
+      const result = await AuthService.login({ email: username, password });
       
       res.json({
         message: 'Cuenta configurada exitosamente',

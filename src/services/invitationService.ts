@@ -193,4 +193,131 @@ export class InvitationService {
       throw error;
     }
   }
+  
+  static async resendInvitation(companyId: number, email?: string): Promise<{ sent: boolean; message: string }> {
+    try {
+      // Si se proporciona un email específico, usarlo. Si no, buscar el último usado
+      let targetEmail = email;
+      let companyName = '';
+      
+      if (!targetEmail) {
+        // Buscar la invitación más reciente para esta empresa
+        const latestInvitation = await prisma.invitationToken.findFirst({
+          where: { companyId },
+          orderBy: { createdAt: 'desc' },
+          include: { company: true }
+        });
+        
+        if (!latestInvitation) {
+          return {
+            sent: false,
+            message: 'No se encontró ninguna invitación previa para esta empresa'
+          };
+        }
+        
+        targetEmail = latestInvitation.email;
+        companyName = latestInvitation.company.name;
+        
+        // Verificar si el token está activo y no ha sido usado
+        const now = new Date();
+        console.log('Token validation:', {
+          token: latestInvitation.token,
+          used: latestInvitation.used,
+          expiresAt: latestInvitation.expiresAt,
+          now: now,
+          isExpired: now >= latestInvitation.expiresAt
+        });
+      } else {
+        // Si se proporciona email, obtener datos de la empresa
+        const company = await prisma.company.findUnique({
+          where: { id: companyId },
+          select: { name: true }
+        });
+        
+        if (!company) {
+          return {
+            sent: false,
+            message: 'Empresa no encontrada'
+          };
+        }
+        
+        companyName = company.name;
+      }
+      
+      // Verificar si ya existe un usuario con ese email
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email: targetEmail,
+          companyId,
+          role: 'CLIENT'
+        }
+      });
+      
+      if (existingUser) {
+        return {
+          sent: false,
+          message: `Ya existe un usuario configurado con el email ${targetEmail} para esta empresa`
+        };
+      }
+      
+      // Crear y enviar nueva invitación
+      await this.createAndSendInvitation(
+        companyId,
+        targetEmail,
+        companyName
+      );
+      
+      return {
+        sent: true,
+        message: `Invitación enviada exitosamente a ${targetEmail}`
+      };
+    } catch (error) {
+      console.error('Error resending invitation:', error);
+      throw new Error('Error al reenviar la invitación');
+    }
+  }
+  
+  static async sendAdditionalInvitation(companyId: number, email: string): Promise<{ sent: boolean; message: string }> {
+    try {
+      // Obtener información de la empresa
+      const company = await prisma.company.findUnique({
+        where: { id: companyId },
+        select: { name: true }
+      });
+      
+      if (!company) {
+        return {
+          sent: false,
+          message: 'Empresa no encontrada'
+        };
+      }
+      
+      // Verificar si ya existe un usuario con ese email en cualquier empresa
+      const existingUser = await prisma.user.findUnique({
+        where: { email }
+      });
+      
+      if (existingUser) {
+        return {
+          sent: false,
+          message: 'Ya existe un usuario registrado con ese correo electrónico'
+        };
+      }
+      
+      // Crear y enviar invitación
+      await this.createAndSendInvitation(
+        companyId,
+        email,
+        company.name
+      );
+      
+      return {
+        sent: true,
+        message: `Invitación enviada exitosamente a ${email}`
+      };
+    } catch (error) {
+      console.error('Error sending additional invitation:', error);
+      throw new Error('Error al enviar la invitación adicional');
+    }
+  }
 }
