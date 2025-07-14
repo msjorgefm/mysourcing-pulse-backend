@@ -19,8 +19,11 @@ class EmailService {
       return;
     }
 
-    // Puerto 465 requiere secure: true
+    // Puerto 465 requiere secure: true, Mailtrap usa 2525
     const isSecure = config.smtp.port === 465;
+    
+    // Detectar si es Mailtrap
+    const isMailtrap = config.smtp.host.includes('mailtrap');
     
     this.transporter = nodemailer.createTransport({
       host: config.smtp.host,
@@ -36,6 +39,11 @@ class EmailService {
       }
     });
     
+    if (isMailtrap) {
+      console.log('📧 Usando Mailtrap para captura de emails de prueba');
+      console.log('🔗 Ve tus emails en: https://mailtrap.io/inboxes');
+    }
+    
     // Verificar la configuración
     this.transporter.verify((error, success) => {
       if (error) {
@@ -49,18 +57,26 @@ class EmailService {
 
   async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
-      console.log('📧 Intentando enviar email a:', options.to);
-      console.log('📧 Asunto:', options.subject);
+      const isMailtrap = config.smtp.host.includes('mailtrap');
       
-      // Modo desarrollo sin transporter
-      if (!this.transporter) {
-        console.log('🔧 MODO DESARROLLO - Email simulado:');
+      console.log('\n📧 === ENVIANDO EMAIL ===');
+      console.log('📧 Para:', options.to);
+      console.log('📧 Asunto:', options.subject);
+      console.log('📧 Servidor SMTP:', config.smtp.host);
+      console.log('📧 Puerto:', config.smtp.port);
+      
+      // Guardar email localmente siempre
+      this.saveEmailLocally(options);
+      
+      // Modo desarrollo sin transporter o si es Mailtrap con límite alcanzado
+      if (!this.transporter || config.smtp.host === 'localhost') {
+        console.log('🔧 MODO LOCAL - Email guardado localmente:');
         console.log('   Para:', options.to);
         console.log('   De:', config.smtp.from);
         console.log('   Asunto:', options.subject);
         console.log('   ---');
-        console.log('   El email se habría enviado en producción.');
-        console.log('   Configura las credenciales SMTP para envío real.');
+        console.log('   📁 Email guardado en: emails-sent/');
+        console.log('   ✅ Busca el archivo HTML con el contenido completo');
         return true;
       }
       
@@ -72,11 +88,29 @@ class EmailService {
         text: options.text || this.htmlToText(options.html),
       };
 
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log('✅ Email enviado exitosamente');
-      console.log('   Message ID:', info.messageId);
-      console.log('   Response:', info.response);
-      return true;
+      try {
+        const info = await this.transporter.sendMail(mailOptions);
+        console.log('✅ Email enviado exitosamente');
+        console.log('   Message ID:', info.messageId);
+        console.log('   Response:', info.response);
+        
+        if (config.smtp.host.includes('mailtrap')) {
+          console.log('\n📮 === MAILTRAP INFO ===');
+          console.log('🔗 Ve tu email en: https://mailtrap.io/inboxes');
+          console.log('📧 El email fue capturado por Mailtrap (no se envió realmente)');
+          console.log('✅ Esto es normal en desarrollo\n');
+        }
+        
+        return true;
+      } catch (smtpError: any) {
+        // Si es error de límite de Mailtrap, continuar sin error
+        if (smtpError.message && smtpError.message.includes('email limit is reached')) {
+          console.log('⚠️  Límite de Mailtrap alcanzado - Email guardado localmente');
+          console.log('📁 Revisa el archivo en: emails-sent/');
+          return true;
+        }
+        throw smtpError;
+      }
     } catch (error: any) {
       console.error('❌ Error al enviar email:');
       console.error('   Error:', error.message);
@@ -86,6 +120,72 @@ class EmailService {
         console.error('   Respuesta SMTP:', error.response);
       }
       return false;
+    }
+  }
+  
+  private saveEmailLocally(options: EmailOptions): void {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      
+      const emailsDir = path.join(__dirname, '../../emails-sent');
+      if (!fs.existsSync(emailsDir)) {
+        fs.mkdirSync(emailsDir, { recursive: true });
+      }
+      
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const filename = `${timestamp}_${options.to.replace('@', '_at_')}.html`;
+      const filepath = path.join(emailsDir, filename);
+      
+      const fullHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${options.subject}</title>
+  <style>
+    .email-info {
+      background: #f0f0f0;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+    .email-info h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    .email-info p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-info">
+    <h2>📧 Información del Email</h2>
+    <p><strong>Para:</strong> ${options.to}</p>
+    <p><strong>De:</strong> ${config.smtp.from}</p>
+    <p><strong>Asunto:</strong> ${options.subject}</p>
+    <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-MX')}</p>
+    <hr>
+    <p><em>Este email fue guardado localmente porque el servicio SMTP tiene límites o no está configurado.</em></p>
+  </div>
+  
+  ${options.html}
+</body>
+</html>
+      `;
+      
+      fs.writeFileSync(filepath, fullHtml);
+      console.log(`📁 Email guardado en: ${filename}`);
+      
+      // Si hay un link de configuración, extraerlo y mostrarlo
+      const linkMatch = options.html.match(/href="([^"]*setup[^"]*)"/);
+      if (linkMatch) {
+        console.log(`🔗 Link de configuración: ${linkMatch[1]}`);
+      }
+    } catch (err) {
+      console.error('Error guardando email localmente:', err);
     }
   }
 

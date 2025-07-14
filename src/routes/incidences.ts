@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import { incidenceController } from '../controllers/incidenceController';
-import { validateIncidenceParams } from '../middleware/validation';
+// import { validateIncidenceParams } from '../middleware/validation';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
+
+// Todas las rutas requieren autenticación
+router.use(authenticate);
 
 router.get('/', async (req, res, next) => {
   try {
@@ -56,5 +60,15 @@ router.get('/export', async (req, res) => {
   // Implementar exportación de incidencias
 });
 
+// Ruta para carga masiva de incidencias
+router.post('/bulk', async (req, res, next) => {
+  try {
+    // Usar el controlador personalizado de incidencias
+    const { IncidenciasController } = await import('../controllers/incidenciasController');
+    await IncidenciasController.createBulkIncidencias(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default router;

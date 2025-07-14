@@ -180,6 +180,29 @@ async function main() {
         status: 'CONFIGURED',
         employeesCount: 120
       }
+    }),
+    // Agregar Empresa Demo con RFC EDE2401010A1
+    prisma.company.upsert({
+      where: { rfc: 'EDE2401010A1' },
+      update: {
+        name: 'Empresa Demo S.A. de C.V.',
+        legalName: 'Empresa Demostrativa Sociedad Anónima de Capital Variable',
+        address: 'Av. Reforma 123, Col. Centro, CDMX',
+        email: 'contacto@empresademo.com',
+        phone: '5551234567',
+        status: 'CONFIGURED',
+        employeesCount: 10
+      },
+      create: {
+        name: 'Empresa Demo S.A. de C.V.',
+        rfc: 'EDE2401010A1',
+        legalName: 'Empresa Demostrativa Sociedad Anónima de Capital Variable',
+        address: 'Av. Reforma 123, Col. Centro, CDMX',
+        email: 'contacto@empresademo.com',
+        phone: '5551234567',
+        status: 'CONFIGURED',
+        employeesCount: 10
+      }
     })
   ]);
 
@@ -229,6 +252,25 @@ async function main() {
         name: 'Juan Pérez García',
         role: 'EMPLOYEE',
         companyId: companies[0].id
+      }
+    }),
+    // Usuario cliente para Empresa Demo
+    prisma.user.upsert({
+      where: { email: 'contacto@empresademo.com' },
+      update: {
+        password: clientPassword,
+        name: 'Administrador Demo',
+        role: 'CLIENT',
+        companyId: companies[2].id // Empresa Demo es la tercera empresa
+      },
+      create: {
+        email: 'contacto@empresademo.com',
+        password: clientPassword,
+        name: 'Administrador Demo',
+        role: 'CLIENT',
+        companyId: companies[2].id,
+        firstName: 'Administrador',
+        lastName: 'Demo'
       }
     })
   ]);
@@ -619,6 +661,8 @@ async function main() {
       ]);
 
       // Departamentos
+      // Primero eliminar departamentos existentes
+      await prisma.departamento.deleteMany({ where: { empresaId: company.id } });
       const departamentos = await Promise.all([
         prisma.departamento.create({
           data: {
@@ -650,6 +694,8 @@ async function main() {
       ]);
 
       // Puestos (REQUERIDO - mínimo uno)
+      // Primero eliminar puestos existentes
+      await prisma.puesto.deleteMany({ where: { empresaId: company.id } });
       await Promise.all([
         prisma.puesto.create({
           data: {
@@ -768,11 +814,59 @@ async function main() {
       });
     }
   }
+  
+  // Crear document checklist para Empresa Demo
+  await prisma.companyDocumentChecklist.upsert({
+    where: { companyId: companies[2].id },
+    update: {
+      constanciaSituacionFiscal: true,
+      altaPatronal: true,
+      altaFonacot: true,
+      sellosDigitales: true,
+      catalogoTrabajadores: true,
+      plantillaIncidencias: true,
+      identificacion: true,
+      cuentaBancaria: true,
+      representanteLegal: true,
+      actaConstitutiva: true,
+      allDocumentsUploaded: true
+    },
+    create: {
+      companyId: companies[2].id,
+      constanciaSituacionFiscal: true,
+      altaPatronal: true,
+      altaFonacot: true,
+      sellosDigitales: true,
+      catalogoTrabajadores: true,
+      plantillaIncidencias: true,
+      identificacion: true,
+      cuentaBancaria: true,
+      representanteLegal: true,
+      actaConstitutiva: true,
+      allDocumentsUploaded: true
+    }
+  });
 
   console.log('✅ Seed completado exitosamente');
   console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${employees.length} empleados`);
   console.log('📚 Catálogos: regímenes fiscales y actividades económicas');
   console.log('🧙‍♂️ Wizards y datos de configuración creados para las empresas');
+  
+  console.log('\n📧 CREDENCIALES DE ACCESO:');
+  console.log('=====================================');
+  console.log('OPERADOR:');
+  console.log('  Email: carlos@mysourcing.mx');
+  console.log('  Password: operator123');
+  console.log('\nCLIENTE (TechCorp):');
+  console.log('  Email: ana@techcorp.mx');
+  console.log('  Password: client123');
+  console.log('\nCLIENTE (Empresa Demo):');
+  console.log('  Email: contacto@empresademo.com');
+  console.log('  Password: client123');
+  console.log('\nEMPLEADO:');
+  console.log('  Email: juan.perez@techcorp.mx');
+  console.log('  Password: employee123');
+  console.log('=====================================\n');
 }
 
 main()

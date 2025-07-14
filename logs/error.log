@@ -1,0 +1,110 @@
+2025-07-13 16:27:14 [ERROR]: Error creating payroll calendar: 
+Invalid `prisma.payrollCalendar.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/payrollCalendarController.ts:77:53
+
+  74   });
+  75 }
+  76 
+→ 77 const calendar = await prisma.payrollCalendar.create({
+       data: {
+         companyId: "3",
+                    ~~~
+         name: "demo quincenal",
+         payFrequency: "quincenal",
+         daysBeforeClose: 1,
+         startDate: new Date("2025-01-01T00:00:00.000Z"),
+         periodNumber: 1,
+         payNaturalDays: true
+       },
+       include: {
+         company: true
+       }
+     })
+
+Argument `companyId`: Invalid value provided. Expected Int, provided String.
+PrismaClientValidationError: 
+Invalid `prisma.payrollCalendar.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/payrollCalendarController.ts:77:53
+
+  74   });
+  75 }
+  76 
+→ 77 const calendar = await prisma.payrollCalendar.create({
+       data: {
+         companyId: "3",
+                    ~~~
+         name: "demo quincenal",
+         payFrequency: "quincenal",
+         daysBeforeClose: 1,
+         startDate: new Date("2025-01-01T00:00:00.000Z"),
+         periodNumber: 1,
+         payNaturalDays: true
+       },
+       include: {
+         company: true
+       }
+     })
+
+Argument `companyId`: Invalid value provided. Expected Int, provided String.
+    at kn (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Xn.handleRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:7102)
+    at Xn.handleAndLogRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.createPayrollCalendar (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/payrollCalendarController.ts:77:24)
+    at async /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/payrollCalendars.ts:32:5
+2025-07-13 16:27:25 [ERROR]: Error creating payroll calendar: 
+Invalid `prisma.payrollCalendar.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/payrollCalendarController.ts:77:53
+
+  74   });
+  75 }
+  76 
+→ 77 const calendar = await prisma.payrollCalendar.create({
+       data: {
+         companyId: "3",
+                    ~~~
+         name: "demo quincenal",
+         payFrequency: "quincenal",
+         daysBeforeClose: 1,
+         startDate: new Date("2025-01-01T00:00:00.000Z"),
+         periodNumber: 1,
+         payNaturalDays: true
+       },
+       include: {
+         company: true
+       }
+     })
+
+Argument `companyId`: Invalid value provided. Expected Int, provided String.
+PrismaClientValidationError: 
+Invalid `prisma.payrollCalendar.create()` invocation in
+/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/payrollCalendarController.ts:77:53
+
+  74   });
+  75 }
+  76 
+→ 77 const calendar = await prisma.payrollCalendar.create({
+       data: {
+         companyId: "3",
+                    ~~~
+         name: "demo quincenal",
+         payFrequency: "quincenal",
+         daysBeforeClose: 1,
+         startDate: new Date("2025-01-01T00:00:00.000Z"),
+         periodNumber: 1,
+         payNaturalDays: true
+       },
+       include: {
+         company: true
+       }
+     })
+
+Argument `companyId`: Invalid value provided. Expected Int, provided String.
+    at kn (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Xn.handleRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:7102)
+    at Xn.handleAndLogRequestError (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Xn.request (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at async l (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/node_modules/@prisma/client/runtime/library.js:130:9812)
+    at async Object.createPayrollCalendar (/Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/controllers/payrollCalendarController.ts:77:24)
+    at async /Users/jorge.francisco/Desktop/pulse-mvp/mysourcing-pulse-backend/src/routes/payrollCalendars.ts:32:5

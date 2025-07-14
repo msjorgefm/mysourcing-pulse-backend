@@ -29,6 +29,10 @@ model User {
   company       Company?       @relation(fields: [companyId], references: [id])
   employee      Employee?      @relation(fields: [employeeId], references: [id])
   vinculacionesJefe VinculacionJefe[]
+  createdIncidences Incidence[]    @relation("IncidenceCreatedBy")
+  approvedIncidences Incidence[]   @relation("IncidenceApprovedBy")
+  createdPayrolls Payroll[]        @relation("PayrollCreatedBy")
+  approvedPayrolls Payroll[]       @relation("PayrollApprovedBy")
 
   @@index([email, isActive])
   @@map("users")
@@ -115,17 +119,19 @@ model Calendar {
 
 // Modelo para Calendario de Nómina (Payroll Calendar)
 model PayrollCalendar {
-  id               Int      @id @default(autoincrement())
+  id               Int         @id @default(autoincrement())
   companyId        Int      
-  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company          Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
   name             String
-  payFrequency     String   // semanal, quincenal, mensual, decenal, catorcenal
-  daysBeforeClose  Int      @default(0)
+  payFrequency     String      // semanal, quincenal, mensual, decenal, catorcenal
+  daysBeforeClose  Int         @default(0)
   startDate        DateTime
-  periodNumber     Int      @default(1)
-  payNaturalDays   Boolean  @default(false)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  periodNumber     Int         @default(1)
+  payNaturalDays   Boolean     @default(false)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  incidences       Incidence[]
+  payrolls         Payroll[]
 
   @@map("payroll_calendars")
 }
@@ -146,12 +152,21 @@ model Payroll {
   xmlPath         String?
   pdfPath         String?
   companyId       Int
+  payrollCalendarId Int?
+  approvalStatus  PayrollApprovalStatus @default(PENDING)
+  clientApprovedBy Int?
+  clientApprovalDate DateTime?
+  clientRejectionReason String?
+  createdBy       Int?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   incidences      Incidence[]
   notifications   Notification[]
   payrollItems    PayrollItem[]
   company         Company        @relation(fields: [companyId], references: [id])
+  payrollCalendar PayrollCalendar? @relation(fields: [payrollCalendarId], references: [id])
+  clientApprovedByUser User?     @relation("PayrollApprovedBy", fields: [clientApprovedBy], references: [id])
+  createdByUser   User?          @relation("PayrollCreatedBy", fields: [createdBy], references: [id])
 
   @@index([companyId, status])
   @@index([periodStart, periodEnd])
@@ -186,24 +201,36 @@ model PayrollItem {
 }
 
 model Incidence {
-  id          Int             @id @default(autoincrement())
-  type        IncidenceType
-  date        DateTime
-  quantity    Decimal         @db.Decimal(8, 2)
-  amount      Decimal?        @db.Decimal(10, 2)
-  description String?
-  status      IncidenceStatus @default(PENDING)
-  employeeId  Int
-  companyId   Int
-  payrollId   Int?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  company     Company         @relation(fields: [companyId], references: [id])
-  employee    Employee        @relation(fields: [employeeId], references: [id])
-  payroll     Payroll?        @relation(fields: [payrollId], references: [id])
+  id                 Int             @id @default(autoincrement())
+  type               IncidenceType
+  date               DateTime
+  quantity           Decimal         @db.Decimal(8, 2)
+  amount             Decimal?        @db.Decimal(10, 2)
+  description        String?
+  status             IncidenceStatus @default(PENDING)
+  employeeId         Int
+  companyId          Int
+  payrollId          Int?
+  payrollCalendarId  Int?
+  periodId           String?
+  createdBy          UserRole        @default(CLIENT)
+  createdByUserId    Int?
+  approvedBy         Int?
+  approvalDate       DateTime?
+  rejectionReason    String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  company            Company         @relation(fields: [companyId], references: [id])
+  employee           Employee        @relation(fields: [employeeId], references: [id])
+  payroll            Payroll?        @relation(fields: [payrollId], references: [id])
+  payrollCalendar    PayrollCalendar? @relation(fields: [payrollCalendarId], references: [id])
+  createdByUser      User?           @relation("IncidenceCreatedBy", fields: [createdByUserId], references: [id])
+  approvedByUser     User?           @relation("IncidenceApprovedBy", fields: [approvedBy], references: [id])
 
   @@index([companyId, date])
   @@index([employeeId, type])
+  @@index([payrollCalendarId, periodId])
+  @@index([companyId, status, createdBy])
   @@map("incidences")
 }
 
@@ -909,6 +936,12 @@ enum PayrollStatus {
   ERROR
 }
 
+enum PayrollApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum CFDIStatus {
   PENDING
   PROCESSING
@@ -922,6 +955,10 @@ enum IncidenceType {
   VACACIONES
   TIEMPO_EXTRA
   BONOS
+  INCENTIVOS
+  PRIMA_DOMINICAL
+  INCAPACIDADES
+  OTROS
 }
 
 enum IncidenceStatus {
