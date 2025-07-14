@@ -72,6 +72,32 @@ export class NotificationController {
     }
   }
   
+  static async getUserNotifications(req: AuthRequest, res: Response) {
+    try {
+      const userId = parseInt(req.params.userId);
+      
+      // Verificar que el usuario solo pueda ver sus propias notificaciones
+      if (userId !== req.user!.id && req.user!.role !== 'OPERATOR') {
+        return res.status(403).json({ 
+          error: 'You can only view your own notifications' 
+        });
+      }
+      
+      const notifications = await NotificationService.getUserNotifications(userId);
+      
+      res.json({
+        success: true,
+        data: notifications
+      });
+    } catch (error: any) {
+      console.error('Get user notifications error:', error);
+      res.status(500).json({ 
+        success: false,
+        error: error.message || 'Failed to get user notifications' 
+      });
+    }
+  }
+  
   static async markAsRead(req: AuthRequest, res: Response) {
     try {
       const id = parseInt(req.params.id);
