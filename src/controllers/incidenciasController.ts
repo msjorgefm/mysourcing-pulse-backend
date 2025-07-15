@@ -60,7 +60,7 @@ export class IncidenciasController {
           const employee = await prisma.workerDetails.findFirst({
             where: {
               companyId: parseInt(companyId),
-              numeroTrabajador: inc.employeeId.toString()
+              numeroTrabajador: parseInt(inc.employeeId)
             }
           });
           
@@ -289,14 +289,22 @@ export class IncidenciasController {
         where: whereCondition,
         include: {
           workerDetails: {
-            select: {
-              id: true,
-              numeroTrabajador: true,
-              nombres: true,
-              //department: true,
-              //position: true
-            },
-            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
+            include: {
+              contractConditions: {
+                include: {
+                  departmento: {
+                    select: {
+                      nombre: true
+                    }
+                  },
+                  puesto: {
+                    select: {
+                      nombre: true
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         orderBy: {
@@ -430,14 +438,14 @@ export class IncidenciasController {
         },
         include: {
           workerDetails: {
-            select: {
-              id: true,
-              numeroTrabajador: true,
-              nombres: true,
-              //department: true,
-              //position: true
-            },
-            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
+            include: { 
+              contractConditions: { 
+                include: { 
+                  departmento: true,
+                  puesto: true
+                } 
+              } 
+            }
           }
         },
         orderBy: {
@@ -711,14 +719,18 @@ export class IncidenciasController {
         where,
         include: {
           workerDetails: {
-            select: {
-              id: true,
-              numeroTrabajador: true,
-              nombres: true,
-              //department: true,
-              //position: true
-            },
-            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
+            include: { 
+              contractConditions: { 
+                include: { 
+                  departmento: { 
+                    select: { nombre: true } 
+                  }, 
+                  puesto: { 
+                    select: { nombre: true } 
+                  } 
+                } 
+              } 
+            }
           }
           // createdByUser: {
           //   select: {
@@ -779,14 +791,18 @@ export class IncidenciasController {
         },
         include: {
           workerDetails: {
-            select: {
-              id: true,
-              numeroTrabajador: true,
-              nombres: true,
-              //department: true,
-              //position: true
-            },
-            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
+            include: { 
+              contractConditions: { 
+                include: { 
+                  departmento: { 
+                    select: { nombre: true } 
+                  }, 
+                  puesto: { 
+                    select: { nombre: true } 
+                  } 
+                } 
+              } 
+            }
           }
         },
         orderBy: {
@@ -844,7 +860,9 @@ export class IncidenciasController {
       // Construir el filtro según el rol
       const whereClause: any = {
         companyId: parseInt(companyId),
-        status: 'ACTIVE'
+        contractConditions: {
+          situacionContractual: 'PERMANENTE'
+        }
       };
       
       // Si es jefe de departamento, solo puede ver empleados de su departamento

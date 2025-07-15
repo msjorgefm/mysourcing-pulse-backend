@@ -60,7 +60,15 @@ export const getOrganizationalData = async (empresaId: number) => {
             puesto: true
           }
         },
-        address: true
+        address: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            isActive: true
+          }
+        }
       }
     })
   ]);
@@ -88,13 +96,6 @@ export const getVinculacionesByCompany = async (companyId: number) => {
     where: { empresaId: companyId },
     include: {
       workerDetails: {
-        select: {
-          id: true,
-          numeroTrabajador: true,
-          nombres: true,
-          apellidoPaterno: true,
-          apellidoMaterno: true
-        },
         include: {
           contractConditions: {
             include: {
@@ -174,8 +175,16 @@ export const getVinculacionById = async (id: number) => {
   });
 };
 
-export const createVinculacion = async (data: CreateVinculacionData) => {
-  const { empresaId, workerDetailsId, areaIds = [], departamentoIds = [], puestoIds = [], empleadoIds = [] } = data;
+export const createVinculacion = async (data: CreateVinculacionData & { empleadoId?: number }) => {
+  // Handle both empleadoId (from frontend) and workerDetailsId
+  const workerDetailsIdFromData = data.workerDetailsId || data.empleadoId;
+  const { empresaId, areaIds = [], departamentoIds = [], puestoIds = [], empleadoIds = [] } = data;
+  const workerDetailsId = workerDetailsIdFromData;
+
+  // Validar que tenga un workerDetailsId válido
+  if (!workerDetailsId) {
+    throw new Error('Debe seleccionar un empleado para asignar como jefe');
+  }
 
   // Validar que tenga al menos un área, departamento o puesto
   if (areaIds.length === 0 && departamentoIds.length === 0 && puestoIds.length === 0) {
@@ -188,7 +197,10 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
   // Verificar que el empleado exista y obtenga su información
   const empleado = await prisma.workerDetails.findUnique({
     where: { id: workerDetailsIdNum },
-    include: { user: true }
+    include: { 
+      user: true,
+      address: true 
+    }
   });
 
   if (!empleado) {
@@ -217,11 +229,18 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
 
     if (isNewUser) {
       // Crear nuevo usuario
+      // Obtener el email real del empleado desde su dirección
+      const emailReal = empleado.address?.correoElectronico;
+      
+      if (!emailReal) {
+        throw new Error(`El empleado ${empleado.nombres} ${empleado.apellidoPaterno} no tiene email registrado en su información de contacto`);
+      }
+      
       usuario = await prisma.user.create({
         data: {
-          email: empleado.user?.email || `jefe_${empleado.numeroTrabajador}@empresa.com`,
+          email: emailReal,
           password: '', // Sin contraseña hasta que configure su cuenta
-          username: empleado.user?.username,
+          username: emailReal.split('@')[0], // Usar la parte antes del @ como username
           role: 'DEPARTMENT_HEAD',
           companyId: empresaId,
           workerDetailsId: empleado.id,
@@ -230,7 +249,10 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
           setupTokenExpiry
         }
       });
-      console.log(`🔑 Nuevo usuario creado con setupToken: ${setupToken}`);
+      console.log(`🔑 Nuevo usuario creado con email: ${emailReal}`);
+      console.log(`🔑 SetupToken: ${setupToken}`);
+      // Ahora sí podemos enviar email porque tenemos un email real
+      shouldSendEmail = true;
     } else {
       // Actualizar token en usuario existente
       usuario = await prisma.user.update({
@@ -298,38 +320,61 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
   });
 
   // Si se debe enviar email de configuración
-  if (shouldSendEmail && empleado.user?.email) {
+  if (shouldSendEmail && usuario?.email) {
     try {
       // Obtener información para el email
-      const areasNombres = vinculacion.areas.map(a => a.area.nombre);
-      const departamentosNombres = vinculacion.departamentos.map(d => d.departamento.nombre);
+      const areasNombres = vinculacion.areas.map((a: any) => a.area.nombre);
+      const departamentosNombres = vinculacion.departamentos.map((d: any) => d.departamento.nombre);
       const empleadosACargoCount = vinculacion.empleadosACargo.length;
       
       // Generar enlace de configuración
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      const setupLink = `${frontendUrl}/setup-account?token=${vinculacion.usuario.setupToken}`;
+      const setupLink = `${frontendUrl}/setup-account?token=${usuario.setupToken}`;
+      
+      // Obtener el nombre de la empresa
+      const empresa = await prisma.company.findUnique({
+        where: { id: empresaId },
+        select: { name: true }
+      });
       
       // Enviar email
       await emailService.sendVinculacionJefeEmail(
-        empleado.user.email,
+        usuario.email,
         empleado.nombres,
-        vinculacion.empresa.name,
+        empresa?.name || 'Empresa',
         setupLink,
         areasNombres,
         departamentosNombres,
         empleadosACargoCount
       );
       
-      console.log(`✅ Email enviado a ${empleado.user.email} para configurar su vinculación de jefe`);
+      console.log(`✅ Email enviado a ${usuario.email} para configurar su vinculación de jefe`);
     } catch (emailError) {
       console.error('❌ Error al enviar email de configuración:', emailError);
       // No fallar la operación si el email no se puede enviar
+      shouldSendEmail = false;
     }
-  } else if (shouldSendEmail && !empleado?.user?.email) {
-    console.warn(`⚠️ No se puede enviar email de configuración: el empleado ${empleado.nombres} no tiene email registrado`);
+  }
+  
+  // Determinar el estado del envío de email
+  let emailStatus = 'not_sent';
+  let userEmail: string | undefined = usuario?.email;
+  
+  if (shouldSendEmail && usuario?.email) {
+    emailStatus = 'sent';
+  } else if (!usuario) {
+    emailStatus = 'no_user';
   }
 
-  return vinculacion;
+  // Agregar información adicional a la respuesta
+  const vinculacionWithEmailInfo = {
+    ...vinculacion,
+    emailStatus,
+    userEmail,
+    requiresEmailUpdate: false
+  };
+
+  return vinculacionWithEmailInfo;
 };
 
 export const updateVinculacion = async (id: number, data: UpdateVinculacionData) => {

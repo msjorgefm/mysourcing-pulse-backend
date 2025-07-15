@@ -46,11 +46,11 @@ services:
       # Variables para Prisma
       PRISMA_CLI_BINARY_TARGETS: "native,linux-musl-openssl-3.0.x,debian-openssl-3.0.x"
       # Variables SMTP
-      SMTP_HOST: secure.emailsrvr.com
-      SMTP_PORT: 465
-      SMTP_USER: ea5ee2c4e8dfb1
-      SMTP_PASS: system@mysourcing.com
-      SMTP_FROM: MySourcing Pulse <noreply@mysourcing.com>
+      SMTP_HOST: sandbox.smtp.mailtrap.io
+      SMTP_PORT: 2525
+      SMTP_USER: 6e8889c30d55cb
+      SMTP_PASS: 1dddf6ef0aa2e4
+      SMTP_FROM: Pulse <noreply@mysourcing.com>
     ports:
       - "3001:3001"
     depends_on:

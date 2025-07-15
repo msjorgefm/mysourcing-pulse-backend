@@ -17,9 +17,7 @@ async function main() {
       data: {
         email: operatorEmail,
         password: await bcrypt.hash('password123', 10),
-        name: 'Admin Operador',
-        firstName: 'Admin',
-        lastName: 'Operador',
+        username: 'admin.operador',
         role: 'OPERATOR',
         isActive: true
       }
@@ -27,56 +25,108 @@ async function main() {
     console.log('✅ Operador creado');
   }
 
-  // 2. Crear empresa
-  const company = await prisma.company.create({
-    data: {
-      name: 'Empresa Demo S.A. de C.V.',
-      legalName: 'Empresa Demostrativa Sociedad Anónima de Capital Variable',
-      rfc: 'EDE2401010A1',
-      email: 'contacto@empresademo.com',
-      phone: '5551234567',
-      address: 'Av. Reforma 123, Col. Centro, CDMX',
-      status: 'CONFIGURED',
-      employeesCount: 10
-    }
+  // 2. Verificar si la empresa existe o crearla
+  const companyRfc = 'EDE2401010A1';
+  let company = await prisma.company.findUnique({
+    where: { rfc: companyRfc }
   });
-  console.log('✅ Empresa creada:', company.name);
-
-  // 3. Crear usuario cliente e invitación
-  const clientEmail = 'cliente@empresademo.com';
-  const hashedPassword = await bcrypt.hash('cliente123', 10);
   
-  const client = await prisma.user.create({
-    data: {
-      email: clientEmail,
-      password: hashedPassword,
-      name: 'María García',
-      firstName: 'María',
-      lastName: 'García',
-      role: 'CLIENT',
-      isActive: true,
-      companyId: company.id
-    }
-  });
+  if (!company) {
+    company = await prisma.company.create({
+      data: {
+        name: 'Empresa Demo S.A. de C.V.',
+        legalName: 'Empresa Demostrativa Sociedad Anónima de Capital Variable',
+        rfc: companyRfc,
+        email: 'contacto@empresademo.com',
+        phone: '5551234567',
+        address: 'Av. Reforma 123, Col. Centro, CDMX',
+        status: 'CONFIGURED',
+        employeesCount: 10
+      }
+    });
+    console.log('✅ Empresa creada:', company.name);
+  } else {
+    console.log('✅ Empresa existente encontrada:', company.name);
+    // Limpiar datos anteriores si es necesario
+    await prisma.workerContractCondition.deleteMany({ where: { workerDetails: { companyId: company.id } } });
+    await prisma.workerPaymentData.deleteMany({ where: { workerDetails: { companyId: company.id } } });
+    await prisma.workerAddress.deleteMany({ where: { workerDetails: { companyId: company.id } } });
+    await prisma.workerDetails.deleteMany({ where: { companyId: company.id } });
+    await prisma.puesto.deleteMany({ where: { empresaId: company.id } });
+    await prisma.departamento.deleteMany({ where: { empresaId: company.id } });
+    await prisma.area.deleteMany({ where: { empresaId: company.id } });
+    await prisma.workSchedule.deleteMany({ where: { companyId: company.id } });
+    await prisma.calendar.deleteMany({ where: { companyId: company.id } });
+    await prisma.companyPolicy.deleteMany({ where: { companyId: company.id } });
+    await prisma.companyWizard.deleteMany({ where: { companyId: company.id } });
+    await prisma.notification.deleteMany({ where: { companyId: company.id } });
+    console.log('✅ Datos anteriores eliminados');
+  }
 
-  // Crear token de invitación (ya usado)
-  await prisma.invitationToken.create({
-    data: {
-      token: 'demo-token-123456',
-      email: clientEmail,
-      companyId: company.id,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días
-      used: true,
-      usedAt: new Date(),
-      metadata: { role: 'CLIENT', createdBy: operator.id }
-    }
+  // 3. Verificar si el usuario cliente existe o crearlo
+  const clientEmail = 'cliente@empresademo.com';
+  let client = await prisma.user.findUnique({
+    where: { email: clientEmail }
   });
-  console.log('✅ Cliente creado con invitación');
+  
+  if (!client) {
+    const hashedPassword = await bcrypt.hash('cliente123', 10);
+    client = await prisma.user.create({
+      data: {
+        email: clientEmail,
+        password: hashedPassword,
+        username: 'maria.garcia',
+        role: 'CLIENT',
+        isActive: true,
+        companyId: company.id
+      }
+    });
+    console.log('✅ Cliente creado');
+  } else {
+    // Actualizar la compañía del cliente si es necesario
+    if (client.companyId !== company.id) {
+      client = await prisma.user.update({
+        where: { id: client.id },
+        data: { companyId: company.id }
+      });
+    }
+    console.log('✅ Cliente existente encontrado');
+  }
+
+  // Verificar si el token de invitación existe
+  const existingToken = await prisma.invitationToken.findUnique({
+    where: { token: 'demo-token-123456' }
+  });
+  
+  if (!existingToken) {
+    await prisma.invitationToken.create({
+      data: {
+        token: 'demo-token-123456',
+        email: clientEmail,
+        companyId: company.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días
+        used: true,
+        usedAt: new Date(),
+        metadata: { role: 'CLIENT', createdBy: operator.id }
+      }
+    });
+    console.log('✅ Token de invitación creado');
+  }
 
   // 4. Crear información general de la empresa
-  await prisma.companyGeneralInfo.create({
-    data: {
+  const generalInfo = await prisma.companyGeneralInfo.upsert({
+    where: { companyId: company.id },
+    create: {
       companyId: company.id,
+      businessName: 'Empresa Demostrativa S.A. de C.V.',
+      commercialName: 'Empresa Demo',
+      rfc: 'EDE2401010A1',
+      taxRegime: '601',
+      startDate: new Date('2020-01-15'),
+      tipoPersona: 'MORAL',
+      actividadEconomica: 'Servicios de Tecnología'
+    },
+    update: {
       businessName: 'Empresa Demostrativa S.A. de C.V.',
       commercialName: 'Empresa Demo',
       rfc: 'EDE2401010A1',
@@ -86,21 +136,43 @@ async function main() {
       actividadEconomica: 'Servicios de Tecnología'
     }
   });
+  console.log('✅ Información general de la empresa:', generalInfo.id ? 'actualizada' : 'creada');
 
   // 5. Crear representante legal
-  await prisma.companyLegalRepresentative.create({
-    data: {
+  const legalRep = await prisma.companyLegalRepresentative.upsert({
+    where: { companyId: company.id },
+    create: {
       companyId: company.id,
+      name: 'Juan',
+      primerApellido: 'Pérez',
+      segundoApellido: 'González'
+    },
+    update: {
       name: 'Juan',
       primerApellido: 'Pérez',
       segundoApellido: 'González'
     }
   });
+  console.log('✅ Representante legal:', legalRep.id ? 'actualizado' : 'creado');
 
   // 6. Crear checklist de documentos completado
-  await prisma.companyDocumentChecklist.create({
-    data: {
+  const checklist = await prisma.companyDocumentChecklist.upsert({
+    where: { companyId: company.id },
+    create: {
       companyId: company.id,
+      constanciaSituacionFiscal: true,
+      altaPatronal: true,
+      altaFonacot: true,
+      sellosDigitales: true,
+      catalogoTrabajadores: true,
+      plantillaIncidencias: true,
+      identificacion: true,
+      cuentaBancaria: true,
+      representanteLegal: true,
+      actaConstitutiva: true,
+      allDocumentsUploaded: true
+    },
+    update: {
       constanciaSituacionFiscal: true,
       altaPatronal: true,
       altaFonacot: true,
@@ -114,7 +186,7 @@ async function main() {
       allDocumentsUploaded: true
     }
   });
-  console.log('✅ Checklist de documentos completado');
+  console.log('✅ Checklist de documentos:', checklist.id ? 'actualizado' : 'creado');
 
   // 7. Crear horario de trabajo
   const schedule = await prisma.workSchedule.create({
@@ -129,8 +201,14 @@ async function main() {
   });
 
   // 8. Crear calendario de nómina
-  await prisma.calendar.create({
-    data: {
+  const calendar = await prisma.calendar.upsert({
+    where: {
+      companyId_year: {
+        companyId: company.id,
+        year: 2024
+      }
+    },
+    create: {
       companyId: company.id,
       year: 2024,
       name: 'Calendario 2024',
@@ -140,31 +218,40 @@ async function main() {
         { date: '2024-02-05', name: 'Día de la Constitución' }
       ],
       isDefault: true
+    },
+    update: {
+      name: 'Calendario 2024',
+      workDays: [1, 2, 3, 4, 5],
+      holidays: [
+        { date: '2024-01-01', name: 'Año Nuevo' },
+        { date: '2024-02-05', name: 'Día de la Constitución' }
+      ],
+      isDefault: true
     }
   });
-  console.log('✅ Calendario de nómina creado');
+  console.log('✅ Calendario de nómina:', calendar.id ? 'actualizado' : 'creado');
 
   // 9. Crear áreas organizacionales
   const areas = await Promise.all([
-    prisma.organizationalArea.create({
+    prisma.area.create({
       data: {
-        companyId: company.id,
-        name: 'Dirección General',
-        description: 'Área de dirección y estrategia'
+        empresaId: company.id,
+        nombre: 'Dirección General',
+        descripcion: 'Área de dirección y estrategia'
       }
     }),
-    prisma.organizationalArea.create({
+    prisma.area.create({
       data: {
-        companyId: company.id,
-        name: 'Administración',
-        description: 'Área administrativa y financiera'
+        empresaId: company.id,
+        nombre: 'Administración',
+        descripcion: 'Área administrativa y financiera'
       }
     }),
-    prisma.organizationalArea.create({
+    prisma.area.create({
       data: {
-        companyId: company.id,
-        name: 'Operaciones',
-        description: 'Área de operaciones y producción'
+        empresaId: company.id,
+        nombre: 'Operaciones',
+        descripcion: 'Área de operaciones y producción'
       }
     })
   ]);
@@ -172,36 +259,36 @@ async function main() {
 
   // 10. Crear departamentos
   const departments = await Promise.all([
-    prisma.organizationalDepartment.create({
+    prisma.departamento.create({
       data: {
-        companyId: company.id,
+        empresaId: company.id,
         areaId: areas[0].id,
-        name: 'Dirección General',
-        description: 'Departamento de dirección'
+        nombre: 'Dirección General',
+        descripcion: 'Departamento de dirección'
       }
     }),
-    prisma.organizationalDepartment.create({
+    prisma.departamento.create({
       data: {
-        companyId: company.id,
+        empresaId: company.id,
         areaId: areas[1].id,
-        name: 'Recursos Humanos',
-        description: 'Gestión de personal'
+        nombre: 'Recursos Humanos',
+        descripcion: 'Gestión de personal'
       }
     }),
-    prisma.organizationalDepartment.create({
+    prisma.departamento.create({
       data: {
-        companyId: company.id,
+        empresaId: company.id,
         areaId: areas[1].id,
-        name: 'Finanzas',
-        description: 'Control financiero y contabilidad'
+        nombre: 'Finanzas',
+        descripcion: 'Control financiero y contabilidad'
       }
     }),
-    prisma.organizationalDepartment.create({
+    prisma.departamento.create({
       data: {
-        companyId: company.id,
+        empresaId: company.id,
         areaId: areas[2].id,
-        name: 'Producción',
-        description: 'Departamento de producción'
+        nombre: 'Producción',
+        descripcion: 'Departamento de producción'
       }
     })
   ]);
@@ -209,54 +296,39 @@ async function main() {
 
   // 11. Crear puestos
   const positions = await Promise.all([
-    prisma.organizationalPosition.create({
+    prisma.puesto.create({
       data: {
-        companyId: company.id,
-        departmentId: departments[0].id,
-        name: 'Director General',
-        description: 'Dirección de la empresa',
-        hierarchyLevel: '1',
-        baseSalary: 100000
+        empresaId: company.id,
+        departamentoId: departments[0].id,
+        nombre: 'Director General'
       }
     }),
-    prisma.organizationalPosition.create({
+    prisma.puesto.create({
       data: {
-        companyId: company.id,
-        departmentId: departments[1].id,
-        name: 'Gerente de Recursos Humanos',
-        description: 'Gestión del área de RH',
-        hierarchyLevel: '2',
-        baseSalary: 50000
+        empresaId: company.id,
+        departamentoId: departments[1].id,
+        nombre: 'Gerente de Recursos Humanos'
       }
     }),
-    prisma.organizationalPosition.create({
+    prisma.puesto.create({
       data: {
-        companyId: company.id,
-        departmentId: departments[2].id,
-        name: 'Contador General',
-        description: 'Contabilidad de la empresa',
-        hierarchyLevel: '3',
-        baseSalary: 37500
+        empresaId: company.id,
+        departamentoId: departments[2].id,
+        nombre: 'Contador General'
       }
     }),
-    prisma.organizationalPosition.create({
+    prisma.puesto.create({
       data: {
-        companyId: company.id,
-        departmentId: departments[3].id,
-        name: 'Supervisor de Producción',
-        description: 'Supervisión de línea de producción',
-        hierarchyLevel: '3',
-        baseSalary: 30000
+        empresaId: company.id,
+        departamentoId: departments[3].id,
+        nombre: 'Supervisor de Producción'
       }
     }),
-    prisma.organizationalPosition.create({
+    prisma.puesto.create({
       data: {
-        companyId: company.id,
-        departmentId: departments[3].id,
-        name: 'Operador',
-        description: 'Operación de maquinaria',
-        hierarchyLevel: '4',
-        baseSalary: 15000
+        empresaId: company.id,
+        departamentoId: departments[3].id,
+        nombre: 'Operador'
       }
     })
   ]);
@@ -456,29 +528,112 @@ async function main() {
     }
   ];
 
+  // Mapeo de nombres de posiciones a IDs
+  const positionMap: { [key: string]: number } = {
+    'Director General': positions[0].id,
+    'Gerente de Recursos Humanos': positions[1].id,
+    'Contador General': positions[2].id,
+    'Supervisor de Producción': positions[3].id,
+    'Operador': positions[4].id
+  };
+
+  // Mapeo de nombres de departamentos a IDs
+  const departmentMap: { [key: string]: number } = {
+    'Dirección General': departments[0].id,
+    'Recursos Humanos': departments[1].id,
+    'Finanzas': departments[2].id,
+    'Producción': departments[3].id
+  };
+
+  let workerNumber = 1;
   for (const empData of employeesData) {
-    await prisma.employee.create({
+    // Separar nombre completo en partes
+    const nameParts = empData.name.split(' ');
+    const nombres = nameParts[0];
+    const apellidoPaterno = nameParts[1] || '';
+    const apellidoMaterno = nameParts[2] || '';
+    
+    // Debug: verificar longitudes
+    // CURP tiene formato: 4 letras + 6 dígitos fecha + 1 sexo + 2 entidad + 3 consonantes + 2 homoclave = 18 chars
+    const curp = empData.rfc.slice(0, 10) + 'HDF' + empData.rfc.slice(10, 12) + '01';  // CURP de exactamente 18 caracteres
+    console.log(`  Procesando empleado ${workerNumber}:`);
+    console.log(`    - nombres: ${nombres} (${nombres.length} chars)`);
+    console.log(`    - apellidoPaterno: ${apellidoPaterno} (${apellidoPaterno.length} chars)`);
+    console.log(`    - apellidoMaterno: ${apellidoMaterno} (${apellidoMaterno.length} chars)`);
+    console.log(`    - rfc: ${empData.rfc} (${empData.rfc.length} chars)`);
+    console.log(`    - curp: ${curp} (${curp.length} chars)`);
+    console.log(`    - nss: ${empData.employeeNumber.replace('EMP', '12345678900').slice(0, 11)} (${empData.employeeNumber.replace('EMP', '12345678900').slice(0, 11).length} chars)`);
+    
+    const worker = await prisma.workerDetails.create({
       data: {
         companyId: company.id,
-        employeeNumber: empData.employeeNumber,
-        name: empData.name,
-        email: empData.email,
+        numeroTrabajador: workerNumber++,
+        nombres: nombres,
+        apellidoPaterno: apellidoPaterno,
+        apellidoMaterno: apellidoMaterno,
+        fechaNacimiento: empData.dateOfBirth,
+        sexo: 'MASCULINO', // Por defecto
+        nacionalidad: 'MEXICANA',
+        estadoCivil: 'SOLTERO',
         rfc: empData.rfc,
-        phone: empData.phone,
-        position: empData.position,
-        department: empData.department,
-        baseSalary: empData.baseSalary,
-        hireDate: empData.hireDate,
-        contractType: empData.contractType as any,
-        dateOfBirth: empData.dateOfBirth,
-        address: empData.address,
-        emergencyContact: empData.emergencyContact,
-        bankName: empData.bankName,
-        bankAccount: empData.bankAccount,
-        clabe: empData.clabe,
-        taxRegime: empData.taxRegime,
-        workSchedule: schedule.name,
-        status: 'ACTIVE'
+        curp: curp,
+        nss: empData.employeeNumber.replace('EMP', '12345678900').slice(0, 11), // NSS ficticio
+        umf: 1
+      }
+    });
+    
+    // Crear la dirección del trabajador
+    await prisma.workerAddress.create({
+      data: {
+        workerDetailsId: worker.id,
+        correoElectronico: empData.email,
+        telefonoCelular: empData.phone.replace(/[^0-9]/g, '').slice(-10), // Tomar solo los últimos 10 dígitos
+        codigoPostal: '01000', // Código postal genérico para CDMX
+        pais: 'México',
+        entidadFederativa: 'Ciudad de México',
+        municipioAlcaldia: 'CDMX',
+        colonia: empData.address.split(',')[1]?.trim() || 'Centro',
+        calle: empData.address.split(',')[0]?.trim() || 'Calle Principal',
+        numeroExterior: '123',
+        numeroInterior: null
+      }
+    });
+    
+    // Crear datos de pago del trabajador
+    await prisma.workerPaymentData.create({
+      data: {
+        workerDetailsId: worker.id,
+        metodoPago: 'TRANSFERENCIA',
+        institucionFinanciera: empData.bankName,
+        cuentaBancaria: empData.bankAccount,
+        cuentaClabe: empData.clabe,
+        numeroTarjeta: null
+      }
+    });
+    
+    // Crear condiciones contractuales del trabajador
+    await prisma.workerContractCondition.create({
+      data: {
+        workerDetailsId: worker.id,
+        positionId: positionMap[empData.position],
+        departmentId: departmentMap[empData.department],
+        areaId: null,
+        regimenContratacion: 'SUELDOS',
+        zonaGeografica: 'RESTO_PAIS',
+        tipoSalario: 'FIJO',
+        fechaIngreso: empData.hireDate,
+        fechaAntiguedad: empData.hireDate,
+        tipoContrato: empData.contractType === 'INDEFINITE' ? 'TIEMPO_INDETERMINADO' : 'OBRA_TIEMPO_DETERMINADO',
+        tipoJornada: 'DIURNA',
+        tipoTrabajador: 'CONFIANZA',
+        situacionContractual: 'PERMANENTE',
+        salarioDiario: empData.baseSalary / 30, // Salario diario aproximado
+        sueldoBaseCotizacion: empData.baseSalary / 30, // Mismo que salario diario para este ejemplo
+        registroPatronal: 'Y12-34567-10-8',
+        claseRiesgo: 'CLASE_II',
+        calendarioNomina: 'QUINCENAL',
+        modalidadTrabajo: 'PRESENCIAL',
+        horarioId: schedule.id
       }
     });
   }
