@@ -354,6 +354,146 @@ class EmailService {
       html,
     });
   }
+
+  async sendEmployeePortalInvitationEmail(
+    email: string,
+    employeeName: string,
+    companyName: string,
+    invitationLink: string
+  ): Promise<boolean> {
+    const subject = `Portal de Empleados - ${companyName}`;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Portal de Empleados</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #4F46E5;
+            margin: 0;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #4F46E5;
+            color: white;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 25px 0;
+            font-weight: bold;
+          }
+          .button:hover {
+            background-color: #4338CA;
+          }
+          .benefits {
+            background-color: #EBF8FF;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3182CE;
+          }
+          .benefits ul {
+            margin: 10px 0;
+            padding-left: 20px;
+          }
+          .benefits li {
+            margin: 8px 0;
+            color: #2563EB;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+          }
+          .warning {
+            background-color: #FEF3C7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #F59E0B;
+          }
+          .company-name {
+            color: #4F46E5;
+            font-weight: bold;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Portal de Empleados</h1>
+          </div>
+          
+          <div class="content">
+            <h2>Hola ${employeeName},</h2>
+            
+            <p>Has sido invitado a acceder al Portal de Empleados de <span class="company-name">${companyName}</span>.</p>
+            
+            <div class="benefits">
+              <p><strong>A través del portal podrás:</strong></p>
+              <ul>
+                <li>Consultar tus recibos de nómina</li>
+                <li>Ver tus incidencias y prestaciones</li>
+                <li>Actualizar tu información personal</li>
+                <li>Descargar documentos importantes</li>
+              </ul>
+            </div>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Activar mi cuenta</a>
+            </div>
+            
+            <div class="warning">
+              <strong>Importante:</strong> Este enlace es válido por 72 horas. Si no solicitaste este acceso, puedes ignorar este correo.
+            </div>
+            
+            <p>Si tienes problemas para acceder, contacta a tu departamento de Recursos Humanos.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return await this.sendEmail({
+      to: email,
+      subject,
+      html,
+    });
+  }
 }
 
 export const emailService = new EmailService();
+export const sendEmail = (options: EmailOptions) => emailService.sendEmail(options);

@@ -13,15 +13,16 @@ export declare class InvitationService {
             name: string;
             rfc: string;
         };
+        metadata: import("@prisma/client/runtime/library").JsonValue;
     } | null>;
     static getFullInvitationDetails(token: string): Promise<({
         company: {
             email: string;
             id: number;
-            name: string;
             createdAt: Date;
             updatedAt: Date;
             phone: string | null;
+            name: string;
             rfc: string;
             legalName: string;
             address: string;

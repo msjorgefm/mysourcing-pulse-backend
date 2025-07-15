@@ -22,8 +22,7 @@ export class CompanyService {
   static async getAllCompanies(operatorOnly: boolean = false) {
     const companies = await prisma.company.findMany({
       include: {
-        employees: {
-          where: { status: 'ACTIVE' },
+        workerDetails: {
           select: { id: true }
         },
         payrolls: {
@@ -42,7 +41,7 @@ export class CompanyService {
         documentChecklist: true,
         _count: {
           select: {
-            employees: { where: { status: 'ACTIVE' } },
+            workerDetails: true,
             payrolls: true,
             incidences: true
           }
@@ -61,7 +60,7 @@ export class CompanyService {
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
-      employeesCount: company._count?.employees || 0,
+      employeesCount: company._count?.workerDetails || 0,
       payrollsCount: company._count.payrolls,
       incidencesCount: company._count.incidences,
       calendarsCount: company.calendars.length,
@@ -77,7 +76,7 @@ export class CompanyService {
     const include: any = {
       _count: {
         select: {
-          employees: { where: { status: 'ACTIVE' } },
+          workerDetails: true,
           payrolls: true,
           incidences: true
         }
@@ -85,9 +84,8 @@ export class CompanyService {
     };
     
     if (includeDetails) {
-      include.employees = {
-        where: { status: 'ACTIVE' },
-        orderBy: { name: 'asc' }
+      include.workerDetails = {
+        orderBy: { numeroTrabajador: 'asc' }
       };
       include.payrolls = {
         orderBy: { createdAt: 'desc' },
@@ -114,9 +112,9 @@ export class CompanyService {
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
-      employeesCount: (company as any)._count?.employees || 0,
+      employeesCount: (company as any)._count?.workerDetails || 0,
       ...(includeDetails && {
-        employees: (company as any).employees || [],
+        employees: (company as any).workerDetails || [],
         payrolls: (company as any).payrolls || [],
         calendars: (company as any).calendars || []
       }),
@@ -241,16 +239,15 @@ export class CompanyService {
   }
   
   static async deleteCompany(id: number) {
-    // Verificar si la empresa tiene empleados activos
-    const employeeCount = await prisma.employee.count({
+    // Verificar si la empresa tiene trabajadores activos
+    const workerCount = await prisma.workerDetails.count({
       where: { 
-        companyId: id,
-        status: 'ACTIVE'
+        companyId: id
       }
     });
     
-    if (employeeCount > 0) {
-      throw new Error('Cannot delete company with active employees');
+    if (workerCount > 0) {
+      throw new Error('Cannot delete company with active workers');
     }
     
     // Verificar si tiene nóminas pendientes
@@ -285,7 +282,7 @@ export class CompanyService {
       include: {
         _count: {
           select: {
-            employees: { where: { status: 'ACTIVE' } },
+            workerDetails: true,
             payrolls: true,
             incidences: true,
             calendars: true
@@ -347,8 +344,8 @@ export class CompanyService {
     return {
       companyId: id,
       employees: {
-        total: stats._count.employees,
-        active: stats._count.employees
+        total: stats._count.workerDetails,
+        active: stats._count.workerDetails
       },
       payrolls: {
         total: stats._count.payrolls,

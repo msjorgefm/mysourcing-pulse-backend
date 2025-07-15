@@ -17,7 +17,7 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 import authRoutes from './routes/auth';
 import companyRoutes from './routes/companies';
 import companyDocumentRoutes from './routes/companyDocumentRoutes';
-import employeeRoutes from './routes/employees';
+import workerDetailsRoutes from './routes/workerDetails';
 import payrollRoutes from './routes/payrolls';
 import payrollCalendarRoutes from './routes/payrollCalendars';
 import incidenceRoutes from './routes/incidences';
@@ -32,6 +32,7 @@ import stateRoutes from './routes/stateRoutes';
 import locationRoutes from './routes/locations';
 import bankRoutes from './routes/bankRoutes';
 import userRoutes from './routes/users';
+import calendarRoutes from './routes/calendars';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -59,9 +60,10 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", "data:", "https:", "http://localhost:3000", "http://localhost:3001"],
     },
   },
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 // CORS
@@ -108,6 +110,22 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Servir archivos estáticos con headers CORS
+app.use('/uploads', express.static('uploads', {
+  setHeaders: (res, path) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
+
+// Servir archivos de recursos (fotos de empleados)
+app.use('/resources', express.static('resources', {
+  setHeaders: (res, path) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
+
 // ================================
 // RUTAS
 // ================================
@@ -138,7 +156,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/companies', companyDocumentRoutes);
-app.use('/api/employees', employeeRoutes);
+app.use('/api/workers', workerDetailsRoutes);
 app.use('/api/payrolls', payrollRoutes);
 app.use('/api/payroll-calendars', payrollCalendarRoutes);
 app.use('/api/incidences', incidenceRoutes);

@@ -542,54 +542,236 @@ export class CompanyWizardService {
 
   static async processOrganizationalData(companyId: number, stepNumber: number, stepData: any) {
     if (stepNumber === 1 && stepData.areas) { // Áreas
-      await prisma.area.deleteMany({ where: { empresaId: companyId } });
+      // Get existing areas to preserve IDs when possible
+      const existingAreas = await prisma.area.findMany({
+        where: { empresaId: companyId }
+      });
       
+      // Create a map of existing areas by name for matching
+      const existingAreasMap = new Map(
+        existingAreas.map(area => [area.nombre.toLowerCase(), area])
+      );
+      
+      // Track which areas to keep
+      const areasToKeep = new Set<number>();
+      
+      // Update existing areas or create new ones
       for (const area of stepData.areas) {
-        await prisma.area.create({
-          data: { 
-            empresaId: companyId,
-            nombre: area.nombre,
-            descripcion: area.descripcion || null,
-            activo: true
-          }
-        });
+        const existingArea = existingAreasMap.get(area.nombre.toLowerCase());
+        
+        if (existingArea && area.id === existingArea.id) {
+          // Update existing area
+          await prisma.area.update({
+            where: { id: existingArea.id },
+            data: {
+              nombre: area.nombre,
+              descripcion: area.descripcion || null,
+              activo: true
+            }
+          });
+          areasToKeep.add(existingArea.id);
+        } else {
+          // Create new area
+          const newArea = await prisma.area.create({
+            data: { 
+              empresaId: companyId,
+              nombre: area.nombre,
+              descripcion: area.descripcion || null,
+              activo: true
+            }
+          });
+          areasToKeep.add(newArea.id);
+        }
       }
+      
+      // Delete areas that are no longer in the list
+      await prisma.area.deleteMany({
+        where: {
+          empresaId: companyId,
+          id: { notIn: Array.from(areasToKeep) }
+        }
+      });
     } else if (stepNumber === 2 && stepData.departamentos) { // Departamentos
-      await prisma.departamento.deleteMany({ where: { empresaId: companyId } });
+      console.log('Processing departments:', stepData.departamentos);
+      
+      // Get current areas from database to ensure we use correct IDs
+      const currentAreas = await prisma.area.findMany({
+        where: { empresaId: companyId, activo: true }
+      });
+      
+      // Get existing departments to preserve IDs when possible
+      const existingDepartments = await prisma.departamento.findMany({
+        where: { empresaId: companyId }
+      });
+      
+      // Create maps for validation and matching
+      const areaIdMap = new Map(currentAreas.map(area => [area.id, area]));
+      // Map departments by name only since there's a unique constraint on (empresaId, nombre)
+      const existingDeptMap = new Map(
+        existingDepartments.map(dept => [dept.nombre.toLowerCase(), dept])
+      );
+      
+      // Track which departments to keep
+      const departmentsToKeep = new Set<number>();
       
       for (const dept of stepData.departamentos) {
-        await prisma.departamento.create({
-          data: { 
-            empresaId: companyId,
-            areaId: dept.areaId ? parseInt(dept.areaId) : null,
-            nombre: dept.nombre,
-            descripcion: dept.descripcion || null,
-            activo: true
-          }
+        const parsedAreaId = dept.areaId ? parseInt(dept.areaId) : null;
+        
+        // Validate that the area ID exists
+        if (parsedAreaId && !areaIdMap.has(parsedAreaId)) {
+          console.warn(`Area ID ${parsedAreaId} not found for department ${dept.nombre}. Setting to null.`);
+        }
+        
+        const validAreaId = parsedAreaId && areaIdMap.has(parsedAreaId) ? parsedAreaId : null;
+        // Look up department by name only due to unique constraint
+        const existingDept = existingDeptMap.get(dept.nombre.toLowerCase());
+        
+        console.log('Processing department:', {
+          nombre: dept.nombre,
+          areaId: dept.areaId,
+          parsedAreaId: parsedAreaId,
+          validAreaId: validAreaId,
+          existingDeptId: existingDept?.id
         });
+        
+        if (existingDept) {
+          // Update existing department (identified by name)
+          await prisma.departamento.update({
+            where: { id: existingDept.id },
+            data: {
+              nombre: dept.nombre,
+              areaId: validAreaId,
+              descripcion: dept.descripcion || null,
+              activo: true
+            }
+          });
+          departmentsToKeep.add(existingDept.id);
+          console.log(`Updated existing department: ${dept.nombre} (ID: ${existingDept.id})`);
+        } else {
+          // Create new department
+          const newDept = await prisma.departamento.create({
+            data: { 
+              empresaId: companyId,
+              areaId: validAreaId,
+              nombre: dept.nombre,
+              descripcion: dept.descripcion || null,
+              activo: true
+            }
+          });
+          departmentsToKeep.add(newDept.id);
+          console.log(`Created new department: ${dept.nombre} (ID: ${newDept.id})`);
+        }
       }
+      
+      // Delete departments that are no longer in the list
+      await prisma.departamento.deleteMany({
+        where: {
+          empresaId: companyId,
+          id: { notIn: Array.from(departmentsToKeep) }
+        }
+      });
     } else if (stepNumber === 3 && stepData.puestos) { // Puestos (REQUERIDO)
       // Validar que haya al menos un puesto
       if (!stepData.puestos || stepData.puestos.length === 0) {
         throw new Error('Debe agregar al menos un puesto para continuar');
       }
       
-      await prisma.puesto.deleteMany({ where: { empresaId: companyId } });
+      console.log('Processing positions:', stepData.puestos);
+      
+      // Get current areas, departments and existing positions from database
+      const [currentAreas, currentDepartments, existingPositions] = await Promise.all([
+        prisma.area.findMany({
+          where: { empresaId: companyId, activo: true }
+        }),
+        prisma.departamento.findMany({
+          where: { empresaId: companyId, activo: true }
+        }),
+        prisma.puesto.findMany({
+          where: { empresaId: companyId }
+        })
+      ]);
+      
+      // Create maps for validation and matching
+      const areaIdMap = new Map(currentAreas.map(area => [area.id, area]));
+      const departmentIdMap = new Map(currentDepartments.map(dept => [dept.id, dept]));
+      // Map positions by name only since there's a unique constraint on (empresaId, nombre)
+      const existingPositionMap = new Map(
+        existingPositions.map(pos => [pos.nombre.toLowerCase(), pos])
+      );
+      
+      // Track which positions to keep
+      const positionsToKeep = new Set<number>();
       
       for (const puesto of stepData.puestos) {
         // No enviar el ID temporal del frontend
         const { id, areaNombre, departamentoNombre, ...puestoData } = puesto;
         
-        await prisma.puesto.create({
-          data: { 
-            empresaId: companyId,
-            areaId: puestoData.areaId ? parseInt(puestoData.areaId) : null,
-            departamentoId: puestoData.departamentoId ? parseInt(puestoData.departamentoId) : null,
-            nombre: puestoData.nombre,
-            activo: true
-          }
+        const parsedAreaId = puestoData.areaId ? parseInt(puestoData.areaId) : null;
+        const parsedDepartmentId = puestoData.departamentoId ? parseInt(puestoData.departamentoId) : null;
+        
+        // Validate that the area ID exists
+        if (parsedAreaId && !areaIdMap.has(parsedAreaId)) {
+          console.warn(`Area ID ${parsedAreaId} not found for position ${puestoData.nombre}. Setting to null.`);
+        }
+        
+        // Validate that the department ID exists
+        if (parsedDepartmentId && !departmentIdMap.has(parsedDepartmentId)) {
+          console.warn(`Department ID ${parsedDepartmentId} not found for position ${puestoData.nombre}. Setting to null.`);
+        }
+        
+        const validAreaId = parsedAreaId && areaIdMap.has(parsedAreaId) ? parsedAreaId : null;
+        const validDepartmentId = parsedDepartmentId && departmentIdMap.has(parsedDepartmentId) ? parsedDepartmentId : null;
+        
+        // Look up position by name only due to unique constraint
+        const existingPosition = existingPositionMap.get(puestoData.nombre.toLowerCase());
+        
+        console.log('Processing position:', {
+          nombre: puestoData.nombre,
+          areaId: puestoData.areaId,
+          departamentoId: puestoData.departamentoId,
+          parsedAreaId,
+          parsedDepartmentId,
+          validAreaId,
+          validDepartmentId,
+          existingPositionId: existingPosition?.id
         });
+        
+        if (existingPosition) {
+          // Update existing position (identified by name)
+          await prisma.puesto.update({
+            where: { id: existingPosition.id },
+            data: {
+              nombre: puestoData.nombre,
+              areaId: validAreaId,
+              departamentoId: validDepartmentId,
+              activo: true
+            }
+          });
+          positionsToKeep.add(existingPosition.id);
+          console.log(`Updated existing position: ${puestoData.nombre} (ID: ${existingPosition.id})`);
+        } else {
+          // Create new position
+          const newPosition = await prisma.puesto.create({
+            data: { 
+              empresaId: companyId,
+              areaId: validAreaId,
+              departamentoId: validDepartmentId,
+              nombre: puestoData.nombre,
+              activo: true
+            }
+          });
+          positionsToKeep.add(newPosition.id);
+          console.log(`Created new position: ${puestoData.nombre} (ID: ${newPosition.id})`);
+        }
       }
+      
+      // Delete positions that are no longer in the list
+      await prisma.puesto.deleteMany({
+        where: {
+          empresaId: companyId,
+          id: { notIn: Array.from(positionsToKeep) }
+        }
+      });
     }
   }
 

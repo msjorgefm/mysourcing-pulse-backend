@@ -79,6 +79,15 @@ router.get('/companies/:companyId/departamentos', async (req, res, next) => {
   }
 });
 
+// Obtener todos los puestos de una empresa (opcionalmente filtrados por departamento)
+router.get('/companies/:companyId/puestos', async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyPuestos(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Eliminar un área
 router.delete('/companies/:companyId/areas/:areaId', async (req, res, next) => {
   try {

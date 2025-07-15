@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { InvitationService } from '../services/invitationService';
 import { UserService } from '../services/userService';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import Joi from 'joi';
+import { UserRole } from '@prisma/client';
 
 export class OnboardingController {
   
@@ -49,8 +50,8 @@ export class OnboardingController {
         username: Joi.string().min(3).max(50).required(),
         password: Joi.string().min(8).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
-        firstName: Joi.string().min(2).max(50).required(),
-        lastName: Joi.string().min(2).max(50).required(),
+        firstName: Joi.string().min(2).max(50).optional(),
+        lastName: Joi.string().min(2).max(50).optional(),
         phone: Joi.string().pattern(/^[0-9\-\+\(\)\s]+$/).optional()
       });
       
@@ -73,15 +74,6 @@ export class OnboardingController {
         });
       }
       
-      // Verificar si el username ya existe
-      const existingUser = await UserService.getUserByEmail(username);
-      if (existingUser) {
-        return res.status(400).json({
-          success: false,
-          error: 'Username already exists'
-        });
-      }
-      
       // Obtener detalles de la invitación
       const invitationDetails = await InvitationService.getInvitationDetails(token);
       if (!invitationDetails) {
@@ -91,26 +83,72 @@ export class OnboardingController {
         });
       }
       
-      // Hashear contraseña
-      const hashedPassword = await bcrypt.hash(password, 10);
-      
       // Obtener detalles completos de la invitación para verificar metadata
       const fullInvitationDetails = await InvitationService.getFullInvitationDetails(token);
       const metadata = (fullInvitationDetails as any)?.metadata;
-      const isDepartmentHead = metadata?.role === 'DEPARTMENT_HEAD';
       
-      // Crear usuario con el rol apropiado
-      const fullName = `${firstName} ${lastName}`;
-      const newUser = await UserService.createUser({
-        email: username,
-        password: hashedPassword,
-        name: fullName,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        role: isDepartmentHead ? 'DEPARTMENT_HEAD' : 'CLIENT',
-        companyId: invitationDetails.company.id
-      });
+      // Determinar el rol basado en la metadata
+      let userRole: UserRole = UserRole.CLIENT; // Rol por defecto
+      if (metadata?.role === 'DEPARTMENT_HEAD') {
+        userRole = UserRole.DEPARTMENT_HEAD;
+      } else if (metadata?.role === 'EMPLOYEE') {
+        userRole = UserRole.EMPLOYEE;
+      }
+      
+      let newUser: any;
+      
+      // Si es employee, buscar usuario existente por employeeId y actualizar
+      if ( metadata?.role === 'EMPLOYEE') {
+        const existingEmployee = await UserService.getUserByEmployeeId(parseInt(metadata.workerDetailsId.toString()));
+        if (!existingEmployee) {
+          return res.status(400).json({
+            success: false,
+            error: 'Employee user not found'
+          });
+        }
+        
+        // Verificar si el nuevo username ya está en uso por otro usuario
+        const usernameCheck = await UserService.getUserByEmail(username);
+        if (usernameCheck && usernameCheck.id !== existingEmployee.id) {
+          return res.status(400).json({
+            success: false,
+            error: 'Username already exists'
+          });
+        }
+        
+        // Actualizar usuario existente
+        newUser = await UserService.updateUser(existingEmployee.id, {
+          username: username,
+          password: password,
+          isActive: true
+        });
+      } else {
+        // Para otros roles, verificar si el username ya existe
+        const existingUser = await UserService.getUserByEmail(username);
+        if (existingUser) {
+          return res.status(400).json({
+            success: false,
+            error: 'Username already exists'
+          });
+        }
+        
+        // Preparar datos del usuario según el rol
+        let userData: any = {
+          email: username,
+          password: password,
+          role: userRole,
+          companyId: invitationDetails.company.id
+        };
+        
+        // Para otros roles (CLIENT, DEPARTMENT_HEAD), sí guardar la información personal
+        userData.name = `${firstName} ${lastName}`;
+        userData.firstName = firstName || '';
+        userData.lastName = lastName || '';
+        userData.phone = phone || '';
+        
+        // Crear usuario con los datos apropiados
+        newUser = await UserService.createUser(userData);
+      }
       
       // Marcar token como usado
       await InvitationService.markTokenAsUsed(token);

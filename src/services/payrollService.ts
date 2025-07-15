@@ -10,7 +10,7 @@ export interface CreatePayrollRequest {
   periodStart: string;
   periodEnd: string;
   calendarId?: number;
-  employeeIds?: number[];
+  workerDetailsIds?: number[];
 }
 
 export interface PayrollCalculation {
@@ -76,8 +76,8 @@ export class PayrollService {
       // Calendar relationship removed
       incidences: {
         include: {
-          employee: {
-            select: { id: true, name: true, employeeNumber: true }
+          workerDetails: {
+            select: { id: true, nombres: true, apellidoPaterno: true, apellidoMaterno: true, numeroTrabajador: true }
           }
         }
       }
@@ -86,8 +86,8 @@ export class PayrollService {
     if (includeDetails) {
       include.payrollItems = {
         include: {
-          employee: {
-            select: { id: true, name: true, employeeNumber: true, position: true }
+          workerDetails: {
+            select: { id: true, nombres: true, apellidoPaterno: true, apellidoMaterno: true, numeroTrabajador: true }
           }
         }
       };
@@ -128,9 +128,7 @@ export class PayrollService {
     const company = await prisma.company.findUnique({
       where: { id: data.companyId },
       include: {
-        employees: {
-          where: { status: 'ACTIVE' }
-        }
+        workerDetails: true
       }
     });
     
@@ -138,13 +136,13 @@ export class PayrollService {
       throw new Error('Company not found');
     }
     
-    // Obtener empleados a incluir
-    const employees = data.employeeIds?.length 
-      ? company.employees?.filter( (emp: { id: number }) => data.employeeIds!.includes(emp.id)) || []
-      : company.employees || [];
+    // Obtener trabajadores a incluir
+    const workers = data.workerDetailsIds?.length 
+      ? company.workerDetails?.filter( (worker: { id: number }) => data.workerDetailsIds!.includes(worker.id)) || []
+      : company.workerDetails || [];
     
-    if (employees.length === 0) { 
-      throw new Error('No active employees found for this company');
+    if (workers.length === 0) { 
+      throw new Error('No active workers found for this company');
     }
     
     // Crear nómina inicial
@@ -156,7 +154,7 @@ export class PayrollService {
         totalGross: 0,
         totalDeductions: 0,
         totalNet: 0,
-        employeeCount: employees.length,
+        employeeCount: workers.length,
         status: 'DRAFT',
         companyId: data.companyId
       }
@@ -182,14 +180,12 @@ export class PayrollService {
       include: {
         company: {
           include: {
-            employees: {
-              where: { status: 'ACTIVE' }
-            }
+            workerDetails: true
           }
         },
         incidences: {
           include: {
-            employee: true
+            workerDetails: true
           }
         }
       }
@@ -205,23 +201,23 @@ export class PayrollService {
     
     // Calcular nómina usando el servicio de cálculos
     const calculations = await CalculationService.calculatePayrollForCompany(
-      (payroll.company as any).employees || [],
+      (payroll.company as any).workerDetails || [],
       (payroll as any).incidences || [],
       payroll.periodStart,
       payroll.periodEnd
     );
     
-    // Crear detalles por empleado
+    // Crear detalles por trabajador
     const payrollDetails = [];
-    for (const empCalc of calculations.employeeCalculations) {
+    for (const workerCalc of calculations.employeeCalculations) {
       const detail = await prisma.payrollItem.create({
         data: {
           payrollId: payrollId,
-          employeeId: empCalc.employeeId,
-          baseSalary: empCalc.perceptions?.salarioBase || 0,
-          totalGross: empCalc.perceptions?.total || 0,
-          totalDeductions: empCalc.deductions?.total || 0,
-          netSalary: empCalc.netPay || 0,
+          workerDetailsId: workerCalc.employeeId, // Note: CalculationService might need to be updated to use workerId
+          baseSalary: workerCalc.perceptions?.salarioBase || 0,
+          totalGross: workerCalc.perceptions?.total || 0,
+          totalDeductions: workerCalc.deductions?.total || 0,
+          netSalary: workerCalc.netPay || 0,
           workedDays: 15
         }
       });

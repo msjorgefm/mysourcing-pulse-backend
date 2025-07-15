@@ -13,5 +13,6 @@ declare class EmailService {
     sendDepartmentHeadInvitationEmail(email: string, companyName: string, departmentName: string, invitationLink: string): Promise<boolean>;
 }
 export declare const emailService: EmailService;
+export declare const sendEmail: (options: EmailOptions) => Promise<boolean>;
 export {};
 //# sourceMappingURL=emailService.d.ts.map

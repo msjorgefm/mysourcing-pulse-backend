@@ -104,10 +104,11 @@ export class InvitationService {
     if (!invitationToken || invitationToken.used || new Date() > invitationToken.expiresAt) {
       return null;
     }
-    
+    console.log('🔍 Invitation details retrieved:', invitationToken);
     return {
       email: invitationToken.email,
       company: invitationToken.company,
+      metadata: invitationToken.metadata
     };
   }
   

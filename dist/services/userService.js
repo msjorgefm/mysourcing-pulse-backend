@@ -13,7 +13,7 @@ class UserService {
             where: { email },
             include: {
                 company: true,
-                employee: true
+                workerDetails: true
             }
         });
     }
@@ -22,7 +22,7 @@ class UserService {
             where: { id },
             include: {
                 company: true,
-                employee: true
+                workerDetails: true
             }
         });
         if (user && !includePassword) {
@@ -36,7 +36,7 @@ class UserService {
             where: { id },
             include: {
                 company: true,
-                employee: true
+                workerDetails: true
             }
         });
     }
@@ -50,26 +50,22 @@ class UserService {
             data: {
                 email: data.email,
                 password: data.password, // Ya debe venir hasheada
-                name: data.name,
-                firstName: data.firstName,
-                lastName: data.lastName,
+                username: data.username,
                 phone: data.phone,
                 role: data.role,
                 companyId: data.companyId,
-                employeeId: data.employeeId,
+                workerDetailsId: data.workerDetailsId,
                 isActive: true
             },
             select: {
                 id: true,
                 email: true,
-                name: true,
-                firstName: true,
-                lastName: true,
+                username: true,
                 phone: true,
                 role: true,
                 isActive: true,
                 companyId: true,
-                employeeId: true,
+                workerDetailsId: true,
                 createdAt: true
             }
         });
@@ -86,15 +82,13 @@ class UserService {
             select: {
                 id: true,
                 email: true,
-                name: true,
-                firstName: true,
-                lastName: true,
+                username: true,
                 phone: true,
                 photoUrl: true,
                 role: true,
                 isActive: true,
                 companyId: true,
-                employeeId: true,
+                workerDetailsId: true,
                 updatedAt: true
             }
         });
@@ -115,13 +109,13 @@ class UserService {
             select: {
                 id: true,
                 email: true,
-                name: true,
+                username: true,
                 role: true,
                 createdAt: true,
                 lastLoginAt: true
             },
             orderBy: {
-                name: 'asc'
+                username: 'asc'
             }
         });
     }
@@ -134,7 +128,7 @@ class UserService {
             select: {
                 id: true,
                 email: true,
-                name: true,
+                username: true,
                 companyId: true,
                 createdAt: true
             },

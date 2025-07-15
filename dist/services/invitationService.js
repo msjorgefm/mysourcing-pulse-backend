@@ -96,9 +96,11 @@ class InvitationService {
         if (!invitationToken || invitationToken.used || new Date() > invitationToken.expiresAt) {
             return null;
         }
+        console.log('🔍 Invitation details retrieved:', invitationToken);
         return {
             email: invitationToken.email,
             company: invitationToken.company,
+            metadata: invitationToken.metadata
         };
     }
     static async getFullInvitationDetails(token) {
@@ -125,9 +127,9 @@ class InvitationService {
                 where: { id: companyId },
                 select: { name: true }
             });
-            const department = await prisma.companyDepartment.findUnique({
+            const department = await prisma.departamento.findUnique({
                 where: { id: departmentId },
-                select: { name: true }
+                select: { nombre: true }
             });
             if (!company || !department) {
                 throw new Error('Empresa o departamento no encontrado');
@@ -142,16 +144,16 @@ class InvitationService {
                     metadata: {
                         role: 'DEPARTMENT_HEAD',
                         departmentId: departmentId,
-                        departmentName: department.name
+                        departmentName: department.nombre
                     }
                 },
             });
             // Generar enlace de invitación
             const invitationLink = `${config_1.config.frontend.url}/setup-account?token=${token}&role=department_head`;
             // Enviar correo de invitación
-            const emailSent = await emailService_1.emailService.sendDepartmentHeadInvitationEmail(email, company.name, department.name, invitationLink);
+            const emailSent = await emailService_1.emailService.sendDepartmentHeadInvitationEmail(email, company.name, department.nombre, invitationLink);
             if (emailSent) {
-                console.log(`✅ Department head invitation sent to ${email} for department ${department.name} at ${company.name}`);
+                console.log(`✅ Department head invitation sent to ${email} for department ${department.nombre} at ${company.name}`);
             }
             // En desarrollo, mostrar el link en consola
             if (config_1.config.env === 'development') {

@@ -278,9 +278,42 @@ export class CompanyWizardController {
 
           // Retornar directamente los datos de la base de datos
           return {
-            areas: await prisma.area.findMany({ where: { empresaId: companyId } }),
-            departamentos: await prisma.departamento.findMany({ where: { empresaId: companyId } }),
-            puestos: await prisma.puesto.findMany({ where: { empresaId: companyId } })
+            areas: await prisma.area.findMany({ 
+              where: { 
+                empresaId: companyId,
+                activo: true
+              },
+              orderBy: { nombre: 'asc' }
+            }),
+            departamentos: await prisma.departamento.findMany({ 
+              where: { 
+                empresaId: companyId,
+                activo: true
+              },
+              include: {
+                area: {
+                  select: {
+                    id: true,
+                    nombre: true
+                  }
+                }
+              },
+              orderBy: { nombre: 'asc' }
+            }),
+            puestos: await prisma.puesto.findMany({ 
+              where: { 
+                empresaId: companyId,
+                activo: true
+              },
+              include: {
+                departamento: {
+                  include: {
+                    area: true
+                  }
+                }
+              },
+              orderBy: { nombre: 'asc' }
+            })
           };
         case 6: // Nómina
           // Obtener los calendarios de nómina desde la tabla payrollCalendar
@@ -292,7 +325,7 @@ export class CompanyWizardController {
         case 7: // Talento Humano
           return {
             schedules: await prisma.companySchedule.findMany({ where: { companyId } }),
-            employees: await prisma.employee.findMany({ where: { companyId } })
+            workers: await prisma.workerDetails.findMany({ where: { companyId } })
           };
         default:
           return null;
@@ -431,6 +464,50 @@ export class CompanyWizardController {
     }
   }
 
+  // Obtener todos los puestos de una empresa (opcionalmente filtrados por departamento)
+  static async getCompanyPuestos(req: Request, res: Response) {
+    try {
+      const { companyId } = req.params;
+      const { departamentoId } = req.query;
+      
+      if (!companyId || isNaN(Number(companyId))) {
+        return res.status(400).json({ error: 'Valid company ID is required' });
+      }
+
+      const prisma = new PrismaClient();
+
+      try {
+        const whereCondition: any = {
+          empresaId: Number(companyId)
+        };
+
+        // Si se proporciona departamentoId, filtrar por él
+        if (departamentoId && !isNaN(Number(departamentoId))) {
+          whereCondition.departamentoId = Number(departamentoId);
+        }
+
+        const puestos = await prisma.puesto.findMany({
+          where: whereCondition,
+          include: {
+            departamento: {
+              include: {
+                area: true
+              }
+            }
+          },
+          orderBy: { nombre: 'asc' }
+        });
+
+        res.json(puestos);
+      } finally {
+        await prisma.$disconnect();
+      }
+    } catch (error: any) {
+      console.error('Get puestos error:', error);
+      res.status(500).json({ error: error.message || 'Failed to get puestos' });
+    }
+  }
+
   // Eliminar un área
   static async deleteArea(req: Request, res: Response) {
     try {
@@ -453,6 +530,21 @@ export class CompanyWizardController {
 
         if (!area) {
           return res.status(404).json({ error: 'Área no encontrada' });
+        }
+
+        // Verificar si existen departamentos asociados al área
+        const departamentosCount = await prisma.departamento.count({
+          where: {
+            areaId: Number(areaId),
+            activo: true
+          }
+        });
+
+        if (departamentosCount > 0) {
+          return res.status(400).json({ 
+            error: 'No se puede eliminar el área porque tiene departamentos asociados. Por favor elimine primero todos los departamentos de esta área.',
+            departamentos: departamentosCount
+          });
         }
 
         // Eliminar el área
@@ -492,6 +584,21 @@ export class CompanyWizardController {
 
         if (!departamento) {
           return res.status(404).json({ error: 'Departamento no encontrado' });
+        }
+
+        // Verificar si existen puestos asociados al departamento
+        const puestosCount = await prisma.puesto.count({
+          where: {
+            departamentoId: Number(departamentoId),
+            activo: true
+          }
+        });
+
+        if (puestosCount > 0) {
+          return res.status(400).json({ 
+            error: 'No se puede eliminar el departamento porque tiene puestos asociados. Por favor elimine primero todos los puestos de este departamento.',
+            puestos: puestosCount
+          });
         }
 
         // Eliminar el departamento

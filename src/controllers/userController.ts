@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export class UserController {
   
@@ -23,9 +23,7 @@ export class UserController {
         data: {
           id: user.id,
           email: user.email,
-          name: user.name,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          username: user.username,
           phone: user.phone,
           photoUrl: user.photoUrl,
           role: user.role,
@@ -46,16 +44,11 @@ export class UserController {
   static async updateProfile(req: Request, res: Response) {
     try {
       const userId = (req as any).userId;
-      const { firstName, lastName, phone } = req.body;
-      
-      // Actualizar el nombre completo
-      const fullName = `${firstName} ${lastName}`;
+      const { username, phone } = req.body;
       
       const updatedUser = await UserService.updateUser(userId, {
-        firstName,
-        lastName,
-        phone,
-        name: fullName
+        username,
+        phone
       });
       
       res.json({
@@ -64,9 +57,7 @@ export class UserController {
         data: {
           id: updatedUser.id,
           email: updatedUser.email,
-          name: updatedUser.name,
-          firstName: updatedUser.firstName,
-          lastName: updatedUser.lastName,
+          username: updatedUser.username,
           phone: updatedUser.phone,
           role: updatedUser.role
         }
@@ -76,6 +67,56 @@ export class UserController {
       res.status(500).json({
         success: false,
         error: 'Error al actualizar el perfil'
+      });
+    }
+  }
+
+  // Actualizar datos básicos del usuario (para empleados)
+  static async updateUserData(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { username, email } = req.body;
+      
+      // Obtener el usuario para verificar si es empleado
+      const user = await UserService.getUserById(parseInt(id));
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: 'Usuario no encontrado'
+        });
+      }
+      
+      // Si el usuario es un empleado, solo actualizar el email/username
+      // Los datos personales (firstName, lastName) deben manejarse desde Employee/WorkerDetails
+      const updateData: any = {};
+      
+      if (user.role === 'EMPLOYEE' && user.workerDetailsId) {
+        // Para empleados, solo actualizar email/username
+        if (email) updateData.email = email;
+        if (username) updateData.username = username;
+      } else {
+        // Para otros roles (CLIENT, DEPARTMENT_HEAD, etc.), actualizar todos los campos
+        if (username) updateData.username = username;
+        if (email) updateData.email = email;
+      }
+      
+      const updatedUser = await UserService.updateUser(parseInt(id), updateData);
+      
+      res.json({
+        success: true,
+        message: 'Datos de usuario actualizados exitosamente',
+        data: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          username: updatedUser.username,
+          role: updatedUser.role
+        }
+      });
+    } catch (error) {
+      console.error('Error updating user data:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Error al actualizar los datos de usuario'
       });
     }
   }
@@ -123,4 +164,49 @@ export class UserController {
       });
     }
   }
+
+  // Cambiar contraseña por ID de usuario específico
+  static async changePasswordById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { currentPassword, newPassword } = req.body;
+      
+      // Obtener usuario con contraseña para verificación
+      const user = await UserService.getUserByIdWithPassword(parseInt(id));
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: 'Usuario no encontrado'
+        });
+      }
+      
+      // Verificar contraseña actual
+      const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+      
+      if (!isValidPassword) {
+        return res.status(400).json({
+          success: false,
+          error: 'La contraseña actual es incorrecta'
+        });
+      }
+      
+      // Actualizar contraseña
+      await UserService.updateUser(parseInt(id), {
+        password: newPassword // El servicio se encarga de hashearla
+      });
+      
+      res.json({
+        success: true,
+        message: 'Contraseña actualizada exitosamente'
+      });
+    } catch (error) {
+      console.error('Error changing password:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Error al cambiar la contraseña'
+      });
+    }
+  }
+  
 }

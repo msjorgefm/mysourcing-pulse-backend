@@ -1,5 +1,5 @@
-import {  IncidenceType } from '../types/payroll';
-import { Employee } from '../types/user';
+import { IncidenceType } from '../types/payroll';
+import { WorkerDetails } from '../types/user';
 
 // Constantes para cálculos
 export const CALCULATION_CONSTANTS = {
@@ -13,49 +13,51 @@ export const CALCULATION_CONSTANTS = {
 /**
  * Calcula el monto de una incidencia basado en el tipo y cantidad
  */
+interface WorkerCalculationData {
+  salary: number;
+  isActive: boolean;
+  [key: string]: any;
+}
+
 export const calculateIncidenceAmount = (
   type: IncidenceType,
-  employee: Employee,
+  worker: WorkerCalculationData,
   quantity: number,
   workingDaysInPeriod: number = CALCULATION_CONSTANTS.WORKING_DAYS_PER_PERIOD
 ): number => {
-  if (!type || !employee || !quantity || quantity < 0) {
+  if (!type || !worker || !quantity || quantity < 0) {
     return 0;
   }
 
-  const dailySalary = employee.salary / workingDaysInPeriod;
+  const dailySalary = worker.salary / workingDaysInPeriod;
   const hourlyRate = dailySalary / CALCULATION_CONSTANTS.WORKING_HOURS_PER_DAY;
 
   switch (type) {
-    case 'faltas':
+    case 'ABSENCE':
       // Descuento por días no trabajados
       return parseFloat(
         (dailySalary * quantity * CALCULATION_CONSTANTS.ABSENCE_MULTIPLIER).toFixed(2)
       );
 
-    case 'vacaciones':
+    case 'VACATION':
       // Pago normal por días de vacaciones
       return parseFloat(
         (dailySalary * quantity * CALCULATION_CONSTANTS.VACATION_MULTIPLIER).toFixed(2)
       );
 
-    case 'tiempo_extra':
+    case 'OVERTIME':
       // Pago de tiempo extra (doble)
       return parseFloat(
         (hourlyRate * quantity * CALCULATION_CONSTANTS.OVERTIME_MULTIPLIER).toFixed(2)
       );
 
-    case 'permisos':
+    case 'PERMISSION':
       // Por defecto sin afectación (puede ser con o sin goce)
       return 0;
 
-    case 'bonos':
+    case 'BONUS':
       // Para bonos, la cantidad ES el monto
       return parseFloat(parseFloat(quantity.toString()).toFixed(2));
-
-    case 'descuentos':
-      // Para descuentos, aplicar como negativo
-      return parseFloat((-Math.abs(quantity)).toFixed(2));
 
     default:
       return 0;
@@ -63,13 +65,16 @@ export const calculateIncidenceAmount = (
 };
 
 /**
- * Calcula el salario bruto de un empleado para un período
+ * Calcula el salario bruto de un trabajador para un período
  */
 export const calculateGrossSalary = (
-  employee: Employee,
+  worker: WorkerDetails,
   workingDaysInPeriod: number = CALCULATION_CONSTANTS.WORKING_DAYS_PER_PERIOD
 ): number => {
-  const dailySalary = employee.salary / workingDaysInPeriod;
+  const monthlySalary = worker.contractConditions?.salarioDiario 
+    ? Number(worker.contractConditions.salarioDiario) * 30 
+    : 15000; // Default monthly salary
+  const dailySalary = monthlySalary / 30;
   return parseFloat((dailySalary * workingDaysInPeriod).toFixed(2));
 };
 
@@ -140,7 +145,7 @@ export const calculateIncidencesTotal = (
  * Calcula resumen de nómina para una empresa
  */
 export const calculatePayrollSummary = (
-  employees: Employee[],
+  workers: WorkerDetails[],
   incidences: Array<any> = []
 ): {
   totalEmployees: number;
@@ -150,10 +155,10 @@ export const calculatePayrollSummary = (
   totalDeductions: number;
   estimatedNetTotal: number;
 } => {
-  const totalEmployees = employees.length;
+  const totalEmployees = workers.length;
   
-  const totalGrossSalary = employees.reduce((sum, emp) => {
-    return sum + calculateGrossSalary(emp);
+  const totalGrossSalary = workers.reduce((sum, worker) => {
+    return sum + calculateGrossSalary(worker);
   }, 0);
 
   const incidencesTotal = calculateIncidencesTotal(incidences);
@@ -186,7 +191,7 @@ export const validateIncidenceQuantity = (
   }
 
   switch (type) {
-    case 'tiempo_extra':
+    case 'OVERTIME':
       if (quantity > 12) {
         return { 
           isValid: false, 
@@ -195,8 +200,8 @@ export const validateIncidenceQuantity = (
       }
       break;
 
-    case 'vacaciones':
-    case 'faltas':
+    case 'VACATION':
+    case 'ABSENCE':
       if (quantity > maxWorkingDays) {
         return { 
           isValid: false, 
@@ -205,8 +210,7 @@ export const validateIncidenceQuantity = (
       }
       break;
 
-    case 'bonos':
-    case 'descuentos':
+    case 'BONUS':
       if (quantity > 999999.99) {
         return { 
           isValid: false, 

@@ -10,40 +10,34 @@ export class AuthService {
   
   static async login(credentials: LoginRequest): Promise<AuthResponse> {
     const { email, password } = credentials;
-    
-    console.log('🔐 Login attempt for:', email);
-    
-    // Buscar usuario por email
+        
+    // Buscar usuario por email o username
     const user = await prisma.user.findFirst({
       where: {
-        email: email,
+        OR: [
+          { email: email },
+          { username: email }
+        ],
         isActive: true
       },
       include: {
         company: true,
-        employee: true
+        workerDetails: true
       }
     });
     
     if (!user) {
-      console.log('❌ User not found:', email);
       throw new Error('Invalid credentials');
     }
     
     if (!user.isActive) {
-      console.log('❌ User is inactive:', email);
       throw new Error('Invalid credentials');
     }
-    
-    // Verificar contraseña
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      console.log('❌ Invalid password for:', email);
       throw new Error('Invalid credentials');
     }
-    
-    console.log('✅ Login successful for:', email);
-    
+        
     // Generar tokens
     const accessToken = this.generateAccessToken(user.id);
     const refreshToken = this.generateRefreshToken(user.id);
@@ -67,17 +61,16 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
-        firstName: user.firstName || undefined,
-        lastName: user.lastName || undefined,
+        name: user.username || user.email,
+        username: user.username,
         phone: user.phone || undefined,
         photoUrl: user.photoUrl || undefined,
         role: user.role as any,
         companyId: user.companyId || undefined,
         companyName: user.company?.name || undefined,
-        employeeId: user.employeeId || undefined,
+        workerDetailsId: user.workerDetailsId || undefined,
         isActive: user.isActive
-      },
+      } as User,
       accessToken,
       refreshToken
     };
@@ -111,10 +104,10 @@ export class AuthService {
   static async createUser(userData: {
     email: string;
     password: string;
-    name: string;
+    username: string;
     role: string;
     companyId?: number;
-    employeeId?: number;
+    workerDetailsId?: number;
   }): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password, 12);
     
@@ -129,12 +122,13 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      name: user.name,
+      name: user.username || user.email,
+      username: user.username,
       role: user.role as any,
       companyId: user.companyId || undefined,
-      employeeId: user.employeeId || undefined,
+      workerDetailsId: user.workerDetailsId || undefined,
       isActive: user.isActive
-    };
+    } as User;
   }
   
   private static generateAccessToken(userId: number): string {

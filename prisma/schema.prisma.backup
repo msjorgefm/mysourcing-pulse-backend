@@ -8,22 +8,24 @@ datasource db {
 }
 
 model User {
-  id              Int            @id @default(autoincrement())
-  email           String         @unique
-  password        String
-  username        String?
-  role            UserRole
-  isActive        Boolean        @default(true)
-  companyId       Int?
-  workerDetailsId Int?           @unique
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  lastLoginAt     DateTime?
-  phone           String?
-  photoUrl        String?
-  refreshTokens   RefreshToken[]
-  company         Company?       @relation(fields: [companyId], references: [id])
-  workerDetails   WorkerDetails? @relation(fields: [workerDetailsId], references: [id])
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String
+  name          String
+  role          UserRole
+  isActive      Boolean        @default(true)
+  companyId     Int?
+  employeeId    Int?           @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  lastLoginAt   DateTime?
+  firstName     String?
+  lastName      String?
+  phone         String?
+  photoUrl      String?
+  refreshTokens RefreshToken[]
+  company       Company?       @relation(fields: [companyId], references: [id])
+  employee      Employee?      @relation(fields: [employeeId], references: [id])
 
   @@index([email, isActive])
   @@map("users")
@@ -56,6 +58,39 @@ model InvitationToken {
   @@map("invitation_tokens")
 }
 
+model Employee {
+  id               Int            @id @default(autoincrement())
+  employeeNumber   String         @unique
+  name             String
+  email            String?
+  rfc              String         @unique
+  position         String
+  department       String
+  status           EmployeeStatus @default(ACTIVE)
+  hireDate         DateTime
+  contractType     ContractType
+  workSchedule     String?
+  baseSalary       Decimal        @db.Decimal(10, 2)
+  dateOfBirth      DateTime?
+  address          String?
+  phone            String?
+  emergencyContact String?
+  bankName         String?
+  bankAccount      String?
+  clabe            String?
+  taxRegime        String?
+  companyId        Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  company          Company        @relation(fields: [companyId], references: [id])
+  incidences       Incidence[]
+  payrollItems     PayrollItem[]
+  user             User?
+  workerDetails    WorkerDetails?
+
+  @@index([companyId, status])
+  @@map("employees")
+}
 
 model Calendar {
   id        Int      @id @default(autoincrement())
@@ -119,51 +154,51 @@ model Payroll {
 }
 
 model PayrollItem {
-  id              Int           @id @default(autoincrement())
-  baseSalary      Decimal       @db.Decimal(10, 2)
-  overtime        Decimal       @default(0) @db.Decimal(10, 2)
-  bonuses         Decimal       @default(0) @db.Decimal(10, 2)
-  totalGross      Decimal       @db.Decimal(10, 2)
-  incomeTax       Decimal       @default(0) @db.Decimal(10, 2)
-  socialSecurity  Decimal       @default(0) @db.Decimal(10, 2)
-  otherDeductions Decimal       @default(0) @db.Decimal(10, 2)
-  totalDeductions Decimal       @db.Decimal(10, 2)
-  netSalary       Decimal       @db.Decimal(10, 2)
+  id              Int        @id @default(autoincrement())
+  baseSalary      Decimal    @db.Decimal(10, 2)
+  overtime        Decimal    @default(0) @db.Decimal(10, 2)
+  bonuses         Decimal    @default(0) @db.Decimal(10, 2)
+  totalGross      Decimal    @db.Decimal(10, 2)
+  incomeTax       Decimal    @default(0) @db.Decimal(10, 2)
+  socialSecurity  Decimal    @default(0) @db.Decimal(10, 2)
+  otherDeductions Decimal    @default(0) @db.Decimal(10, 2)
+  totalDeductions Decimal    @db.Decimal(10, 2)
+  netSalary       Decimal    @db.Decimal(10, 2)
   workedDays      Int
-  cfdiStatus      CFDIStatus    @default(PENDING)
+  cfdiStatus      CFDIStatus @default(PENDING)
   cfdiUuid        String?
   cfdiXmlPath     String?
   cfdiPdfPath     String?
-  workerDetailsId Int
+  employeeId      Int
   payrollId       Int
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  workerDetails   WorkerDetails @relation(fields: [workerDetailsId], references: [id])
-  payroll         Payroll       @relation(fields: [payrollId], references: [id])
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  employee        Employee   @relation(fields: [employeeId], references: [id])
+  payroll         Payroll    @relation(fields: [payrollId], references: [id])
 
-  @@unique([workerDetailsId, payrollId])
+  @@unique([employeeId, payrollId])
   @@map("payroll_items")
 }
 
 model Incidence {
-  id              Int             @id @default(autoincrement())
-  type            IncidenceType
-  date            DateTime
-  quantity        Decimal         @db.Decimal(8, 2)
-  amount          Decimal?        @db.Decimal(10, 2)
-  description     String?
-  status          IncidenceStatus @default(PENDING)
-  workerDetailsId Int
-  companyId       Int
-  payrollId       Int?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  company         Company         @relation(fields: [companyId], references: [id])
-  workerDetails   WorkerDetails   @relation(fields: [workerDetailsId], references: [id])
-  payroll         Payroll?        @relation(fields: [payrollId], references: [id])
+  id          Int             @id @default(autoincrement())
+  type        IncidenceType
+  date        DateTime
+  quantity    Decimal         @db.Decimal(8, 2)
+  amount      Decimal?        @db.Decimal(10, 2)
+  description String?
+  status      IncidenceStatus @default(PENDING)
+  employeeId  Int
+  companyId   Int
+  payrollId   Int?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  company     Company         @relation(fields: [companyId], references: [id])
+  employee    Employee        @relation(fields: [employeeId], references: [id])
+  payroll     Payroll?        @relation(fields: [payrollId], references: [id])
 
   @@index([companyId, date])
-  @@index([workerDetailsId, type])
+  @@index([employeeId, type])
   @@map("incidences")
 }
 
@@ -467,6 +502,7 @@ model WorkSchedule {
 
 model WorkerDetails {
   id                 Int                      @id @default(autoincrement())
+  employeeId         Int                      @unique
   companyId          Int
   numeroTrabajador   Int
   nombres            String
@@ -480,21 +516,19 @@ model WorkerDetails {
   curp               String                   @db.VarChar(18)
   nss                String                   @db.VarChar(11)
   umf                Int?
-  invitationSentAt   Boolean                  @default(false)
+  fotografia         String?
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt
   address            WorkerAddress?
   alimony            WorkerAlimony[]
   contractConditions WorkerContractCondition?
   company            Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee           Employee                 @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   documents          WorkerDocument[]
   familyMembers      WorkerFamilyMember[]
   fonacotCredits     WorkerFonacotCredit[]
   infonavitCredits   WorkerInfonavitCredit[]
   paymentData        WorkerPaymentData?
-  incidences         Incidence[]
-  payrollItems       PayrollItem[]
-  user               User?
 
   @@unique([companyId, numeroTrabajador])
   @@unique([companyId, rfc])
@@ -725,6 +759,7 @@ model Company {
   payrollCalendars  PayrollCalendar[]
   documentChecklist CompanyDocumentChecklist?
   companyDocuments  CompanyDocument[]
+  employees         Employee[]
   incidences        Incidence[]
   invitationTokens  InvitationToken[]
   notifications     Notification[]

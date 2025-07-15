@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailService = void 0;
+exports.sendEmail = exports.emailService = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = require("../config");
 class EmailService {
@@ -335,4 +335,6 @@ class EmailService {
     }
 }
 exports.emailService = new EmailService();
+const sendEmail = (options) => exports.emailService.sendEmail(options);
+exports.sendEmail = sendEmail;
 //# sourceMappingURL=emailService.js.map

@@ -1,7 +1,7 @@
 /**
  * Traduce errores técnicos de Prisma a mensajes amigables en español
  */
-export function translatePrismaError(error: any): string {
+export function translatePrismaError(error: any): { message: string; code?: string } {
   const errorMessage = error.message || error.toString();
   
   // Log para debugging en desarrollo
@@ -12,240 +12,156 @@ export function translatePrismaError(error: any): string {
   // Errores de unique constraint
   if (errorMessage.includes('Unique constraint failed')) {
     if (errorMessage.includes('rfc')) {
-      return 'El RFC ya está registrado en el sistema';
+      return { message: 'El RFC ya está registrado en el sistema', code: 'DUPLICATE_RFC' };
     }
     if (errorMessage.includes('curp')) {
-      return 'El CURP ya está registrado en el sistema';
+      return { message: 'El CURP ya está registrado en el sistema', code: 'DUPLICATE_CURP' };
     }
-    if (errorMessage.includes('employeeNumber')) {
-      return 'El número de empleado ya existe en el sistema';
+    if (errorMessage.includes('employeeNumber') || errorMessage.includes('numeroTrabajador')) {
+      return { message: 'El número de empleado ya existe en el sistema', code: 'DUPLICATE_EMPLOYEE_NUMBER' };
     }
     if (errorMessage.includes('email')) {
-      return 'El correo electrónico ya está registrado';
+      return { message: 'El correo electrónico ya está registrado', code: 'DUPLICATE_EMAIL' };
     }
     if (errorMessage.includes('nss')) {
-      return 'El NSS (Número de Seguro Social) ya está registrado';
+      return { message: 'El NSS (Número de Seguro Social) ya está registrado', code: 'DUPLICATE_NSS' };
     }
-    return 'Este registro ya existe en el sistema';
+    return { message: 'Este registro ya existe en el sistema', code: 'DUPLICATE_ENTRY' };
   }
   
   // Errores de foreign key
   if (errorMessage.includes('Foreign key constraint failed')) {
-    return 'Error de referencia: algunos datos relacionados no existen';
+    return { message: 'Error de referencia: algunos datos relacionados no existen', code: 'FOREIGN_KEY_ERROR' };
   }
   
   // Errores de campos requeridos
   if (errorMessage.includes('Null constraint violation') || errorMessage.includes('NOT NULL constraint failed')) {
-    if (errorMessage.includes('name')) {
-      return 'El nombre es requerido';
+    if (errorMessage.includes('name') || errorMessage.includes('nombres')) {
+      return { message: 'El nombre es requerido', code: 'MISSING_NAME' };
     }
     if (errorMessage.includes('rfc')) {
-      return 'El RFC es requerido';
+      return { message: 'El RFC es requerido', code: 'MISSING_RFC' };
     }
     if (errorMessage.includes('curp')) {
-      return 'El CURP es requerido';
+      return { message: 'El CURP es requerido', code: 'MISSING_CURP' };
     }
     if (errorMessage.includes('email')) {
-      return 'El correo electrónico es requerido';
+      return { message: 'El correo electrónico es requerido', code: 'MISSING_EMAIL' };
     }
-    if (errorMessage.includes('employeeNumber')) {
-      return 'El número de empleado es requerido';
+    if (errorMessage.includes('employeeNumber') || errorMessage.includes('numeroTrabajador')) {
+      return { message: 'El número de empleado es requerido', code: 'MISSING_EMPLOYEE_NUMBER' };
     }
     if (errorMessage.includes('position')) {
-      return 'El puesto es requerido';
+      return { message: 'El puesto es requerido', code: 'MISSING_POSITION' };
     }
     if (errorMessage.includes('hireDate')) {
-      return 'La fecha de ingreso es requerida';
+      return { message: 'La fecha de ingreso es requerida', code: 'MISSING_HIRE_DATE' };
     }
-    return 'Faltan campos requeridos para completar el registro';
-  }
-  
-  // Errores de Prisma específicos para tipos de datos
-  if (errorMessage.includes('Invalid value provided')) {
-    // Buscar el campo específico
-    const fieldMatch = errorMessage.match(/Expected (\w+) for (\w+)\.(\w+), provided (\w+)/);
-    if (fieldMatch) {
-      const expectedType = fieldMatch[1];
-      const model = fieldMatch[2];
-      const field = fieldMatch[3];
-      const providedType = fieldMatch[4];
-      
-      const typeTranslations: Record<string, string> = {
-        'String': 'texto',
-        'Int': 'número entero',
-        'Float': 'número decimal',
-        'Boolean': 'verdadero/falso',
-        'DateTime': 'fecha'
-      };
-      
-      const fieldTranslations: Record<string, string> = {
-        'sexo': 'género',
-        'estadoCivil': 'estado civil',
-        'tipoSalario': 'tipo de salario',
-        'tipoContrato': 'tipo de contrato',
-        'claseRiesgo': 'clase de riesgo IMSS'
-      };
-      
-      const translatedField = fieldTranslations[field] || field;
-      const translatedType = typeTranslations[expectedType] || expectedType;
-      
-      return `El campo ${translatedField} debe ser de tipo ${translatedType}`;
-    }
+    return { message: 'Faltan campos requeridos para completar el registro', code: 'MISSING_REQUIRED_FIELDS' };
   }
   
   // Errores de validación de datos
-  if (errorMessage.includes('Invalid `prisma') || errorMessage.includes('Argument')) {
-    // Extraer información del campo problemático
-    if (errorMessage.includes('Invalid date')) {
-      const dateFieldMatch = errorMessage.match(/for field `(\w+)`/);
-      const fieldName = dateFieldMatch ? dateFieldMatch[1] : 'fecha';
-      const fieldTranslations: Record<string, string> = {
-        'hireDate': 'fecha de ingreso',
-        'dateOfBirth': 'fecha de nacimiento',
-        'fechaIngreso': 'fecha de ingreso',
-        'fechaNacimiento': 'fecha de nacimiento',
-        'fechaAntiguedad': 'fecha de antigüedad',
-        'fechaInicioInfonavit': 'fecha de inicio de crédito Infonavit',
-        'fechaTerminoInfonavit': 'fecha de término de crédito Infonavit',
-        'fechaInicioFonacot': 'fecha de inicio de crédito Fonacot',
-        'fechaTerminoFonacot': 'fecha de término de crédito Fonacot',
-        'fechaInicioPension': 'fecha de inicio de pensión alimenticia'
-      };
-      const translatedField = fieldTranslations[fieldName] || fieldName;
-      return `Formato de fecha inválido en ${translatedField}. Use el formato DD/MM/AAAA o AAAA-MM-DD`;
-    }
-    
-    if (errorMessage.includes('Expected a valid') && errorMessage.includes('number')) {
-      const numberFieldMatch = errorMessage.match(/for field `(\w+)`/);
-      const fieldName = numberFieldMatch ? numberFieldMatch[1] : 'campo numérico';
-      const fieldTranslations: Record<string, string> = {
-        'baseSalary': 'salario base',
-        'salarioDiario': 'salario diario',
-        'sueldoBaseCotizacion': 'sueldo base de cotización',
-        'montoDescuentoInfonavit': 'monto de descuento Infonavit',
-        'retencionMensualFonacot': 'retención mensual Fonacot',
-        'valorDescuentoPension': 'valor de descuento de pensión'
-      };
-      const translatedField = fieldTranslations[fieldName] || fieldName;
-      return `Se esperaba un valor numérico válido en ${translatedField}. No use letras ni caracteres especiales`;
-    }
-    
-    if (errorMessage.includes('Invalid enum value')) {
-      // Buscar el valor y campo específicos
-      const enumMatch = errorMessage.match(/Invalid enum value\. Expected (.+?) for field `(\w+)`/);
-      if (enumMatch) {
-        const expectedValues = enumMatch[1];
-        const fieldName = enumMatch[2];
-        const fieldTranslations: Record<string, string> = {
-          'contractType': 'tipo de contrato',
-          'tipoContrato': 'tipo de contrato',
-          'tipoSalario': 'tipo de salario',
-          'tipoJornada': 'tipo de jornada',
-          'modalidadTrabajo': 'modalidad de trabajo',
-          'claseRiesgo': 'clase de riesgo IMSS',
-          'tipoTrabajador': 'tipo de trabajador',
-          'situacionContractual': 'situación contractual',
-          'genero': 'género',
-          'estadocivil': 'estado civil',
-          'zonaGeografica': 'zona geográfica'
-        };
-        const translatedField = fieldTranslations[fieldName] || fieldName;
-        return `Valor inválido para ${translatedField}. Los valores permitidos son: ${expectedValues}`;
-      }
-      return 'Valor inválido para el campo seleccionado. Verifique que esté usando una opción válida de la lista';
-    }
-    
-    // Si no podemos identificar el error específico, dar más contexto
-    return 'Formato de datos inválido. Verifique que todos los campos tengan el formato correcto (fechas: DD/MM/AAAA, números sin letras, etc.)';
+  if (errorMessage.includes('Invalid value for argument') || errorMessage.includes('Argument') && errorMessage.includes('is missing')) {
+    return { message: 'Datos inválidos. Por favor verifica la información ingresada', code: 'INVALID_DATA' };
   }
   
-  // Errores de longitud de campo
-  if (errorMessage.includes('String or binary data would be truncated') || errorMessage.includes('too long')) {
-    const lengthMatch = errorMessage.match(/field `(\w+)`/);
-    if (lengthMatch) {
-      const fieldName = lengthMatch[1];
-      const fieldTranslations: Record<string, string> = {
-        'name': 'nombre',
-        'email': 'correo electrónico',
-        'address': 'dirección',
-        'phone': 'teléfono',
-        'position': 'puesto',
-        'department': 'departamento'
-      };
-      const translatedField = fieldTranslations[fieldName] || fieldName;
-      return `El campo ${translatedField} excede la longitud máxima permitida`;
-    }
-    return 'Uno o más campos exceden la longitud máxima permitida';
+  // Errores de conexión
+  if (errorMessage.includes('Can\'t reach database server') || errorMessage.includes('Connection refused')) {
+    return { message: 'No se puede conectar con la base de datos. Intente nuevamente más tarde', code: 'DATABASE_CONNECTION_ERROR' };
   }
   
-  // Errores de tipo de dato
-  if (errorMessage.includes('incorrect data type')) {
-    return 'Tipo de dato incorrecto. Verifique que los números no contengan letras y las fechas tengan el formato correcto';
+  // Errores de permisos
+  if (errorMessage.includes('Access denied') || errorMessage.includes('permission denied')) {
+    return { message: 'No tiene permisos para realizar esta operación', code: 'ACCESS_DENIED' };
   }
   
-  // Errores de conversión de datos
-  if (errorMessage.includes('Cannot convert') || errorMessage.includes('Invalid value')) {
-    if (errorMessage.includes('DateTime')) {
-      return 'Formato de fecha inválido. Use DD/MM/AAAA o AAAA-MM-DD';
-    }
-    if (errorMessage.includes('Int') || errorMessage.includes('Float') || errorMessage.includes('Decimal')) {
-      return 'Valor numérico inválido. Asegúrese de usar solo números y punto decimal';
-    }
-    return 'Formato de datos incorrecto. Verifique que los valores correspondan al tipo de campo';
+  // Errores de registro no encontrado
+  if (errorMessage.includes('Record to update not found') || errorMessage.includes('Record to delete does not exist')) {
+    return { message: 'El registro que intenta modificar no existe', code: 'RECORD_NOT_FOUND' };
   }
   
   // Errores de validación específicos
-  if (errorMessage.includes('debe ser') || errorMessage.includes('must be')) {
-    return errorMessage.replace('must be', 'debe ser').replace('at least', 'al menos').replace('at most', 'como máximo');
+  if (errorMessage.includes('Invalid email format')) {
+    return { message: 'El formato del correo electrónico es inválido', code: 'INVALID_EMAIL_FORMAT' };
   }
   
-  // Error genérico mejorado
-  console.error('Error no traducido:', errorMessage); // Para debugging
-  return 'Error al procesar la información. Por favor verifica que todos los campos tengan el formato correcto y los datos sean válidos';
-}
-
-/**
- * Traduce errores de validación específicos del empleado
- */
-export function translateEmployeeValidationError(field: string, error: string): string {
-  const fieldTranslations: Record<string, string> = {
-    numeroEmpleado: 'Número de empleado',
-    nombres: 'Nombre(s)',
-    primerApellido: 'Primer apellido',
-    segundoApellido: 'Segundo apellido',
-    rfc: 'RFC',
-    curp: 'CURP',
-    nss: 'NSS',
-    fechaNacimiento: 'Fecha de nacimiento',
-    genero: 'Género',
-    estadocivil: 'Estado civil',
-    telefono: 'Teléfono',
-    email: 'Correo electrónico',
-    codigoPostal: 'Código postal',
-    fechaIngreso: 'Fecha de ingreso',
-    salarioDiario: 'Salario diario',
-    puesto: 'Puesto',
-    tipoContrato: 'Tipo de contrato'
-  };
-  
-  const fieldName = fieldTranslations[field] || field;
-  
-  // Traducir mensajes de error comunes
-  if (error.includes('required')) {
-    return `${fieldName} es requerido`;
+  if (errorMessage.includes('RFC format') || (errorMessage.includes('rfc') && errorMessage.includes('pattern'))) {
+    return { message: 'El formato del RFC es inválido. Debe tener 12 o 13 caracteres', code: 'INVALID_RFC_FORMAT' };
   }
   
-  if (error.includes('invalid')) {
-    return `${fieldName} tiene un formato inválido`;
+  if (errorMessage.includes('CURP format') || (errorMessage.includes('curp') && errorMessage.includes('pattern'))) {
+    return { message: 'El formato del CURP es inválido. Debe tener 18 caracteres', code: 'INVALID_CURP_FORMAT' };
   }
   
-  if (error.includes('must be')) {
-    return `${fieldName} debe ser válido`;
+  if (errorMessage.includes('NSS format') || (errorMessage.includes('nss') && errorMessage.includes('pattern'))) {
+    return { message: 'El formato del NSS es inválido. Debe tener 11 dígitos', code: 'INVALID_NSS_FORMAT' };
   }
   
-  if (error.includes('already exists')) {
-    return `${fieldName} ya existe en el sistema`;
+  // Errores de fecha
+  if (errorMessage.includes('Invalid date format') || errorMessage.includes('Invalid datetime')) {
+    return { message: 'Formato de fecha inválido. Use DD/MM/AAAA', code: 'INVALID_DATE_FORMAT' };
   }
   
-  return `Error en ${fieldName}: ${error}`;
+  // Errores de número
+  if (errorMessage.includes('Invalid number') || errorMessage.includes('Expected number')) {
+    return { message: 'Valor numérico inválido', code: 'INVALID_NUMBER' };
+  }
+  
+  // Errores de enum/opciones válidas
+  if (errorMessage.includes('Invalid enum value')) {
+    if (errorMessage.includes('status')) {
+      return { message: 'Estado inválido. Use: ACTIVE, INACTIVE, TERMINATED o ON_LEAVE', code: 'INVALID_STATUS' };
+    }
+    if (errorMessage.includes('contractType')) {
+      return { message: 'Tipo de contrato inválido. Use: INDEFINIDO, TIEMPO_DETERMINADO, MEDIO_TIEMPO, CONTRATISTA o PRACTICANTE', code: 'INVALID_CONTRACT_TYPE' };
+    }
+    if (errorMessage.includes('role')) {
+      return { message: 'Rol inválido. Use: ADMIN, OPERATOR, CLIENT o EMPLOYEE', code: 'INVALID_ROLE' };
+    }
+    return { message: 'Valor inválido para el campo seleccionado. Verifique que esté usando una opción válida de la lista', code: 'INVALID_ENUM_VALUE' };
+  }
+  
+  // Errores de formato JSON
+  if (errorMessage.includes('Invalid JSON') || errorMessage.includes('JSON.parse')) {
+    return { message: 'Formato de datos inválido. Verifique que todos los campos tengan el formato correcto (fechas: DD/MM/AAAA, números sin letras, etc.)', code: 'INVALID_JSON_FORMAT' };
+  }
+  
+  // Errores de límites de la base de datos
+  if (errorMessage.includes('value too long') || errorMessage.includes('String or binary data would be truncated')) {
+    if (errorMessage.includes('name')) {
+      return { message: 'El nombre es demasiado largo. Máximo 100 caracteres', code: 'NAME_TOO_LONG' };
+    }
+    if (errorMessage.includes('address')) {
+      return { message: 'La dirección es demasiado larga. Máximo 200 caracteres', code: 'ADDRESS_TOO_LONG' };
+    }
+    if (errorMessage.includes('comments') || errorMessage.includes('description')) {
+      return { message: 'El texto es demasiado largo. Máximo 500 caracteres', code: 'TEXT_TOO_LONG' };
+    }
+    return { message: 'Uno o más campos exceden la longitud máxima permitida', code: 'VALUE_TOO_LONG' };
+  }
+  
+  // Errores de tipo de dato
+  if (errorMessage.includes('incorrect type') || errorMessage.includes('type mismatch')) {
+    return { message: 'Tipo de dato incorrecto. Verifique que los números no contengan letras y las fechas tengan el formato correcto', code: 'TYPE_MISMATCH' };
+  }
+  
+  // Errores de conversión
+  if (errorMessage.includes('Failed to convert') || errorMessage.includes('Cannot convert')) {
+    if (errorMessage.includes('date')) {
+      return { message: 'Formato de fecha inválido. Use DD/MM/AAAA o AAAA-MM-DD', code: 'DATE_CONVERSION_ERROR' };
+    }
+    if (errorMessage.includes('number') || errorMessage.includes('decimal')) {
+      return { message: 'Valor numérico inválido. Asegúrese de usar solo números y punto decimal', code: 'NUMBER_CONVERSION_ERROR' };
+    }
+    return { message: 'Formato de datos incorrecto. Verifique que los valores correspondan al tipo de campo', code: 'CONVERSION_ERROR' };
+  }
+  
+  // Error por defecto
+  if (process.env.NODE_ENV === 'development') {
+    // En desarrollo, mostrar más información
+    return { message: `Error del sistema: ${errorMessage}`, code: 'SYSTEM_ERROR' };
+  }
+  
+  // En producción, mensaje genérico
+  return { message: 'Error al procesar la información. Por favor verifica que todos los campos tengan el formato correcto y los datos sean válidos', code: 'GENERIC_ERROR' };
 }

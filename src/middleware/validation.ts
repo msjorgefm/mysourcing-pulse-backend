@@ -3,30 +3,40 @@ import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
 // Esquemas de validación
-const employeeSchema = Joi.object({
-  name: Joi.string().min(2).max(100).required(),
-  employeeNumber: Joi.string().min(1).max(50).required(),
-  position: Joi.string().max(100),
-  department: Joi.string().max(100),
-  salary: Joi.number().positive().required(),
-  companyId: Joi.number().integer().positive().required(),
-  hireDate: Joi.date(),
-  isActive: Joi.boolean().default(true)
+const workerDetailsSchema = Joi.object({
+  numeroTrabajador: Joi.number().integer().positive().required(),
+  nombres: Joi.string().min(2).max(100).required(),
+  apellidoPaterno: Joi.string().min(2).max(100).required(),
+  apellidoMaterno: Joi.string().min(2).max(100).optional(),
+  fechaNacimiento: Joi.date().required(),
+  sexo: Joi.string().valid('MASCULINO', 'FEMENINO').optional(),
+  nacionalidad: Joi.string().valid('MEXICANA', 'EXTRANJERA').optional(),
+  estadoCivil: Joi.string().valid('SOLTERO', 'CASADO', 'DIVORCIADO', 'VIUDO', 'UNION_LIBRE').required(),
+  rfc: Joi.string().pattern(/^[A-Z]{4}\d{6}[A-Z0-9]{3}$/).required().messages({
+    'string.pattern.base': 'El RFC debe tener el formato correcto (AAAA000000XXX)'
+  }),
+  curp: Joi.string().pattern(/^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/).required().messages({
+    'string.pattern.base': 'El CURP debe tener el formato correcto'
+  }),
+  nss: Joi.string().pattern(/^\d{11}$/).required().messages({
+    'string.pattern.base': 'El NSS debe tener 11 dígitos'
+  }),
+  umf: Joi.number().integer().positive().optional(),
+  companyId: Joi.number().integer().positive().required()
 });
 
 const incidenceSchema = Joi.object({
-  employeeId: Joi.number().integer().positive().required(),
+  workerDetailsId: Joi.number().integer().positive().required(),
   companyId: Joi.number().integer().positive().required(),
   type: Joi.string().valid(
-    'faltas', 'vacaciones', 'tiempo_extra', 
-    'permisos', 'bonos', 'descuentos'
+    'ABSENCE', 'VACATION', 'OVERTIME', 
+    'PERMISSION', 'BONUS'
   ).required(),
   quantity: Joi.number().positive().required(),
   amount: Joi.number(),
   date: Joi.date().required(),
-  comments: Joi.string().max(500),
-  periodStart: Joi.date(),
-  periodEnd: Joi.date()
+  description: Joi.string().max(500),
+  status: Joi.string().valid('PENDING', 'APPROVED', 'REJECTED', 'APPLIED').default('PENDING')
 });
 
 const payrollCalendarSchema = Joi.object({
@@ -46,8 +56,8 @@ const payrollPeriodSchema = Joi.object({
 });
 
 // Funciones de validación
-export const validateEmployee = (data: any) => {
-  const { error } = employeeSchema.validate(data);
+export const validateWorkerDetails = (data: any) => {
+  const { error } = workerDetailsSchema.validate(data);
   return {
     isValid: !error,
     errors: error ? error.details.map(d => d.message) : []
@@ -79,7 +89,7 @@ export const validatePayrollPeriod = (data: any) => {
 };
 
 // Middleware de validación de parámetros
-export const validateEmployeeParams = (req: Request, res: Response, next: NextFunction) => {
+export const validateWorkerDetailsParams = (req: Request, res: Response, next: NextFunction) => {
   const { companyId } = req.params;
   
   if (!companyId || isNaN(parseInt(companyId))) {

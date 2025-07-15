@@ -76,7 +76,7 @@ export const payrollCalendarController = {
 
       const calendar = await prisma.payrollCalendar.create({
         data: {
-          companyId: data.companyId,
+          companyId: parseInt(data.companyId),
           name: data.name,
           payFrequency: data.payFrequency,
           daysBeforeClose: data.daysBeforeClose || 0,
