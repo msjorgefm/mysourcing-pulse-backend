@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "db:seed": "ts-node prisma/seed.ts",
+    "db:seed:demo": "ts-node prisma/seedDemoCompanySimple.ts",
     "db:reset": "prisma migrate reset --force",
     "test": "jest",
     "test:watch": "jest --watch",

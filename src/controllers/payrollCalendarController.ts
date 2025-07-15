@@ -95,7 +95,8 @@ export const payrollCalendarController = {
       logger.error('Error creating payroll calendar:', error);
       res.status(500).json({
         success: false,
-        message: 'Error al crear calendario de nómina'
+        message: 'Error al crear calendario de nómina',
+        error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : undefined
       });
     }
   },

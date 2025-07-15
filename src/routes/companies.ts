@@ -223,4 +223,22 @@ router.post('/:companyId/invite-department-head', authenticate, async (req, res)
   }
 });
 
+// Resend invitation to company
+router.post('/:id/resend-invitation', authorize(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+  try {
+    await CompanyController.resendInvitation(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Send additional invitation to company
+router.post('/:id/send-additional-invitation', authorize(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+  try {
+    await CompanyController.sendAdditionalInvitation(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

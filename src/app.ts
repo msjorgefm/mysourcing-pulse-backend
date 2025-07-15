@@ -20,7 +20,9 @@ import companyDocumentRoutes from './routes/companyDocumentRoutes';
 import workerDetailsRoutes from './routes/workerDetails';
 import payrollRoutes from './routes/payrolls';
 import payrollCalendarRoutes from './routes/payrollCalendars';
-import incidenceRoutes from './routes/incidences';
+// import incidenceRoutes from './routes/incidences';
+import incidenciasRoutes from './routes/incidencias';
+import approvalsRoutes from './routes/approvals';
 import notificationRoutes from './routes/notifications';
 import onboardingRoutes from './routes/onboardingRoutes';
 import testRoutes from './routes/testRoutes';
@@ -32,6 +34,7 @@ import stateRoutes from './routes/stateRoutes';
 import locationRoutes from './routes/locations';
 import bankRoutes from './routes/bankRoutes';
 import userRoutes from './routes/users';
+import vinculacionJefesRoutes from './routes/vinculacionJefes';
 import calendarRoutes from './routes/calendars';
 
 // Cargar variables de entorno
@@ -159,7 +162,9 @@ app.use('/api/companies', companyDocumentRoutes);
 app.use('/api/workers', workerDetailsRoutes);
 app.use('/api/payrolls', payrollRoutes);
 app.use('/api/payroll-calendars', payrollCalendarRoutes);
-app.use('/api/incidences', incidenceRoutes);
+// app.use('/api/incidences', incidenceRoutes);
+app.use('/api', incidenciasRoutes); // Las rutas ya incluyen /companies/:id/incidencias
+app.use('/api/approvals', approvalsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -170,6 +175,7 @@ app.use('/api/states', stateRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/banks', bankRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/vinculacion-jefes', vinculacionJefesRoutes);
 
 // Rutas de prueba (solo en desarrollo)
 if (process.env.NODE_ENV === 'development') {

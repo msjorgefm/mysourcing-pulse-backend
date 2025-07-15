@@ -162,4 +162,69 @@ export class CompanyController {
       throw error;
     }
   }
+  
+  static async resendInvitation(req: AuthRequest, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid company ID' });
+      }
+      
+      const result = await CompanyService.resendInvitation(id);
+      
+      if (result.sent) {
+        res.json({
+          success: true,
+          message: result.message
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error: any) {
+      console.error('Resend invitation error:', error);
+      res.status(500).json({ 
+        success: false,
+        error: error.message || 'Failed to resend invitation' 
+      });
+    }
+  }
+  
+  static async sendAdditionalInvitation(req: AuthRequest, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      const { email } = req.body;
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid company ID' });
+      }
+      
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+      
+      const result = await CompanyService.sendAdditionalInvitation(id, email);
+      
+      if (result.sent) {
+        res.json({
+          success: true,
+          message: result.message
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error: any) {
+      console.error('Send additional invitation error:', error);
+      res.status(500).json({ 
+        success: false,
+        error: error.message || 'Failed to send additional invitation' 
+      });
+    }
+  }
 }

@@ -201,7 +201,7 @@ export class PayrollService {
     
     // Calcular nómina usando el servicio de cálculos
     const calculations = await CalculationService.calculatePayrollForCompany(
-      (payroll.company as any).workerDetails || [],
+      (payroll.company.workerDetails) || [],
       (payroll as any).incidences || [],
       payroll.periodStart,
       payroll.periodEnd

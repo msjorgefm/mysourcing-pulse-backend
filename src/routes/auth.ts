@@ -42,4 +42,21 @@ router.get('/profile', authenticate as any, async (req, res, next) => {
   }
 });
 
+// Rutas para configuración de cuenta con token
+router.post('/setup-account/validate-token', async (req, res, next) => {
+  try {
+    await AuthController.validateSetupToken(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/setup-account/complete', async (req, res, next) => {
+  try {
+    await AuthController.completeAccountSetup(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

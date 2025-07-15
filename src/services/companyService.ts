@@ -124,13 +124,21 @@ export class CompanyService {
   }
   
   static async createCompany(data: CreateCompanyRequest) {
-    // Verificar si RFC ya existe
-    const existingCompany = await prisma.company.findUnique({
-      where: { rfc: data.rfc }
-    });
-    
-    if (existingCompany) {
-      throw new Error('RFC already exists');
+    // Si el RFC es temporal o está pendiente, generar uno único
+    let finalRfc = data.rfc;
+    if (!data.rfc || data.rfc === 'PENDIENTE123' || data.rfc.startsWith('PENDIENTE')) {
+      // Generar RFC temporal único basado en timestamp
+      const timestamp = Date.now();
+      finalRfc = `PENDIENTE${timestamp}`;
+    } else {
+      // Si se proporciona un RFC real, verificar que no exista
+      const existingCompany = await prisma.company.findUnique({
+        where: { rfc: data.rfc }
+      });
+      
+      if (existingCompany) {
+        throw new Error('RFC already exists');
+      }
     }
     
     // Verificar si ya existe un usuario con ese email
@@ -144,10 +152,10 @@ export class CompanyService {
     
     const company = await prisma.company.create({
       data: {
-        name: data.name,
-        rfc: data.rfc,
+        name: data.name || data.legalName, // Use legalName if name not provided
+        rfc: finalRfc, // Use the generated unique RFC
         legalName: data.legalName,
-        address: data.address,
+        address: data.address || 'Por definir', // Default address if not provided
         email: data.email,
         phone: data.phone,
         status: 'IN_SETUP', // Siempre crear con estado "en configuración"
@@ -442,5 +450,13 @@ export class CompanyService {
       message: 'Invitación enviada exitosamente',
       invitation
     };
+  }
+  
+  static async resendInvitation(companyId: number) {
+    return await InvitationService.resendInvitation(companyId);
+  }
+  
+  static async sendAdditionalInvitation(companyId: number, email: string) {
+    return await InvitationService.sendAdditionalInvitation(companyId, email);
   }
 }

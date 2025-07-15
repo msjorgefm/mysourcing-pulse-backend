@@ -108,6 +108,55 @@ export class NotificationService {
     }));
   }
   
+  static async getUserNotifications(userId: number) {
+    // Primero obtener la información del usuario para conocer su empresa
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { companyId: true, role: true }
+    });
+    
+    if (!user) {
+      return [];
+    }
+    
+    const notifications = await prisma.notification.findMany({
+      where: {
+        companyId: user.companyId, // Solo notificaciones de su empresa
+        OR: [
+          // Notificaciones específicas para este usuario
+          {
+            metadata: {
+              path: ['userId'],
+              equals: userId
+            }
+          },
+          // Notificaciones para el rol del usuario
+          {
+            metadata: {
+              path: ['targetRole'],
+              equals: user.role
+            }
+          }
+        ]
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50
+    });
+    
+    return notifications.map((notification: any) => ({
+      id: notification.id,
+      type: notification.type,
+      title: notification.title,
+      message: notification.message,
+      priority: notification.priority,
+      read: notification.read,
+      companyId: notification.companyId,
+      metadata: notification.metadata,
+      createdAt: notification.createdAt,
+      readAt: notification.readAt
+    }));
+  }
+  
   static async markAsRead(notificationId: number) {
     const notification = await prisma.notification.update({
       where: { id: notificationId },

@@ -150,4 +150,97 @@ export class AuthService {
       { expiresIn: '7d' }
     );
   }
+  
+  static async validateSetupToken(token: string) {
+    console.log(`🔍 Validando token: ${token}`);
+    
+    const user = await prisma.user.findFirst({
+      where: {
+        setupToken: token,
+        setupTokenExpiry: {
+          gt: new Date()
+        }
+      }
+    });
+    
+    if (!user) {
+      // Buscar si existe el token pero expiró
+      const expiredUser = await prisma.user.findFirst({
+        where: { setupToken: token }
+      });
+      
+      if (expiredUser) {
+        console.log(`❌ Token expirado. Expiró en: ${expiredUser.setupTokenExpiry}`);
+        throw new Error('Token expirado. Solicita un nuevo enlace.');
+      }
+      
+      console.log(`❌ Token no encontrado en la base de datos`);
+      throw new Error('Token inválido o expirado');
+    }
+    
+    console.log(`✅ Token válido para usuario: ${user.email}`);
+    return user;
+  }
+  
+  static async completeAccountSetup(token: string, username: string, password: string): Promise<AuthResponse> {
+    // Validar token
+    const user = await this.validateSetupToken(token);
+    
+    // Verificar que el username no esté en uso
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email: username,
+        id: { not: user.id }
+      }
+    });
+    
+    if (existingUser) {
+      throw new Error('El nombre de usuario ya está en uso');
+    }
+    
+    // Hash de la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Actualizar usuario
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        email: username, // Actualizamos el email con el username elegido
+        password: hashedPassword,
+        isActive: true,
+        setupToken: null,
+        setupTokenExpiry: null,
+        lastLoginAt: new Date()
+      },
+      include: {
+        company: true,
+        workerDetails: true
+      }
+    });
+    
+    // Generar tokens
+    const accessToken = this.generateAccessToken(updatedUser.id);
+    const refreshToken = this.generateRefreshToken(updatedUser.id);
+    
+    // Guardar refresh token
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: updatedUser.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      }
+    });
+    
+    return {
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.username || '',
+        role: updatedUser.role,
+        isActive: updatedUser.isActive
+      },
+      accessToken,
+      refreshToken
+    };
+  }
 }
