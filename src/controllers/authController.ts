@@ -12,7 +12,7 @@ export class AuthController {
       const { error } = loginValidation.validate(req.body);
       if (error) {
         console.log('❌ Validation error:', error.details[0].message);
-        return res.status(400).json({ error: error.details[0].message });
+        return res.status(400).json({ success: false, error: error.details[0].message });
       }
       
       const result = await AuthService.login(req.body);
@@ -20,12 +20,13 @@ export class AuthController {
       console.log('✅ Login response ready for:', req.body.email);
       
       res.json({
+        success: true,
         message: 'Login successful',
         data: result
       });
     } catch (error: any) {
       console.error('❌ Login controller error:', error);
-      res.status(401).json({ error: error.message || 'Login failed' });
+      res.status(401).json({ success: false, error: error.message || 'Login failed' });
     }
   }
   
@@ -34,18 +35,19 @@ export class AuthController {
       const { refreshToken } = req.body;
       
       if (!refreshToken) {
-        return res.status(400).json({ error: 'Refresh token required' });
+        return res.status(400).json({ success: false, error: 'Refresh token required' });
       }
       
       const result = await AuthService.refreshToken(refreshToken);
       
       res.json({
+        success: true,
         message: 'Token refreshed successfully',
         data: result
       });
     } catch (error: any) {
       console.error('Refresh token error:', error);
-      res.status(401).json({ error: error.message || 'Token refresh failed' });
+      res.status(401).json({ success: false, error: error.message || 'Token refresh failed' });
     }
   }
   
@@ -57,10 +59,10 @@ export class AuthController {
         await AuthService.logout(refreshToken);
       }
       
-      res.json({ message: 'Logout successful' });
+      res.json({ success: true, message: 'Logout successful' });
     } catch (error: any) {
       console.error('Logout error:', error);
-      res.status(500).json({ error: 'Logout failed' });
+      res.status(500).json({ success: false, error: 'Logout failed' });
     }
   }
   
@@ -68,33 +70,35 @@ export class AuthController {
     try {
       const { error } = registerValidation.validate(req.body);
       if (error) {
-        return res.status(400).json({ error: error.details[0].message });
+        return res.status(400).json({ success: false, error: error.details[0].message });
       }
       
       const user = await AuthService.createUser(req.body);
       
       res.status(201).json({
+        success: true,
         message: 'User created successfully',
         data: user
       });
     } catch (error: any) {
       console.error('Register error:', error);
       if (error.code === 'P2002') {
-        return res.status(409).json({ error: 'Email already exists' });
+        return res.status(409).json({ success: false, error: 'Email already exists' });
       }
-      res.status(500).json({ error: error.message || 'Registration failed' });
+      res.status(500).json({ success: false, error: error.message || 'Registration failed' });
     }
   }
   
   static async getProfile(req: any, res: Response) {
     try {
       res.json({
+        success: true,
         message: 'Profile retrieved successfully',
         data: req.user
       });
     } catch (error: any) {
       console.error('Get profile error:', error);
-      res.status(500).json({ error: 'Failed to get profile' });
+      res.status(500).json({ success: false, error: 'Failed to get profile' });
     }
   }
   
@@ -103,19 +107,39 @@ export class AuthController {
       const { token } = req.body;
       
       if (!token) {
-        return res.status(400).json({ error: 'Token requerido' });
+        return res.status(400).json({ success: false, error: 'Token requerido' });
       }
       
       // Primero intentar con el setupToken de User
       try {
         const user = await AuthService.validateSetupToken(token);
-        res.json({
-          message: 'Token válido',
-          data: {
-            email: user.email,
-            name: user.username
+        
+        // Si el usuario tiene workerDetails, obtener información adicional
+        const { PrismaClient } = await import('@prisma/client');
+        const prisma = new PrismaClient();
+        
+        const userWithDetails = await prisma.user.findUnique({
+          where: { id: user.id },
+          include: {
+            workerDetails: true,
+            company: true
           }
         });
+        
+        const responseData: any = {
+          email: user.email,
+          company: userWithDetails?.company,
+          metadata: {
+            role: user.role
+          }
+        };
+        
+        // Si es un empleado o jefe de departamento, incluir su información
+        if (userWithDetails?.workerDetails && (user.role === 'EMPLOYEE' || user.role === 'DEPARTMENT_HEAD')) {
+          responseData.metadata.name = `${userWithDetails.workerDetails.nombres} ${userWithDetails.workerDetails.apellidoPaterno} ${userWithDetails.workerDetails.apellidoMaterno || ''}`.trim();
+        }
+        
+        res.json(responseData);
         return;
       } catch (userTokenError) {
         // Si no se encuentra en User, buscar en InvitationToken
@@ -128,6 +152,7 @@ export class AuthController {
       
       if (invitationDetails) {
         res.json({
+          success: true,
           message: 'Token válido',
           data: {
             email: invitationDetails.email,
@@ -139,7 +164,7 @@ export class AuthController {
       }
     } catch (error: any) {
       console.error('Error validating setup token:', error);
-      res.status(400).json({ error: error.message || 'Token inválido o expirado' });
+      res.status(400).json({ success: false, error: error.message || 'Token inválido o expirado' });
     }
   }
   
@@ -149,21 +174,22 @@ export class AuthController {
       
       // Validaciones básicas
       if (!token || !username || !password || !confirmPassword) {
-        return res.status(400).json({ error: 'Todos los campos son requeridos' });
+        return res.status(400).json({ success: false, error: 'Todos los campos son requeridos' });
       }
       
       if (password !== confirmPassword) {
-        return res.status(400).json({ error: 'Las contraseñas no coinciden' });
+        return res.status(400).json({ success: false, error: 'Las contraseñas no coinciden' });
       }
       
       if (password.length < 8) {
-        return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+        return res.status(400).json({ success: false, error: 'La contraseña debe tener al menos 8 caracteres' });
       }
       
       // Primero intentar con el setupToken de User
       try {
         const result = await AuthService.completeAccountSetup(token, username, password);
         res.json({
+          success: true,
           message: 'Cuenta configurada exitosamente',
           data: result
         });
@@ -212,12 +238,13 @@ export class AuthController {
       const result = await AuthService.login({ email: username, password });
       
       res.json({
+        success: true,
         message: 'Cuenta configurada exitosamente',
         data: result
       });
     } catch (error: any) {
       console.error('Error completing account setup:', error);
-      res.status(400).json({ error: error.message || 'Error al configurar la cuenta' });
+      res.status(400).json({ success: false, error: error.message || 'Error al configurar la cuenta' });
     }
   }
 }
