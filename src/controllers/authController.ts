@@ -113,7 +113,7 @@ export class AuthController {
           message: 'Token válido',
           data: {
             email: user.email,
-            name: user.name
+            name: user.username
           }
         });
         return;
@@ -199,11 +199,9 @@ export class AuthController {
         data: {
           email: username,
           password: hashedPassword,
-          name: invitationDetails.company.name,
+          username: invitationDetails.company.name,
           role: 'CLIENT',
-          companyId: invitationDetails.company.id,
-          firstName: '',
-          lastName: ''
+          companyId: invitationDetails.company.id
         }
       });
       

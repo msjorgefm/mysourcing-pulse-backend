@@ -52,12 +52,11 @@ export interface Incidence {
 }
 
 export type IncidenceType = 
-  | 'faltas' 
-  | 'vacaciones' 
-  | 'tiempo_extra' 
-  | 'permisos' 
-  | 'bonos' 
-  | 'descuentos';
+  | 'ABSENCE' 
+  | 'VACATION' 
+  | 'OVERTIME' 
+  | 'PERMISSION' 
+  | 'BONUS';
 
 export interface IncidenceCalculation {
   baseAmount: number;

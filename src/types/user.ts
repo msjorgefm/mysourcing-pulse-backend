@@ -1,11 +1,12 @@
 export interface User {
   id: number;
   email: string;
-  name: string;
+  name?: string;
+  username?: string;
   role: UserRole;
   companyId?: number;
   companyName?: string;
-  employeeId?: number;
+  workerDetailsId?: number;
   isActive: boolean;
   lastLogin?: Date;
   createdAt: Date;
@@ -47,18 +48,24 @@ export interface Company {
   updatedAt: Date;
 }
 
-export interface Employee {
+export interface WorkerDetails {
   id: number;
   companyId: number;
-  employeeNumber: string;
-  name: string;
-  position?: string;
-  department?: string;
-  salary: number;
-  hireDate?: Date;
-  isActive: boolean;
+  numeroTrabajador: number;
+  nombres: string;
+  apellidoPaterno: string;
+  apellidoMaterno?: string;
+  fechaNacimiento: Date;
+  rfc: string;
+  curp: string;
+  nss: string;
   createdAt: Date;
   updatedAt: Date;
+  contractConditions?: {
+    salarioDiario: number;
+    position?: string;
+    department?: string;
+  };
 }
 
 export interface Notification {

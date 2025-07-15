@@ -30,7 +30,7 @@ export const authenticate: RequestHandler = async (req: AuthRequest, res: Respon
         where: { id: decoded.userId },
         include: {
           company: true,
-          employee: true
+          workerDetails: true
         }
       });
       
@@ -42,12 +42,12 @@ export const authenticate: RequestHandler = async (req: AuthRequest, res: Respon
       req.user = {
         id: user.id,
         email: user.email,
-        name: user.name,
+        name: user.username || user.email,
         role: user.role as any,
         companyId: user.companyId || undefined,
-        employeeId: user.employeeId || undefined,
+        workerDetailsId: user.workerDetailsId || undefined,
         isActive: user.isActive
-      };
+      } as User;
       
       next();
     } finally {

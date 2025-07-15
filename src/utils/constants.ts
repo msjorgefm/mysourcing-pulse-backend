@@ -232,7 +232,7 @@ export const JWT_CONFIG = {
 // URLs y endpoints
 export const API_ENDPOINTS = {
   AUTH: '/api/auth',
-  EMPLOYEES: '/api/employees',
+  WORKERS: '/api/workers',
   COMPANIES: '/api/companies',
   PAYROLLS: '/api/payrolls',
   INCIDENCES: '/api/incidences',

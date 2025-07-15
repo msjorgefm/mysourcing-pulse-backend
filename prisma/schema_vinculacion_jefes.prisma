@@ -6,7 +6,7 @@ model VinculacionJefe {
   id         Int      @id @default(autoincrement())
   empresaId  Int
   usuarioId  Int
-  empleadoId Int      @unique
+  workerDetailsId Int      @unique
   activo     Boolean  @default(true)
   creadoEn   DateTime @default(now())
   actualizadoEn DateTime @updatedAt
@@ -14,7 +14,7 @@ model VinculacionJefe {
   // Relaciones
   empresa  Company  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
   usuario  User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  empleado Employee @relation(fields: [empleadoId], references: [id], onDelete: Cascade)
+  workerDetails WorkerDetails @relation(fields: [workerDetailsId], references: [id], onDelete: Cascade)
 
   // Relaciones con áreas, departamentos, puestos y empleados
   areas        VinculacionJefeArea[]
@@ -35,7 +35,7 @@ model VinculacionJefeArea {
 
   // Relaciones
   vinculacionJefe VinculacionJefe     @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  area            OrganizationalArea  @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  area            Area  @relation(fields: [areaId], references: [id], onDelete: Cascade)
 
   @@unique([vinculacionJefeId, areaId])
   @@map("vinculacion_jefe_areas")
@@ -49,7 +49,7 @@ model VinculacionJefeDepartamento {
 
   // Relaciones
   vinculacionJefe VinculacionJefe           @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  departamento    OrganizationalDepartment  @relation(fields: [departamentoId], references: [id], onDelete: Cascade)
+  departamento    Departamento  @relation(fields: [departamentoId], references: [id], onDelete: Cascade)
 
   @@unique([vinculacionJefeId, departamentoId])
   @@map("vinculacion_jefe_departamentos")
@@ -63,7 +63,7 @@ model VinculacionJefePuesto {
 
   // Relaciones
   vinculacionJefe VinculacionJefe         @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  puesto          OrganizationalPosition  @relation(fields: [puestoId], references: [id], onDelete: Cascade)
+  puesto          Puesto  @relation(fields: [puestoId], references: [id], onDelete: Cascade)
 
   @@unique([vinculacionJefeId, puestoId])
   @@map("vinculacion_jefe_puestos")
@@ -72,16 +72,16 @@ model VinculacionJefePuesto {
 model VinculacionJefeEmpleado {
   id               Int             @id @default(autoincrement())
   vinculacionJefeId Int
-  empleadoId       Int
+  workerDetailsId       Int
   activo           Boolean         @default(true)
   creadoEn         DateTime        @default(now())
   actualizadoEn    DateTime        @updatedAt
 
   // Relaciones
   vinculacionJefe VinculacionJefe @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  empleado        Employee        @relation(fields: [empleadoId], references: [id], onDelete: Cascade)
+  workerDetails        WorkerDetails        @relation(fields: [workerDetailsId], references: [id], onDelete: Cascade)
 
-  @@unique([vinculacionJefeId, empleadoId])
-  @@index([empleadoId])
+  @@unique([vinculacionJefeId, workerDetailsId])
+  @@index([workerDetailsId])
   @@map("vinculacion_jefe_empleados")
 }

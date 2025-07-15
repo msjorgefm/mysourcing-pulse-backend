@@ -48,4 +48,14 @@ router.put('/change-password', validateChangePassword, async (req: Request, res:
   await UserController.changePassword(req, res);
 });
 
+// Actualizar datos de usuario por ID (para empleados)
+router.put('/:id', async (req: Request, res: Response) => {
+  await UserController.updateUserData(req, res);
+});
+
+// Cambiar contraseña por ID de usuario
+router.put('/:id/password', validateChangePassword, async (req: Request, res: Response) => {
+  await UserController.changePasswordById(req, res);
+});
+
 export default router;

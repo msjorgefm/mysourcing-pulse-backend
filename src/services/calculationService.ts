@@ -1,33 +1,33 @@
 export class CalculationService {
   
   static async calculatePayrollForCompany(
-    employees: any[],
+    workers: any[],
     incidences: any[],
     periodStart: Date,
     periodEnd: Date
   ) {
     const workingDaysInPeriod = this.calculateWorkingDays(periodStart, periodEnd);
     
-    const employeeCalculations = [];
+    const workerCalculations = [];
     let totals = {
       totalPerceptions: 0,
       totalDeductions: 0,
       totalProvisions: 0,
       totalNetPay: 0,
-      totalEmployees: employees.length,
+      totalEmployees: workers.length,
       totalIncidences: incidences.length,
       employeesWithIncidences: 0,
       totalCompanyCost: 0
     };
     
-    for (const employee of employees) {
-      const employeeIncidences = incidences.filter(inc => inc.employeeId === employee.id);
-      const calculation = this.calculateEmployeePayroll(employee, employeeIncidences, workingDaysInPeriod);
+    for (const worker of workers) {
+      const workerIncidences = incidences.filter(inc => inc.workerDetailsId === worker.id);
+      const calculation = this.calculateWorkerPayroll(worker, workerIncidences, workingDaysInPeriod);
       
-      employeeCalculations.push({
-        employeeId: employee.id,
-        employeeName: employee.name,
-        employeeNumber: employee.employeeNumber,
+      workerCalculations.push({
+        employeeId: worker.id, // Keep as employeeId for backward compatibility in response
+        employeeName: `${worker.nombres} ${worker.apellidoPaterno} ${worker.apellidoMaterno || ''}`.trim(),
+        employeeNumber: worker.numeroTrabajador,
         ...calculation
       });
       
@@ -37,7 +37,7 @@ export class CalculationService {
       totals.totalProvisions += calculation.provisions.total;
       totals.totalNetPay += calculation.netPay;
       
-      if (employeeIncidences.length > 0) {
+      if (workerIncidences.length > 0) {
         totals.employeesWithIncidences++;
       }
     }
@@ -46,12 +46,15 @@ export class CalculationService {
     
     return {
       totals,
-      employeeCalculations
+      employeeCalculations: workerCalculations
     };
   }
   
-  private static calculateEmployeePayroll(employee: any, incidences: any[], workingDays: number) {
-    const baseSalary = employee.salary || 15000;
+  private static calculateWorkerPayroll(worker: any, incidences: any[], workingDays: number) {
+    // Get base salary from contract conditions if available
+    const baseSalary = worker.contractConditions?.salarioDiario 
+      ? Number(worker.contractConditions.salarioDiario) * workingDays
+      : 15000; // Default fallback
     const dailySalary = baseSalary / workingDays;
     const hourlyRate = dailySalary / 8;
     

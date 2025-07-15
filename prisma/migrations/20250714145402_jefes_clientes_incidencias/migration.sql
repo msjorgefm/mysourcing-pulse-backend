@@ -54,3 +54,10 @@ ALTER TABLE "incidences" ADD CONSTRAINT "incidences_createdByUserId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "incidences" ADD CONSTRAINT "incidences_approvedBy_fkey" FOREIGN KEY ("approvedBy") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "setupToken" TEXT,
+ADD COLUMN     "setupTokenExpiry" TIMESTAMP(3);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_setupToken_key" ON "users"("setupToken");

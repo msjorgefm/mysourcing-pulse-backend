@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import employeeRoutes from './employees';
+import workerDetailsRoutes from './workerDetails';
 import incidenceRoutes from './incidences';
 import calendarRoutes from './calendars';
 import payrollCalendarRoutes from './payrollCalendars';
@@ -33,7 +33,7 @@ router.use(authenticate);
 // Rutas principales
 router.use('/companies', companyRoutes);
 router.use('/companies', companyDocumentRoutes);
-router.use('/employees', employeeRoutes);
+router.use('/workers', workerDetailsRoutes);
 router.use('/payrolls', payrollRoutes);
 router.use('/payroll-calendars', payrollCalendarRoutes);
 router.use('/incidences', incidenceRoutes);

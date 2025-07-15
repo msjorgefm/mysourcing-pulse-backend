@@ -2,6 +2,7 @@ import express from 'express';
 import { CompanyController } from '../controllers/companyController';
 import { authenticate, authorize } from '../middleware/auth';
 import { CompanyWizardController } from '../controllers/companyWizardController';
+import { PayrollController } from '../controllers/payrollController';
 
 const router = express.Router();
 
@@ -26,6 +27,17 @@ router.get('/:id', async (req, res, next) => {
 router.get('/:id/stats', async (req, res, next) => {
   try {
     await CompanyController.getCompanyStats(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Obtener nóminas de una empresa
+router.get('/:companyId/payrolls', authenticate, async (req, res, next) => {
+  try {
+    // Set the companyId from the URL params as a query parameter
+    req.query.companyId = req.params.companyId;
+    await PayrollController.getAllPayrolls(req, res);
   } catch (err) {
     next(err);
   }
@@ -95,6 +107,69 @@ router.get('/:companyId/departments', authenticate, async (req, res) => {
   } catch (error) {
     console.error('Error getting departments:', error);
     res.status(500).json({ error: 'Error al obtener los departamentos' });
+  }
+});
+
+// Obtener departamentos de una empresa (alias en español)
+router.get('/:companyId/departamentos', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyDepartamentos(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Eliminar un departamento
+router.delete('/:companyId/departamentos/:departamentoId', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.deleteDepartamento(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Obtener areas de una empresa
+router.get('/:companyId/areas', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyAreas(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Eliminar un área
+router.delete('/:companyId/areas/:areaId', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.deleteArea(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Obtener puestos de una empresa
+router.get('/:companyId/positions', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyPuestos(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Obtener puestos de una empresa (alias en español)
+router.get('/:companyId/puestos', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.getCompanyPuestos(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Eliminar un puesto
+router.delete('/:companyId/puestos/:puestoId', authenticate, async (req, res, next) => {
+  try {
+    await CompanyWizardController.deletePuesto(req, res);
+  } catch (err) {
+    next(err);
   }
 });
 

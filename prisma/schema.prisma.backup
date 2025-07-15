@@ -8,29 +8,24 @@ datasource db {
 }
 
 model User {
-  id              Int            @id @default(autoincrement())
-  email           String         @unique
-  password        String
-  username        String?
-  role            UserRole
-  isActive        Boolean        @default(true)
-  companyId       Int?
-  workerDetailsId Int?           @unique
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  lastLoginAt     DateTime?
-  phone           String?
-  photoUrl        String?
-  setupToken    String?        @unique
-  setupTokenExpiry DateTime?
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String
+  name          String
+  role          UserRole
+  isActive      Boolean        @default(true)
+  companyId     Int?
+  employeeId    Int?           @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  lastLoginAt   DateTime?
+  firstName     String?
+  lastName      String?
+  phone         String?
+  photoUrl      String?
   refreshTokens RefreshToken[]
-  company         Company?       @relation(fields: [companyId], references: [id])
-  workerDetails   WorkerDetails? @relation(fields: [workerDetailsId], references: [id])
-  vinculacionesJefe VinculacionJefe[]
-  createdIncidences Incidence[]    @relation("IncidenceCreatedBy")
-  approvedIncidences Incidence[]   @relation("IncidenceApprovedBy")
-  createdPayrolls Payroll[]        @relation("PayrollCreatedBy")
-  approvedPayrolls Payroll[]       @relation("PayrollApprovedBy")
+  company       Company?       @relation(fields: [companyId], references: [id])
+  employee      Employee?      @relation(fields: [employeeId], references: [id])
 
   @@index([email, isActive])
   @@map("users")
@@ -63,6 +58,40 @@ model InvitationToken {
   @@map("invitation_tokens")
 }
 
+model Employee {
+  id               Int            @id @default(autoincrement())
+  employeeNumber   String         @unique
+  name             String
+  email            String?
+  rfc              String         @unique
+  position         String
+  department       String
+  status           EmployeeStatus @default(ACTIVE)
+  hireDate         DateTime
+  contractType     ContractType
+  workSchedule     String?
+  baseSalary       Decimal        @db.Decimal(10, 2)
+  dateOfBirth      DateTime?
+  address          String?
+  phone            String?
+  emergencyContact String?
+  bankName         String?
+  bankAccount      String?
+  clabe            String?
+  taxRegime        String?
+  companyId        Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  company          Company        @relation(fields: [companyId], references: [id])
+  incidences       Incidence[]
+  payrollItems     PayrollItem[]
+  user             User?
+  workerDetails    WorkerDetails?
+
+  @@index([companyId, status])
+  @@map("employees")
+}
+
 model Calendar {
   id        Int      @id @default(autoincrement())
   name      String
@@ -92,8 +121,6 @@ model PayrollCalendar {
   payNaturalDays  Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  incidences       Incidence[]
-  payrolls         Payroll[]
 
   @@map("payroll_calendars")
 }
@@ -114,21 +141,12 @@ model Payroll {
   xmlPath         String?
   pdfPath         String?
   companyId       Int
-  payrollCalendarId Int?
-  approvalStatus  PayrollApprovalStatus @default(PENDING)
-  clientApprovedBy Int?
-  clientApprovalDate DateTime?
-  clientRejectionReason String?
-  createdBy       Int?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   incidences      Incidence[]
   notifications   Notification[]
   payrollItems    PayrollItem[]
   company         Company        @relation(fields: [companyId], references: [id])
-  payrollCalendar PayrollCalendar? @relation(fields: [payrollCalendarId], references: [id])
-  clientApprovedByUser User?     @relation("PayrollApprovedBy", fields: [clientApprovedBy], references: [id])
-  createdByUser   User?          @relation("PayrollCreatedBy", fields: [createdBy], references: [id])
 
   @@index([companyId, status])
   @@index([periodStart, periodEnd])
@@ -136,63 +154,51 @@ model Payroll {
 }
 
 model PayrollItem {
-  id              Int           @id @default(autoincrement())
-  baseSalary      Decimal       @db.Decimal(10, 2)
-  overtime        Decimal       @default(0) @db.Decimal(10, 2)
-  bonuses         Decimal       @default(0) @db.Decimal(10, 2)
-  totalGross      Decimal       @db.Decimal(10, 2)
-  incomeTax       Decimal       @default(0) @db.Decimal(10, 2)
-  socialSecurity  Decimal       @default(0) @db.Decimal(10, 2)
-  otherDeductions Decimal       @default(0) @db.Decimal(10, 2)
-  totalDeductions Decimal       @db.Decimal(10, 2)
-  netSalary       Decimal       @db.Decimal(10, 2)
+  id              Int        @id @default(autoincrement())
+  baseSalary      Decimal    @db.Decimal(10, 2)
+  overtime        Decimal    @default(0) @db.Decimal(10, 2)
+  bonuses         Decimal    @default(0) @db.Decimal(10, 2)
+  totalGross      Decimal    @db.Decimal(10, 2)
+  incomeTax       Decimal    @default(0) @db.Decimal(10, 2)
+  socialSecurity  Decimal    @default(0) @db.Decimal(10, 2)
+  otherDeductions Decimal    @default(0) @db.Decimal(10, 2)
+  totalDeductions Decimal    @db.Decimal(10, 2)
+  netSalary       Decimal    @db.Decimal(10, 2)
   workedDays      Int
-  cfdiStatus      CFDIStatus    @default(PENDING)
+  cfdiStatus      CFDIStatus @default(PENDING)
   cfdiUuid        String?
   cfdiXmlPath     String?
   cfdiPdfPath     String?
-  workerDetailsId Int
+  employeeId      Int
   payrollId       Int
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  workerDetails   WorkerDetails @relation(fields: [workerDetailsId], references: [id])
-  payroll         Payroll       @relation(fields: [payrollId], references: [id])
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  employee        Employee   @relation(fields: [employeeId], references: [id])
+  payroll         Payroll    @relation(fields: [payrollId], references: [id])
 
-  @@unique([workerDetailsId, payrollId])
+  @@unique([employeeId, payrollId])
   @@map("payroll_items")
 }
 
 model Incidence {
-  id                 Int             @id @default(autoincrement())
-  type               IncidenceType
-  date               DateTime
-  quantity           Decimal         @db.Decimal(8, 2)
-  amount             Decimal?        @db.Decimal(10, 2)
-  description        String?
-  status             IncidenceStatus @default(PENDING)
-  employeeId         Int
-  companyId          Int
-  payrollId          Int?
-  payrollCalendarId  Int?
-  periodId           String?
-  createdBy          UserRole        @default(CLIENT)
-  createdByUserId    Int?
-  approvedBy         Int?
-  approvalDate       DateTime?
-  rejectionReason    String?
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
-  company            Company         @relation(fields: [companyId], references: [id])
-  workerDetails      WorkerDetails   @relation(fields: [employeeId], references: [id])
-  payroll            Payroll?        @relation(fields: [payrollId], references: [id])
-  payrollCalendar    PayrollCalendar? @relation(fields: [payrollCalendarId], references: [id])
-  createdByUser      User?           @relation("IncidenceCreatedBy", fields: [createdByUserId], references: [id])
-  approvedByUser     User?           @relation("IncidenceApprovedBy", fields: [approvedBy], references: [id])
+  id          Int             @id @default(autoincrement())
+  type        IncidenceType
+  date        DateTime
+  quantity    Decimal         @db.Decimal(8, 2)
+  amount      Decimal?        @db.Decimal(10, 2)
+  description String?
+  status      IncidenceStatus @default(PENDING)
+  employeeId  Int
+  companyId   Int
+  payrollId   Int?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  company     Company         @relation(fields: [companyId], references: [id])
+  employee    Employee        @relation(fields: [employeeId], references: [id])
+  payroll     Payroll?        @relation(fields: [payrollId], references: [id])
 
   @@index([companyId, date])
   @@index([employeeId, type])
-  @@index([payrollCalendarId, periodId])
-  @@index([companyId, status, createdBy])
   @@map("incidences")
 }
 
@@ -496,6 +502,7 @@ model WorkSchedule {
 
 model WorkerDetails {
   id                 Int                      @id @default(autoincrement())
+  employeeId         Int                      @unique
   companyId          Int
   numeroTrabajador   Int
   nombres            String
@@ -509,23 +516,19 @@ model WorkerDetails {
   curp               String                   @db.VarChar(18)
   nss                String                   @db.VarChar(11)
   umf                Int?
-  invitationSentAt   Boolean                  @default(false)
+  fotografia         String?
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt
   address            WorkerAddress?
   alimony            WorkerAlimony[]
   contractConditions WorkerContractCondition?
   company            Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee           Employee                 @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   documents          WorkerDocument[]
   familyMembers      WorkerFamilyMember[]
   fonacotCredits     WorkerFonacotCredit[]
   infonavitCredits   WorkerInfonavitCredit[]
   paymentData        WorkerPaymentData?
-  incidences         Incidence[]
-  payrollItems       PayrollItem[]
-  vinculacionComoJefe  VinculacionJefe?
-  jefesAsignados       VinculacionJefeEmpleado[]
-  user               User?
 
   @@unique([companyId, numeroTrabajador])
   @@unique([companyId, rfc])
@@ -756,6 +759,7 @@ model Company {
   payrollCalendars  PayrollCalendar[]
   documentChecklist CompanyDocumentChecklist?
   companyDocuments  CompanyDocument[]
+  employees         Employee[]
   incidences        Incidence[]
   invitationTokens  InvitationToken[]
   notifications     Notification[]
@@ -788,7 +792,6 @@ model Company {
   areas         Area[]
   departamentos Departamento[]
   puestos       Puesto[]
-  vinculacionesJefe         VinculacionJefe[]
 
   // Sección 6: Prestaciones
   benefits      CompanyBenefit[]
@@ -842,12 +845,6 @@ enum PayrollStatus {
   ERROR
 }
 
-enum PayrollApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 enum CFDIStatus {
   PENDING
   PROCESSING
@@ -861,10 +858,6 @@ enum IncidenceType {
   VACACIONES
   TIEMPO_EXTRA
   BONOS
-  INCENTIVOS
-  PRIMA_DOMINICAL
-  INCAPACIDADES
-  OTROS
 }
 
 enum IncidenceStatus {
@@ -1189,7 +1182,6 @@ model Area {
   departamentos            Departamento[]
   puestos                  Puesto[]
   workerContractConditions WorkerContractCondition[]
-  vinculacionesJefe  VinculacionJefeArea[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1214,7 +1206,6 @@ model Departamento {
   // Relaciones
   puestos                  Puesto[]
   workerContractConditions WorkerContractCondition[]
-  vinculacionesJefe  VinculacionJefeDepartamento[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1241,8 +1232,7 @@ model Puesto {
 
   // Relaciones inversas
   workerContractConditions WorkerContractCondition[]
-  vinculacionesJefe  VinculacionJefePuesto[]
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1632,91 +1622,4 @@ model CatalogoRegimenContratacion {
   updatedAt   DateTime @updatedAt
   
   @@map("cat_regimen_contratacion")
-}
-// ================================
-// VINCULACIÓN DE JEFES
-// ================================
-
-model VinculacionJefe {
-  id         Int      @id @default(autoincrement())
-  empresaId  Int
-  usuarioId  Int
-  workerDetailsId Int      @unique
-  activo     Boolean  @default(true)
-  creadoEn   DateTime @default(now())
-  actualizadoEn DateTime @updatedAt
-
-  // Relaciones
-  empresa  Company  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
-  usuario  User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  workerDetails WorkerDetails @relation(fields: [workerDetailsId], references: [id], onDelete: Cascade)
-
-  // Relaciones con áreas, departamentos, puestos y empleados
-  areas        VinculacionJefeArea[]
-  departamentos VinculacionJefeDepartamento[]
-  puestos      VinculacionJefePuesto[]
-  empleadosACargo VinculacionJefeEmpleado[]
-
-  @@index([empresaId])
-  @@index([usuarioId])
-  @@map("vinculacion_jefes")
-}
-
-model VinculacionJefeArea {
-  id               Int             @id @default(autoincrement())
-  vinculacionJefeId Int
-  areaId           Int
-  creadoEn         DateTime        @default(now())
-
-  // Relaciones
-  vinculacionJefe VinculacionJefe     @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  area            Area  @relation(fields: [areaId], references: [id], onDelete: Cascade)
-
-  @@unique([vinculacionJefeId, areaId])
-  @@map("vinculacion_jefe_areas")
-}
-
-model VinculacionJefeDepartamento {
-  id               Int             @id @default(autoincrement())
-  vinculacionJefeId Int
-  departamentoId   Int
-  creadoEn         DateTime        @default(now())
-
-  // Relaciones
-  vinculacionJefe VinculacionJefe           @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  departamento    Departamento  @relation(fields: [departamentoId], references: [id], onDelete: Cascade)
-
-  @@unique([vinculacionJefeId, departamentoId])
-  @@map("vinculacion_jefe_departamentos")
-}
-
-model VinculacionJefePuesto {
-  id               Int             @id @default(autoincrement())
-  vinculacionJefeId Int
-  puestoId         Int
-  creadoEn         DateTime        @default(now())
-
-  // Relaciones
-  vinculacionJefe VinculacionJefe         @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  puesto          Puesto  @relation(fields: [puestoId], references: [id], onDelete: Cascade)
-
-  @@unique([vinculacionJefeId, puestoId])
-  @@map("vinculacion_jefe_puestos")
-}
-
-model VinculacionJefeEmpleado {
-  id               Int             @id @default(autoincrement())
-  vinculacionJefeId Int
-  workerDetailsId       Int
-  activo           Boolean         @default(true)
-  creadoEn         DateTime        @default(now())
-  actualizadoEn    DateTime        @updatedAt
-
-  // Relaciones
-  vinculacionJefe VinculacionJefe @relation(fields: [vinculacionJefeId], references: [id], onDelete: Cascade)
-  workerDetails        WorkerDetails        @relation(fields: [workerDetailsId], references: [id], onDelete: Cascade)
-
-  @@unique([vinculacionJefeId, workerDetailsId])
-  @@index([workerDetailsId])
-  @@map("vinculacion_jefe_empleados")
 }

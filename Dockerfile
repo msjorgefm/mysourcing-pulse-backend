@@ -18,6 +18,8 @@ COPY prisma ./prisma/
 # Instalar dependencias
 RUN npm ci --only=production && npm cache clean --force
 
+RUN npm install exceljs csv-parse
+
 # Instalar multer explícitamente
 RUN npm install multer@2.0.1 --save
 

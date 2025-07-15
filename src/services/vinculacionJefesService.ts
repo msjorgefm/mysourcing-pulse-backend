@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 interface CreateVinculacionData {
   empresaId: number;
-  empleadoId: number;
+  workerDetailsId: number;
   areaIds?: number[];
   departamentoIds?: number[];
   puestoIds?: number[];
@@ -22,57 +22,56 @@ interface UpdateVinculacionData {
   activo?: boolean;
 }
 
-export const getOrganizationalData = async (companyId: number) => {
+export const getOrganizationalData = async (empresaId: number) => {
   const [areas, departamentos, puestos, empleados] = await Promise.all([
-    prisma.organizationalArea.findMany({
-      where: { companyId },
+    prisma.area.findMany({
+      where: { empresaId },
       select: {
         id: true,
-        name: true,
-        description: true
+        nombre: true,
+        descripcion: true
       }
     }),
-    prisma.organizationalDepartment.findMany({
-      where: { companyId },
+    prisma.departamento.findMany({
+      where: { empresaId },
       select: {
         id: true,
-        name: true,
-        description: true,
+        nombre: true,
+        descripcion: true,
         areaId: true
       }
     }),
-    prisma.organizationalPosition.findMany({
-      where: { companyId },
+    prisma.puesto.findMany({
+      where: { empresaId },
       select: {
         id: true,
-        name: true,
-        description: true,
-        departmentId: true
+        nombre: true,
+        departamentoId: true
       }
     }),
-    prisma.employee.findMany({
+    prisma.workerDetails.findMany({
       where: {
-        companyId,
-        status: 'ACTIVE'
+        companyId: empresaId
       },
-      select: {
-        id: true,
-        employeeNumber: true,
-        name: true,
-        position: true,
-        department: true,
-        email: true
+      include: {
+        contractConditions: {
+          include: {
+            departmento: true,
+            puesto: true
+          }
+        },
+        address: true
       }
     })
   ]);
 
   // Filtrar empleados que ya son jefes
   const empleadosQueYaSonJefes = await prisma.vinculacionJefe.findMany({
-    where: { empresaId: companyId },
-    select: { empleadoId: true }
+    where: { empresaId },
+    select: { workerDetailsId: true }
   });
 
-  const empleadosJefeIds = empleadosQueYaSonJefes.map(v => v.empleadoId);
+  const empleadosJefeIds = empleadosQueYaSonJefes.map(v => v.workerDetailsId);
   
   return {
     areas,
@@ -88,20 +87,28 @@ export const getVinculacionesByCompany = async (companyId: number) => {
   return await prisma.vinculacionJefe.findMany({
     where: { empresaId: companyId },
     include: {
-      empleado: {
+      workerDetails: {
         select: {
           id: true,
-          employeeNumber: true,
-          name: true,
-          position: true,
-          department: true,
-          email: true
+          numeroTrabajador: true,
+          nombres: true,
+          apellidoPaterno: true,
+          apellidoMaterno: true
+        },
+        include: {
+          contractConditions: {
+            include: {
+              departmento: true,
+              puesto: true
+            }
+          },
+          address: true
         }
       },
       usuario: {
         select: {
           id: true,
-          name: true,
+          username: true,
           email: true
         }
       },
@@ -122,13 +129,13 @@ export const getVinculacionesByCompany = async (companyId: number) => {
       },
       empleadosACargo: {
         include: {
-          empleado: {
+          workerDetails: {
             select: {
               id: true,
-              employeeNumber: true,
-              name: true,
-              position: true,
-              department: true
+              numeroTrabajador: true,
+              nombres: true,
+              apellidoPaterno: true,
+              apellidoMaterno: true
             }
           }
         }
@@ -141,7 +148,7 @@ export const getVinculacionById = async (id: number) => {
   return await prisma.vinculacionJefe.findUnique({
     where: { id },
     include: {
-      empleado: true,
+      workerDetails: true,
       usuario: true,
       areas: {
         include: {
@@ -160,7 +167,7 @@ export const getVinculacionById = async (id: number) => {
       },
       empleadosACargo: {
         include: {
-          empleado: true
+          workerDetails: true
         }
       }
     }
@@ -168,19 +175,19 @@ export const getVinculacionById = async (id: number) => {
 };
 
 export const createVinculacion = async (data: CreateVinculacionData) => {
-  const { empresaId, empleadoId, areaIds = [], departamentoIds = [], puestoIds = [], empleadoIds = [] } = data;
+  const { empresaId, workerDetailsId, areaIds = [], departamentoIds = [], puestoIds = [], empleadoIds = [] } = data;
 
   // Validar que tenga al menos un área, departamento o puesto
   if (areaIds.length === 0 && departamentoIds.length === 0 && puestoIds.length === 0) {
     throw new Error('Debe asignar al menos un área, departamento o puesto al jefe');
   }
 
-  // Asegurar que empleadoId sea un número
-  const empleadoIdNum = typeof empleadoId === 'string' ? parseInt(empleadoId) : empleadoId;
+  // Asegurar que workerDetailsId sea un número
+  const workerDetailsIdNum = typeof workerDetailsId === 'string' ? parseInt(workerDetailsId) : workerDetailsId;
 
   // Verificar que el empleado exista y obtenga su información
-  const empleado = await prisma.employee.findUnique({
-    where: { id: empleadoIdNum },
+  const empleado = await prisma.workerDetails.findUnique({
+    where: { id: workerDetailsIdNum },
     include: { user: true }
   });
 
@@ -212,12 +219,12 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
       // Crear nuevo usuario
       usuario = await prisma.user.create({
         data: {
-          email: empleado.email || `jefe_${empleado.employeeNumber}@empresa.com`,
+          email: empleado.user?.email || `jefe_${empleado.numeroTrabajador}@empresa.com`,
           password: '', // Sin contraseña hasta que configure su cuenta
-          name: empleado.name,
+          username: empleado.user?.username,
           role: 'DEPARTMENT_HEAD',
           companyId: empresaId,
-          employeeId: empleado.id,
+          workerDetailsId: empleado.id,
           isActive: false,
           setupToken,
           setupTokenExpiry
@@ -249,7 +256,7 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
     data: {
       empresaId,
       usuarioId,
-      empleadoId: empleadoIdNum,
+      workerDetailsId: workerDetailsIdNum,
       areas: {
         create: areaIds.map(areaId => ({ areaId }))
       },
@@ -260,11 +267,11 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
         create: puestoIds.map(puestoId => ({ puestoId }))
       },
       empleadosACargo: {
-        create: empleadoIds.map(empleadoId => ({ empleadoId }))
+        create: empleadoIds.map(workerDetailsId => ({ workerDetailsId }))
       }
     },
     include: {
-      empleado: true,
+      workerDetails: true,
       usuario: true,
       empresa: true,
       areas: {
@@ -284,18 +291,18 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
       },
       empleadosACargo: {
         include: {
-          empleado: true
+          workerDetails: true
         }
       }
     }
   });
 
   // Si se debe enviar email de configuración
-  if (shouldSendEmail && empleado.email) {
+  if (shouldSendEmail && empleado.user?.email) {
     try {
       // Obtener información para el email
-      const areasNombres = vinculacion.areas.map(a => a.area.name);
-      const departamentosNombres = vinculacion.departamentos.map(d => d.departamento.name);
+      const areasNombres = vinculacion.areas.map(a => a.area.nombre);
+      const departamentosNombres = vinculacion.departamentos.map(d => d.departamento.nombre);
       const empleadosACargoCount = vinculacion.empleadosACargo.length;
       
       // Generar enlace de configuración
@@ -304,8 +311,8 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
       
       // Enviar email
       await emailService.sendVinculacionJefeEmail(
-        empleado.email,
-        empleado.name,
+        empleado.user.email,
+        empleado.nombres,
         vinculacion.empresa.name,
         setupLink,
         areasNombres,
@@ -313,13 +320,13 @@ export const createVinculacion = async (data: CreateVinculacionData) => {
         empleadosACargoCount
       );
       
-      console.log(`✅ Email enviado a ${empleado.email} para configurar su vinculación de jefe`);
+      console.log(`✅ Email enviado a ${empleado.user.email} para configurar su vinculación de jefe`);
     } catch (emailError) {
       console.error('❌ Error al enviar email de configuración:', emailError);
       // No fallar la operación si el email no se puede enviar
     }
-  } else if (shouldSendEmail && !empleado.email) {
-    console.warn(`⚠️ No se puede enviar email de configuración: el empleado ${empleado.name} no tiene email registrado`);
+  } else if (shouldSendEmail && !empleado?.user?.email) {
+    console.warn(`⚠️ No se puede enviar email de configuración: el empleado ${empleado.nombres} no tiene email registrado`);
   }
 
   return vinculacion;
@@ -385,7 +392,7 @@ export const updateVinculacion = async (id: number, data: UpdateVinculacionData)
       });
       if (empleadoIds.length > 0) {
         await tx.vinculacionJefeEmpleado.createMany({
-          data: empleadoIds.map(empleadoId => ({ vinculacionJefeId: id, empleadoId }))
+          data: empleadoIds.map(workerDetailsId => ({ vinculacionJefeId: id, workerDetailsId }))
         });
       }
     }
@@ -394,7 +401,7 @@ export const updateVinculacion = async (id: number, data: UpdateVinculacionData)
     return await tx.vinculacionJefe.findUnique({
       where: { id },
       include: {
-        empleado: true,
+        workerDetails: true,
         usuario: true,
         areas: {
           include: {
@@ -413,7 +420,7 @@ export const updateVinculacion = async (id: number, data: UpdateVinculacionData)
         },
         empleadosACargo: {
           include: {
-            empleado: true
+            workerDetails: true
           }
         }
       }
@@ -427,7 +434,7 @@ export const deleteVinculacion = async (id: number) => {
     where: { id },
     include: {
       usuario: true,
-      empleado: true
+      workerDetails: true
     }
   });
 
@@ -460,7 +467,7 @@ export const deleteVinculacion = async (id: number) => {
       console.log(`✅ Usuario ${vinculacion.usuario.email} eliminado al no tener más vinculaciones`);
     }
 
-    console.log(`✅ Vinculación de jefe para ${vinculacion.empleado.name} eliminada exitosamente`);
+    console.log(`✅ Vinculación de jefe para ${vinculacion.workerDetails.nombres} eliminada exitosamente`);
     
     return true;
   });
@@ -473,20 +480,17 @@ export const getEmpleadosACargo = async (vinculacionJefeId: number) => {
       activo: true 
     },
     include: {
-      empleado: {
+      workerDetails: {
         select: {
           id: true,
-          employeeNumber: true,
-          name: true,
-          position: true,
-          department: true,
-          email: true,
-          phone: true,
-          status: true
-        }
+          numeroTrabajador: true,
+          nombres: true,
+          apellidoPaterno: true,
+          apellidoMaterno: true
+        }, include: { contractConditions: { include: { departmento: true, puesto: true } } }
       }
     }
   });
 
-  return empleadosACargo.map(item => item.empleado);
+  return empleadosACargo.map(item => item.workerDetailsId);
 };

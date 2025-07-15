@@ -8,12 +8,13 @@ node_modules
 /resources/
 
 # Carpetas de build
-/dist/
 /build/
 
 # Logs
-*.log
 /logs/
 
 # uploads
 /uploads/
+
+# Dist folder
+/dist/

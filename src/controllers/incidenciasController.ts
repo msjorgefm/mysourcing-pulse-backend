@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient, IncidenceStatus, IncidenceType, UserRole } from '@prisma/client';
+import { PrismaClient, IncidenceStatus, IncidenceType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -57,10 +57,10 @@ export class IncidenciasController {
         let employeeFound = false;
         
         if (inc.employeeId) {
-          const employee = await prisma.employee.findFirst({
+          const employee = await prisma.workerDetails.findFirst({
             where: {
               companyId: parseInt(companyId),
-              employeeNumber: inc.employeeId.toString()
+              numeroTrabajador: inc.employeeId.toString()
             }
           });
           
@@ -72,10 +72,10 @@ export class IncidenciasController {
         
         // Si no se encontró por número, buscar por nombre
         if (!employeeFound && inc.employeeName) {
-          const employee = await prisma.employee.findFirst({
+          const employee = await prisma.workerDetails.findFirst({
             where: {
               companyId: parseInt(companyId),
-              name: {
+              nombres: {
                 contains: inc.employeeName,
                 mode: 'insensitive'
               }
@@ -185,11 +185,11 @@ export class IncidenciasController {
           const departmentHead = await prisma.user.findUnique({
             where: { id: user.id },
             include: {
-              employee: true
+              workerDetails: { include: { contractConditions: { include: { departmento: true } } }}
             }
           });
           
-          const departmentName = departmentHead?.employee?.department || 'Departamento';
+          const departmentName = departmentHead?.workerDetails?.contractConditions?.departmento?.nombre || 'Departamento';
           
           // Crear notificación para usuarios con rol CLIENT de la empresa
           await prisma.notification.create({
@@ -288,14 +288,15 @@ export class IncidenciasController {
       const incidencias = await prisma.incidence.findMany({
         where: whereCondition,
         include: {
-          employee: {
+          workerDetails: {
             select: {
               id: true,
-              employeeNumber: true,
-              name: true,
-              department: true,
-              position: true
-            }
+              numeroTrabajador: true,
+              nombres: true,
+              //department: true,
+              //position: true
+            },
+            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
           }
         },
         orderBy: {
@@ -428,14 +429,15 @@ export class IncidenciasController {
           // } // Solo las creadas por jefes u operadores
         },
         include: {
-          employee: {
+          workerDetails: {
             select: {
               id: true,
-              employeeNumber: true,
-              name: true,
-              department: true,
-              position: true
-            }
+              numeroTrabajador: true,
+              nombres: true,
+              //department: true,
+              //position: true
+            },
+            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
           }
         },
         orderBy: {
@@ -500,9 +502,9 @@ export class IncidenciasController {
       // Crear notificación para el jefe que creó la incidencia
       // Primero verificar si la incidencia fue creada por un jefe
       try {
-        const incidenceEmployee = await prisma.employee.findUnique({
+        const incidenceEmployee = await prisma.workerDetails.findUnique({
           where: { id: incidencia.employeeId },
-          select: { name: true, employeeNumber: true }
+          select: { nombres: true, numeroTrabajador: true }
         });
         
         // Buscar notificaciones previas relacionadas con esta incidencia para identificar al jefe
@@ -524,7 +526,7 @@ export class IncidenciasController {
               data: {
                 type: 'SYSTEM_ALERT',
                 title: 'Incidencia Aprobada',
-                message: `Tu incidencia del empleado ${incidenceEmployee?.employeeNumber} - ${incidenceEmployee?.name} ha sido aprobada`,
+                message: `Tu incidencia del empleado ${incidenceEmployee?.numeroTrabajador} - ${incidenceEmployee?.nombres} ha sido aprobada`,
                 priority: 'NORMAL',
                 companyId: incidencia.companyId,
                 metadata: {
@@ -611,9 +613,9 @@ export class IncidenciasController {
       
       // Crear notificación para el jefe que creó la incidencia
       try {
-        const incidenceEmployee = await prisma.employee.findUnique({
+        const incidenceEmployee = await prisma.workerDetails.findUnique({
           where: { id: incidencia.employeeId },
-          select: { name: true, employeeNumber: true }
+          select: { nombres: true, numeroTrabajador: true }
         });
         
         // Buscar notificaciones previas relacionadas con esta incidencia para identificar al jefe
@@ -635,7 +637,7 @@ export class IncidenciasController {
               data: {
                 type: 'SYSTEM_ALERT',
                 title: 'Incidencia Rechazada',
-                message: `Tu incidencia del empleado ${incidenceEmployee?.employeeNumber} - ${incidenceEmployee?.name} ha sido rechazada. Motivo: ${reason}`,
+                message: `Tu incidencia del empleado ${incidenceEmployee?.numeroTrabajador} - ${incidenceEmployee?.nombres} ha sido rechazada. Motivo: ${reason}`,
                 priority: 'HIGH',
                 companyId: incidencia.companyId,
                 metadata: {
@@ -708,15 +710,16 @@ export class IncidenciasController {
       const incidencias = await prisma.incidence.findMany({
         where,
         include: {
-          employee: {
+          workerDetails: {
             select: {
               id: true,
-              employeeNumber: true,
-              name: true,
-              department: true,
-              position: true
-            }
-          },
+              numeroTrabajador: true,
+              nombres: true,
+              //department: true,
+              //position: true
+            },
+            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
+          }
           // createdByUser: {
           //   select: {
           //     id: true,
@@ -775,14 +778,15 @@ export class IncidenciasController {
           }
         },
         include: {
-          employee: {
+          workerDetails: {
             select: {
               id: true,
-              employeeNumber: true,
-              name: true,
-              department: true,
-              position: true
-            }
+              numeroTrabajador: true,
+              nombres: true,
+              //department: true,
+              //position: true
+            },
+            include: { contractConditions: { include: { departmento: { select: { nombre: true} }, puesto: { select: { nombre: true  } } } } }
           }
         },
         orderBy: {
@@ -849,28 +853,35 @@ export class IncidenciasController {
         const departmentHead = await prisma.user.findUnique({
           where: { id: user.id },
           include: {
-            employee: true
+            workerDetails: {
+              include: { contractConditions: { include: { departmento: true, puesto: true } } }
+            }
           }
         });
         
-        if (departmentHead?.employee?.department) {
-          whereClause.department = departmentHead.employee.department;
+        if (departmentHead?.workerDetails?.contractConditions?.departmento) {
+          whereClause.department = departmentHead.workerDetails?.contractConditions?.departmento.nombre;
         }
       }
       
       // Obtener empleados según permisos
-      const employees = await prisma.employee.findMany({
+      const employees = await prisma.workerDetails.findMany({
         where: whereClause,
-        select: {
-          id: true,
-          employeeNumber: true,
-          name: true,
-          department: true,
-          position: true
+        include: { 
+          contractConditions: { 
+            include: { 
+              departmento: { 
+                select: { nombre: true } 
+              }, 
+              puesto: { 
+                select: { nombre: true } 
+              } 
+            } 
+          } 
         },
         orderBy: [
-          { department: 'asc' },
-          { employeeNumber: 'asc' }
+          { contractConditions: { departmento: { nombre: 'asc' }} },
+          { numeroTrabajador: 'asc' }
         ]
       });
       
@@ -912,10 +923,10 @@ export class IncidenciasController {
           const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
           
           const row = [
-            emp.employeeNumber,
-            `"${emp.name}"`, // Envolver en comillas para manejar nombres con comas
-            `"${emp.department || ''}"`,
-            `"${emp.position || ''}"`,
+            emp.numeroTrabajador,
+            `"${emp.nombres}"`, // Envolver en comillas para manejar nombres con comas
+            `"${emp.contractConditions?.departmento?.nombre || ''}"`,
+            `"${emp.contractConditions?.puesto?.nombre || ''}"`,
             `"${formattedDate}"`, // Fecha en formato DD/MM/YYYY entre comillas
             '', // FALTAS
             '', // RETARDOS
@@ -965,10 +976,10 @@ export class IncidenciasController {
           
           htmlContent += `
             <tr>
-              <td>${emp.employeeNumber}</td>
-              <td>${emp.name}</td>
-              <td>${emp.department || ''}</td>
-              <td>${emp.position || ''}</td>
+              <td>${emp.numeroTrabajador}</td>
+              <td>${emp.nombres}</td>
+              <td>${emp.contractConditions?.departmento?.nombre || ''}</td>
+              <td>${emp.contractConditions?.puesto?.nombre || ''}</td>
               <td style="mso-number-format:'@'">${formattedDate}</td>
               <td></td>
               <td></td>

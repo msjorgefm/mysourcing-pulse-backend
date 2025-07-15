@@ -1,26 +1,22 @@
 import { PrismaClient, UserRole } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 export interface CreateUserData {
   email: string;
   password: string;
-  name: string;
-  firstName?: string;
-  lastName?: string;
+  username: string;
   phone?: string;
   role: UserRole;
   companyId?: number;
-  employeeId?: number;
+  workerDetailsId?: number;
 }
 
 export interface UpdateUserData {
   email?: string;
   password?: string;
-  name?: string;
-  firstName?: string;
-  lastName?: string;
+  username?: string;
   phone?: string;
   photoUrl?: string;
   role?: UserRole;
@@ -34,7 +30,7 @@ export class UserService {
       where: { email },
       include: {
         company: true,
-        employee: true
+        workerDetails: true
       }
     });
   }
@@ -44,7 +40,7 @@ export class UserService {
       where: { id },
       include: {
         company: true,
-        employee: true
+        workerDetails: true
       }
     });
     
@@ -61,7 +57,7 @@ export class UserService {
       where: { id },
       include: {
         company: true,
-        employee: true
+        workerDetails: true
       }
     });
   }
@@ -77,26 +73,22 @@ export class UserService {
       data: {
         email: data.email,
         password: data.password, // Ya debe venir hasheada
-        name: data.name,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        username: data.username,
         phone: data.phone,
         role: data.role,
         companyId: data.companyId,
-        employeeId: data.employeeId,
+        workerDetailsId: data.workerDetailsId,
         isActive: true
       },
       select: {
         id: true,
         email: true,
-        name: true,
-        firstName: true,
-        lastName: true,
+        username: true,
         phone: true,
         role: true,
         isActive: true,
         companyId: true,
-        employeeId: true,
+        workerDetailsId: true,
         createdAt: true
       }
     });
@@ -107,7 +99,7 @@ export class UserService {
     
     // Si se está actualizando la contraseña, hashearla
     if (data.password) {
-      updateData.password = await bcrypt.hash(data.password, 10);
+      updateData.password = await bcrypt.hash(data.password, 12);
     }
     
     return await prisma.user.update({
@@ -116,15 +108,13 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        name: true,
-        firstName: true,
-        lastName: true,
+        username: true,
         phone: true,
         photoUrl: true,
         role: true,
         isActive: true,
         companyId: true,
-        employeeId: true,
+        workerDetailsId: true,
         updatedAt: true
       }
     });
@@ -147,13 +137,13 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        name: true,
+        username: true,
         role: true,
         createdAt: true,
         lastLoginAt: true
       },
       orderBy: {
-        name: 'asc'
+        username: 'asc'
       }
     });
   }
@@ -167,7 +157,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        name: true,
+        username: true,
         companyId: true,
         createdAt: true
       },
@@ -193,6 +183,20 @@ export class UserService {
     });
     
     return !existingUser;
+  }
+  
+  static async getUserByEmployeeId(employeeId: number) {
+    const user = await prisma.user.findFirst({
+      where: {
+        workerDetailsId: employeeId
+      },
+      include: {
+        workerDetails: true,
+        company: true
+      }
+    });
+    
+    return user;
   }
   
   static async getCompanyById(companyId: number) {

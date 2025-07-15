@@ -12,7 +12,7 @@ export const incidenceController = {
     try {
       const incidences = await prisma.incidence.findMany({
         include: {
-          employee: true,
+          workerDetails: true,
           company: true
         },
         orderBy: { date: 'desc' }
@@ -46,7 +46,7 @@ export const incidenceController = {
           }
         },
         include: {
-          employee: true,
+          workerDetails: true,
           company: true
         },
         orderBy: { date: 'desc' }
@@ -78,28 +78,31 @@ export const incidenceController = {
         });
       }
 
-      // Obtener datos del empleado para calcular monto
-      const employee = await prisma.employee.findUnique({
-        where: { id: req.body.employeeId }
+      // Obtener datos del trabajador para calcular monto
+      const worker = await prisma.workerDetails.findUnique({
+        where: { id: req.body.workerDetailsId },
+        include: {
+          contractConditions: true
+        }
       });
 
-      if (!employee) {
+      if (!worker) {
         return res.status(404).json({
           success: false,
-          message: 'Empleado no encontrado'
+          message: 'Trabajador no encontrado'
         });
       }
 
       // Calcular monto automáticamente
-      const employeeForCalculation = {
-        ...employee,
-        salary: Number(employee.baseSalary),
-        isActive: employee.status === 'ACTIVE'
+      const workerForCalculation = {
+        ...worker,
+        salary: worker.contractConditions ? Number(worker.contractConditions.salarioDiario) : 0,
+        isActive: true // Los trabajadores en workerDetails se consideran activos
       };
       
       const calculatedAmount = calculateIncidenceAmount(
         req.body.type,
-        employeeForCalculation,
+        workerForCalculation,
         req.body.quantity
       );
 
@@ -109,12 +112,12 @@ export const incidenceController = {
           amount: calculatedAmount
         },
         include: {
-          employee: true,
+          workerDetails: true,
           company: true
         }
       });
 
-      logger.info(`Incidence created for employee: ${employee.name}`);
+      logger.info(`Incidence created for worker: ${worker.nombres} ${worker.apellidoPaterno}`);
       res.status(201).json({
         success: true,
         data: incidence
@@ -143,19 +146,22 @@ export const incidenceController = {
       }
 
       // Recalcular monto si cambió la cantidad o tipo
-      const employee = await prisma.employee.findUnique({
-        where: { id: req.body.employeeId }
+      const worker = await prisma.workerDetails.findUnique({
+        where: { id: req.body.workerDetailsId },
+        include: {
+          contractConditions: true
+        }
       });
 
-      const employeeForCalculation = {
-        ...employee!,
-        salary: Number(employee!.baseSalary),
-        isActive: employee!.status === 'ACTIVE'
+      const workerForCalculation = {
+        ...worker!,
+        salary: worker!.contractConditions ? Number(worker!.contractConditions.salarioDiario) : 0,
+        isActive: true
       };
       
       const calculatedAmount = calculateIncidenceAmount(
         req.body.type,
-        employeeForCalculation,
+        workerForCalculation,
         req.body.quantity
       );
 
@@ -166,7 +172,7 @@ export const incidenceController = {
           amount: calculatedAmount
         },
         include: {
-          employee: true,
+          workerDetails: true,
           company: true
         }
       });

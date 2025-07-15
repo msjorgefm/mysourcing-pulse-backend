@@ -41,11 +41,11 @@ export class PayrollApprovalController {
           // },
           payrollItems: {
             include: {
-              employee: {
+              workerDetails: {
                 select: {
                   id: true,
-                  employeeNumber: true,
-                  name: true
+                  numeroTrabajador: true,
+                  nombres: true
                 }
               }
             }

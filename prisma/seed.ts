@@ -8,6 +8,7 @@ import { seedBanks } from './seeders/banks';
 import { seedIMSSDelegaciones } from './seeders/imssDelegaciones';
 import { seedIMSSOrigenMovimiento } from './seeders/imssOrigenMovimiento';
 import { seedIMSSSubdelegaciones } from './seeders/imssSubdelegaciones';
+import { seedEmployeeCatalogs } from './seeders/employeeCatalogs';
 
 const prisma = new PrismaClient();
 
@@ -129,6 +130,9 @@ async function main() {
   await seedIMSSOrigenMovimiento();
   await seedIMSSDelegaciones();
   await seedIMSSSubdelegaciones();
+  
+  // Seed catálogos de empleados
+  await seedEmployeeCatalogs();
 
   // Crear usuarios
   const operatorPassword = await bcrypt.hash('operator123', 12);
@@ -212,13 +216,13 @@ async function main() {
       where: { email: 'carlos@mysourcing.mx' },
       update: {
         password: operatorPassword,
-        name: 'Carlos Mendoza',
+        username: 'carlos.mendoza',
         role: 'OPERATOR'
       },
       create: {
         email: 'carlos@mysourcing.mx',
         password: operatorPassword,
-        name: 'Carlos Mendoza',
+        username: 'carlos.mendoza',
         role: 'OPERATOR'
       }
     }),
@@ -226,14 +230,14 @@ async function main() {
       where: { email: 'ana@techcorp.mx' },
       update: {
         password: clientPassword,
-        name: 'Ana Rivera',
+        username: 'ana.rivera',
         role: 'CLIENT',
         companyId: companies[0].id
       },
       create: {
         email: 'ana@techcorp.mx',
         password: clientPassword,
-        name: 'Ana Rivera',
+        username: 'ana.rivera',
         role: 'CLIENT',
         companyId: companies[0].id
       }
@@ -242,14 +246,14 @@ async function main() {
       where: { email: 'juan.perez@techcorp.mx' },
       update: {
         password: employeePassword,
-        name: 'Juan Pérez García',
+        username: 'juan.perez',
         role: 'EMPLOYEE',
         companyId: companies[0].id
       },
       create: {
         email: 'juan.perez@techcorp.mx',
         password: employeePassword,
-        name: 'Juan Pérez García',
+        username: 'juan.perez',
         role: 'EMPLOYEE',
         companyId: companies[0].id
       }
@@ -259,57 +263,64 @@ async function main() {
       where: { email: 'contacto@empresademo.com' },
       update: {
         password: clientPassword,
-        name: 'Administrador Demo',
+        username: 'Administrador Demo',
         role: 'CLIENT',
         companyId: companies[2].id // Empresa Demo es la tercera empresa
       },
       create: {
         email: 'contacto@empresademo.com',
         password: clientPassword,
-        name: 'Administrador Demo',
+        username: 'Administrador Demo',
         role: 'CLIENT',
-        companyId: companies[2].id,
-        firstName: 'Administrador',
-        lastName: 'Demo'
+        companyId: companies[2].id
       }
     })
   ]);
 
-  // Crear empleados para TechCorp
-  const employees: any[] = [];
+  // Crear trabajadores para TechCorp
+  const workers: any[] = [];
   for (let i = 1; i <= 45; i++) {
-    const employeeNumber = `TC${i.toString().padStart(3, '0')}`;
-    const employee = await prisma.employee.upsert({
-      where: { employeeNumber },
+    const numeroTrabajador = i;
+    const worker = await prisma.workerDetails.upsert({
+      where: {
+        companyId_numeroTrabajador: {
+          companyId: companies[0].id,
+          numeroTrabajador
+        }
+      },
       update: {
-        name: `Empleado TechCorp ${i}`,
-        email: `empleado${i}@techcorp.mx`,
-        position: i <= 15 ? 'Desarrollador' : i <= 30 ? 'Analista' : 'Gerente',
-        department: i <= 20 ? 'Tecnología' : i <= 35 ? 'Ventas' : 'Administración',
-        baseSalary: 15000 + (i * 500),
-        status: 'ACTIVE'
+        nombres: `Trabajador TechCorp ${i}`,
+        apellidoPaterno: `Apellido${i}`,
+        apellidoMaterno: `Materno${i}`,
+        fechaNacimiento: new Date(`${1980 + Math.floor(Math.random() * 20)}-0${Math.floor(Math.random() * 9) + 1}-${Math.floor(Math.random() * 28) + 1}`),
+        estadoCivil: 'SOLTERO',
+        rfc: `ETC${i.toString().padStart(7, '0')}H1A`,
+        curp: `AAAA${i.toString().padStart(6, '0')}HDFAAA0${i % 10}`,
+        nss: `${i.toString().padStart(11, '0')}`
       },
       create: {
-        employeeNumber,
-        name: `Empleado TechCorp ${i}`,
-        email: `empleado${i}@techcorp.mx`,
-        rfc: `ETC${i.toString().padStart(6, '0')}H1A`,
-        position: i <= 15 ? 'Desarrollador' : i <= 30 ? 'Analista' : 'Gerente',
-        department: i <= 20 ? 'Tecnología' : i <= 35 ? 'Ventas' : 'Administración',
-        baseSalary: 15000 + (i * 500),
-        hireDate: new Date(`2023-0${Math.floor(Math.random() * 9) + 1}-${Math.floor(Math.random() * 28) + 1}`),
-        contractType: 'INDEFINITE',
-        status: 'ACTIVE',
-        companyId: companies[0].id
+        companyId: companies[0].id,
+        numeroTrabajador,
+        nombres: `Trabajador TechCorp ${i}`,
+        apellidoPaterno: `Apellido${i}`,
+        apellidoMaterno: `Materno${i}`,
+        fechaNacimiento: new Date(`${1980 + Math.floor(Math.random() * 20)}-0${Math.floor(Math.random() * 9) + 1}-${Math.floor(Math.random() * 28) + 1}`),
+        sexo: i % 2 === 0 ? 'MASCULINO' : 'FEMENINO',
+        nacionalidad: 'MEXICANA',
+        estadoCivil: 'SOLTERO',
+        rfc: `ETC${i.toString().padStart(7, '0')}H1A`,
+        curp: `AAAA${i.toString().padStart(6, '0')}HDFAAA0${i % 10}`,
+        nss: `${i.toString().padStart(11, '0')}`,
+        umf: Math.floor(Math.random() * 100) + 1
       }
     });
-    employees.push(employee);
+    workers.push(worker);
   }
 
-  // Asociar primer empleado con usuario employee
+  // Asociar primer trabajador con usuario employee
   await prisma.user.update({
     where: { id: users[2].id },
-    data: { employeeId: employees[0].id }
+    data: { workerDetailsId: workers[0].id }
   });
 
   // Crear wizards para las empresas
@@ -848,7 +859,7 @@ async function main() {
   });
 
   console.log('✅ Seed completado exitosamente');
-  console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${employees.length} empleados`);
+  console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${workers.length} trabajadores`);
   console.log('📚 Catálogos: regímenes fiscales y actividades económicas');
   console.log('🧙‍♂️ Wizards y datos de configuración creados para las empresas');
   
