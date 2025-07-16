@@ -256,7 +256,7 @@ export class AuthController {
           return;
         } else {
           // Para otros casos con setupToken (vinculaciones de jefe, etc.)
-          const result = await AuthService.completeAccountSetup(token, username, password, user.role);
+          const result = await AuthService.completeAccountSetup(token, username, password);
           res.json({
             success: true,
             message: 'Cuenta configurada exitosamente',
