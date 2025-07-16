@@ -1,0 +1,168 @@
+{
+  "id": 1,
+  "companyId": 1,
+  "nombre": "NOMINA 12032025 SABISU.xlsx",
+  "headerRow": 1,
+  "mappings": {
+    "companyId": 1,
+    "mode": "advanced",
+    "sourceFile": {
+      "name": "NOMINA 12032025 SABISU.xlsx",
+      "headerRow": 1,
+      "headers": [
+        "Descripción",
+        "Tipo Nómina",
+        "Descripción",
+        "ID Empleado",
+        "A. Paterno",
+        "PUESTO",
+        "ZONA",
+        "FECHA DE NACIMIENTO",
+        "EDAD",
+        "RFC",
+        "CURP",
+        "NSS",
+        "BANCO",
+        "CUENTA",
+        "CLABE",
+        "FECHA DE INGRESO",
+        "FECHA DE BAJA",
+        "S NETO MENSUAL",
+        "SD",
+        "TOTAL DIAS",
+        null,
+        "SUELDO",
+        "GRATIFICACION",
+        "BONO",
+        "OTROS PAGOS",
+        "PV",
+        "PD",
+        "COMISIONES",
+        "T.EXTRA",
+        "FINIQUITO",
+        "TOTAL PERCEPCIONES"
+      ]
+    },
+    "targetFile": {
+      "name": "Plantilla_incidencias (1).xlsx",
+      "headerRow": 1,
+      "headers": [
+        "ID empleado",
+        "Nombre empleado",
+        "Concepto",
+        "Cantidad",
+        "Importe"
+      ]
+    },
+    "mappings": {
+      "direct": {
+        "3": {
+          "targetIndex": 0,
+          "targetHeader": "ID empleado",
+          "sourceHeader": "ID Empleado"
+        },
+        "4": {
+          "targetIndex": 1,
+          "targetHeader": "Nombre empleado",
+          "sourceHeader": "A. Paterno"
+        }
+      },
+      "transformations": [
+        {
+          "id": 1752701505978,
+          "sourceColumns": [
+            22
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        },
+        {
+          "id": 1752701528387,
+          "sourceColumns": [
+            23
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        },
+        {
+          "id": 1752701604590,
+          "sourceColumns": [
+            24
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        },
+        {
+          "id": 1752701610193,
+          "sourceColumns": [
+            25
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        },
+        {
+          "id": 1752701617844,
+          "sourceColumns": [
+            26
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        },
+        {
+          "id": 1752701626571,
+          "sourceColumns": [
+            27
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        },
+        {
+          "id": 1752701632827,
+          "sourceColumns": [
+            28
+          ],
+          "nameTarget": "2",
+          "valueTarget": "4",
+          "typeValue": "P"
+        }
+      ],
+      "concepts": {
+        "T.EXTRA": "T01",
+        "GRATIFICACION": "C01",
+        "BONO": "C03",
+        "OTROS PAGOS": "C03",
+        "PV": "C04",
+        "PD": "C05",
+        "COMISIONES": "C05",
+        "FINIQUITO": "F01",
+        "PRIMA VACACIONAL(25%)": "C01",
+        "IMPORTE PRIMA DOMINICAL": "C02",
+        "GRATIFICACIÓN": "C04",
+        "IMPORTE TIEMPO EXTRA DOBLE": "C06",
+        "IMPORTE TIEMPO EXTRA TRIPLE": "C07",
+        "IMPORTE DE FESTIVO LABORADO": "C08",
+        "IMPORTE DE DESCANSO LABORADO": "C09",
+        "DESCUENTO POR PERDIDA DE UNIFORMES Y/O HERRAMIENTAS": "C010",
+        "IMPORTE INCAPACIDAD MÁS DE 4 DÍAS": "C011",
+        "IMPORTE INCAPACIDAD": "C012",
+        "FONACOT": "C013",
+        "DESC. PRÉSTAMO CAJA DE AHORRO": "C014",
+        "OTRAS DEDUCIONES": "C015",
+        "IMPORTE INCAPACIDAD DE 1 A 3 DÍAS": "C016",
+        "SANCIÓN / CASTIGO": "C017",
+        "PERMISO CON GOSE": "C018",
+        "FALTAS": "C019",
+        "IMPORTE SOLO VACACIONES": "C020",
+        "IMPORTE VACACIONES": "C021"
+      }
+    }
+  },
+  "createdAt": "2025-07-16T21:34:28.011Z",
+  "updatedAt": "2025-07-16T21:34:28.011Z"
+}

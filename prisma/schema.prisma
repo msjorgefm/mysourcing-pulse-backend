@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -164,7 +165,8 @@ model PayrollItem {
 
 model Incidence {
   id                 Int             @id @default(autoincrement())
-  type               IncidenceType
+  type               IncidenceType?   // Tipo estándar (opcional si se usa customType)
+  customTypeId       Int?            // Referencia al tipo personalizado
   date               DateTime
   quantity           Decimal         @db.Decimal(8, 2)
   amount             Decimal?        @db.Decimal(10, 2)
@@ -188,6 +190,7 @@ model Incidence {
   payrollCalendar    PayrollCalendar? @relation(fields: [payrollCalendarId], references: [id])
   createdByUser      User?           @relation("IncidenceCreatedBy", fields: [createdByUserId], references: [id])
   approvedByUser     User?           @relation("IncidenceApprovedBy", fields: [approvedBy], references: [id])
+  customType         CompanyIncidenceType? @relation(fields: [customTypeId], references: [id])
 
   @@index([companyId, date])
   @@index([employeeId, type])
@@ -799,6 +802,10 @@ model Company {
   // Sección 8: Talento Humano
   schedules CompanySchedule[]
   policies  CompanyPolicy[]
+
+  // Tipos de incidencias personalizados
+  incidenceTypes     CompanyIncidenceType[]
+  incidenceTemplates CompanyIncidenceTemplate[]
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -1633,6 +1640,54 @@ model CatalogoRegimenContratacion {
   
   @@map("cat_regimen_contratacion")
 }
+// ================================
+// TIPOS DE INCIDENCIAS PERSONALIZADOS
+// ================================
+
+model CompanyIncidenceType {
+  id          Int      @id @default(autoincrement())
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  codigo      String   // Código único del tipo (ej: "FALTAS", "BONO_PROD")
+  nombre      String   // Nombre del tipo (ej: "Faltas", "Bono Productividad")
+  tipo        IncidenceCategory // DEDUCCION o PERCEPCION
+  descripcion String?
+  activo      Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  incidences  Incidence[]
+
+  @@unique([companyId, codigo])
+  @@index([companyId, activo])
+  @@map("company_incidence_types")
+}
+
+model CompanyIncidenceTemplate {
+  id          Int      @id @default(autoincrement())
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  nombre      String   // Nombre de la plantilla
+  headerRow   Int      @default(1) // Fila donde están los encabezados
+  mappings    Json     // Mapeo de columnas del archivo
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([companyId])
+  @@map("company_incidence_templates")
+}
+
+// Enum para categorizar incidencias
+enum IncidenceCategory {
+  DEDUCCION
+  PERCEPCION
+}
+
 // ================================
 // VINCULACIÓN DE JEFES
 // ================================

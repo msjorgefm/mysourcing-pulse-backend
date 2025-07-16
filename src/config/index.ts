@@ -29,6 +29,16 @@ export const config = {
     from: process.env.SMTP_FROM || 'MySourcing Pulse <noreply@mysourcingpulse.com>',
   },
   
+  imap: {
+    enabled: process.env.IMAP_ENABLED === 'true',
+    host: process.env.IMAP_HOST || 'imap.gmail.com',
+    port: parseInt(process.env.IMAP_PORT || '993', 10),
+    user: process.env.IMAP_USER || process.env.SMTP_USER || '',
+    pass: process.env.IMAP_PASS || process.env.SMTP_PASS || '',
+    sentFolder: process.env.IMAP_SENT_FOLDER || 'Sent',
+    secure: true
+  },
+  
   invitation: {
     expiresInHours: 48,
   },
