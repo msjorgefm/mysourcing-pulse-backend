@@ -12,6 +12,8 @@ model User {
   email           String         @unique
   password        String
   username        String?
+  firstName       String?
+  lastName        String?
   role            UserRole
   isActive        Boolean        @default(true)
   companyId       Int?
@@ -23,6 +25,16 @@ model User {
   photoUrl        String?
   setupToken    String?        @unique
   setupTokenExpiry DateTime?
+  
+  // Relación para operadores asignados a un administrador
+  managedByAdminId Int?
+  managedByAdmin   User?          @relation("AdminOperators", fields: [managedByAdminId], references: [id])
+  managedOperators User[]         @relation("AdminOperators")
+  
+  // Relaciones para OperatorCompany
+  operatorCompanies OperatorCompany[] @relation("OperatorCompanies")
+  assignedOperatorCompanies OperatorCompany[] @relation("AssignedOperatorCompanies")
+  
   refreshTokens RefreshToken[]
   company         Company?       @relation(fields: [companyId], references: [id])
   workerDetails   WorkerDetails? @relation(fields: [workerDetailsId], references: [id])
@@ -33,6 +45,7 @@ model User {
   approvedPayrolls Payroll[]       @relation("PayrollApprovedBy")
 
   @@index([email, isActive])
+  @@index([managedByAdminId])
   @@map("users")
 }
 
@@ -510,6 +523,7 @@ model WorkerDetails {
   nss                String                   @db.VarChar(11)
   umf                Int?
   invitationSentAt   Boolean                  @default(false)
+  activo             Boolean                  @default(true)
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt
   address            WorkerAddress?
@@ -582,7 +596,7 @@ model WorkerContractCondition {
   createdAt                DateTime             @default(now())
   updatedAt                DateTime             @updatedAt
   area                     Area?                @relation(fields: [areaId], references: [id])
-  departmento              Departamento?        @relation(fields: [departmentId], references: [id])
+  departamento              Departamento?        @relation(fields: [departmentId], references: [id])
   schedule                 WorkSchedule?        @relation(fields: [horarioId], references: [id])
   puesto                   Puesto?              @relation(fields: [positionId], references: [id])
   workerDetails            WorkerDetails        @relation(fields: [workerDetailsId], references: [id], onDelete: Cascade)
@@ -738,6 +752,27 @@ enum UserRole {
 }
 
 // ================================
+// RELACIÓN OPERADOR-EMPRESA
+// ================================
+model OperatorCompany {
+  id         Int      @id @default(autoincrement())
+  operatorId Int
+  companyId  Int
+  assignedAt DateTime @default(now())
+  assignedBy Int      // ID del admin que asignó
+  isActive   Boolean  @default(true)
+  
+  operator   User     @relation("OperatorCompanies", fields: [operatorId], references: [id])
+  company    Company  @relation("CompanyOperators", fields: [companyId], references: [id])
+  assignedByUser User @relation("AssignedOperatorCompanies", fields: [assignedBy], references: [id])
+  
+  @@unique([operatorId, companyId])
+  @@index([operatorId])
+  @@index([companyId])
+  @@map("operator_companies")
+}
+
+// ================================
 // EMPRESAS
 // ================================
 model Company {
@@ -752,6 +787,7 @@ model Company {
   employeesCount Int           @default(0)
 
   // Relaciones
+  operatorCompanies OperatorCompany[] @relation("CompanyOperators")
   calendars         Calendar[]
   payrollCalendars  PayrollCalendar[]
   documentChecklist CompanyDocumentChecklist?

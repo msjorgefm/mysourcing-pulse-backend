@@ -134,10 +134,35 @@ async function main() {
   // Seed catálogos de empleados
   await seedEmployeeCatalogs();
 
-  // Crear usuarios
+  // Crear contraseñas hasheadas
+  const adminPassword = await bcrypt.hash('admin123', 12);
   const operatorPassword = await bcrypt.hash('operator123', 12);
   const clientPassword = await bcrypt.hash('client123', 12);
   const employeePassword = await bcrypt.hash('employee123', 12);
+  
+  // Primero crear el usuario administrador principal
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@mysourcing.mx' },
+    update: {
+      password: adminPassword,
+      username: 'Administrador Principal',
+      firstName: 'Admin',
+      lastName: 'Principal',
+      role: 'ADMIN',
+      isActive: true
+    },
+    create: {
+      email: 'admin@mysourcing.mx',
+      password: adminPassword,
+      username: 'Administrador Principal',
+      firstName: 'Admin',
+      lastName: 'Principal',
+      role: 'ADMIN',
+      isActive: true
+    }
+  });
+  
+  console.log('✅ Usuario administrador creado');
 
   // Crear o actualizar empresas
   const companies = await Promise.all([
@@ -210,22 +235,54 @@ async function main() {
     })
   ]);
 
-  // Crear usuarios
-  const users = await Promise.all([
+  // Crear operadores asignados al administrador
+  const operators = await Promise.all([
     prisma.user.upsert({
       where: { email: 'carlos@mysourcing.mx' },
       update: {
         password: operatorPassword,
         username: 'carlos.mendoza',
-        role: 'OPERATOR'
+        firstName: 'Carlos',
+        lastName: 'Mendoza',
+        role: 'OPERATOR',
+        managedByAdminId: adminUser.id // Vincular al admin
       },
       create: {
         email: 'carlos@mysourcing.mx',
         password: operatorPassword,
         username: 'carlos.mendoza',
-        role: 'OPERATOR'
+        firstName: 'Carlos',
+        lastName: 'Mendoza',
+        role: 'OPERATOR',
+        managedByAdminId: adminUser.id // Vincular al admin
       }
     }),
+    prisma.user.upsert({
+      where: { email: 'maria@mysourcing.mx' },
+      update: {
+        password: operatorPassword,
+        username: 'maria.garcia',
+        firstName: 'María',
+        lastName: 'García',
+        role: 'OPERATOR',
+        managedByAdminId: adminUser.id // Vincular al admin
+      },
+      create: {
+        email: 'maria@mysourcing.mx',
+        password: operatorPassword,
+        username: 'maria.garcia',
+        firstName: 'María',
+        lastName: 'García',
+        role: 'OPERATOR',
+        managedByAdminId: adminUser.id // Vincular al admin
+      }
+    })
+  ]);
+  
+  console.log(`✅ ${operators.length} operadores creados y vinculados al administrador`);
+  
+  // Crear usuarios clientes
+  const users = await Promise.all([
     prisma.user.upsert({
       where: { email: 'ana@techcorp.mx' },
       update: {
@@ -276,6 +333,68 @@ async function main() {
       }
     })
   ]);
+  
+  // Asignar operadores a las empresas mediante OperatorCompany
+  await Promise.all([
+    // Carlos maneja TechCorp y Empresa Demo
+    prisma.operatorCompany.upsert({
+      where: {
+        operatorId_companyId: {
+          operatorId: operators[0].id,
+          companyId: companies[0].id
+        }
+      },
+      update: {
+        isActive: true,
+        assignedBy: adminUser.id
+      },
+      create: {
+        operatorId: operators[0].id,
+        companyId: companies[0].id,
+        assignedBy: adminUser.id,
+        isActive: true
+      }
+    }),
+    prisma.operatorCompany.upsert({
+      where: {
+        operatorId_companyId: {
+          operatorId: operators[0].id,
+          companyId: companies[2].id // Empresa Demo
+        }
+      },
+      update: {
+        isActive: true,
+        assignedBy: adminUser.id
+      },
+      create: {
+        operatorId: operators[0].id,
+        companyId: companies[2].id, // Empresa Demo
+        assignedBy: adminUser.id,
+        isActive: true
+      }
+    }),
+    // María maneja Retail Solutions
+    prisma.operatorCompany.upsert({
+      where: {
+        operatorId_companyId: {
+          operatorId: operators[1].id,
+          companyId: companies[1].id
+        }
+      },
+      update: {
+        isActive: true,
+        assignedBy: adminUser.id
+      },
+      create: {
+        operatorId: operators[1].id,
+        companyId: companies[1].id,
+        assignedBy: adminUser.id,
+        isActive: true
+      }
+    })
+  ]);
+  
+  console.log('✅ Operadores asignados a empresas');
 
   // Crear trabajadores para TechCorp
   const workers: any[] = [];
@@ -311,17 +430,22 @@ async function main() {
         rfc: `ETC${i.toString().padStart(7, '0')}H1A`,
         curp: `AAAA${i.toString().padStart(6, '0')}HDFAAA0${i % 10}`,
         nss: `${i.toString().padStart(11, '0')}`,
-        umf: Math.floor(Math.random() * 100) + 1
+        umf: Math.floor(Math.random() * 100) + 1,
+        activo: true
       }
     });
     workers.push(worker);
   }
 
   // Asociar primer trabajador con usuario employee
-  await prisma.user.update({
-    where: { id: users[2].id },
-    data: { workerDetailsId: workers[0].id }
-  });
+  // Primero verificar si el usuario employee (juan.perez@techcorp.mx) existe
+  const employeeUser = users.find(u => u.email === 'juan.perez@techcorp.mx');
+  if (employeeUser && workers.length > 0) {
+    await prisma.user.update({
+      where: { id: employeeUser.id },
+      data: { workerDetailsId: workers[0].id }
+    });
+  }
 
   // Crear wizards para las empresas
   for (const company of companies) {
@@ -859,15 +983,31 @@ async function main() {
   });
 
   console.log('✅ Seed completado exitosamente');
-  console.log(`📊 Creados: ${companies.length} empresas, ${users.length} usuarios, ${workers.length} trabajadores`);
+  console.log(`📊 Resumen:`);
+  console.log(`   - 1 Administrador principal`);
+  console.log(`   - ${operators.length} Operadores`);
+  console.log(`   - ${companies.length} Empresas`);
+  console.log(`   - ${users.length} Usuarios clientes`);
+  console.log(`   - ${workers.length} Trabajadores`);
   console.log('📚 Catálogos: regímenes fiscales y actividades económicas');
   console.log('🧙‍♂️ Wizards y datos de configuración creados para las empresas');
+  console.log('🔗 Jerarquía: Admin → Operadores → Empresas → Clientes/Trabajadores');
   
   console.log('\n📧 CREDENCIALES DE ACCESO:');
   console.log('=====================================');
-  console.log('OPERADOR:');
-  console.log('  Email: carlos@mysourcing.mx');
-  console.log('  Password: operator123');
+  console.log('ADMINISTRADOR:');
+  console.log('  Email: admin@mysourcing.mx');
+  console.log('  Password: admin123');
+  console.log('\nOPERADORES:');
+  console.log('  Carlos Mendoza:');
+  console.log('    Email: carlos@mysourcing.mx');
+  console.log('    Password: operator123');
+  console.log('    Empresas: TechCorp, Empresa Demo');
+  console.log('  ');
+  console.log('  María García:');
+  console.log('    Email: maria@mysourcing.mx');
+  console.log('    Password: operator123');
+  console.log('    Empresas: Retail Solutions');
   console.log('\nCLIENTE (TechCorp):');
   console.log('  Email: ana@techcorp.mx');
   console.log('  Password: client123');

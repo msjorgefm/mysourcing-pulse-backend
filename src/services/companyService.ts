@@ -39,6 +39,20 @@ export class CompanyService {
           select: { id: true, name: true, year: true }
         },
         documentChecklist: true,
+        operatorCompanies: {
+          where: { isActive: true },
+          include: {
+            operator: {
+              select: {
+                id: true,
+                email: true,
+                username: true,
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        },
         _count: {
           select: {
             workerDetails: true,
@@ -67,6 +81,13 @@ export class CompanyService {
       recentPayrolls: company.payrolls,
       activeCalendars: company.calendars,
       documentChecklist: company.documentChecklist,
+      operators: company.operatorCompanies.map((oc: any) => ({
+        id: oc.operator.id,
+        email: oc.operator.email,
+        username: oc.operator.username,
+        fullName: `${oc.operator.firstName || ''} ${oc.operator.lastName || ''}`.trim(),
+        assignedAt: oc.assignedAt
+      })),
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     }));
@@ -150,32 +171,52 @@ export class CompanyService {
       throw new Error('Ya existe un usuario registrado con ese correo electrónico');
     }
     
-    const company = await prisma.company.create({
-      data: {
-        name: data.name || data.legalName, // Use legalName if name not provided
-        rfc: finalRfc, // Use the generated unique RFC
-        legalName: data.legalName,
-        address: data.address || 'Por definir', // Default address if not provided
-        email: data.email,
-        phone: data.phone,
-        status: 'IN_SETUP', // Siempre crear con estado "en configuración"
-        employeesCount: 0,
-        // Crear el checklist vacío por defecto
-        documentChecklist: {
-          create: {}
+    // Usar una transacción para crear tanto la empresa como el usuario
+    const result = await prisma.$transaction(async (tx) => {
+      // Crear la empresa
+      const company = await tx.company.create({
+        data: {
+          name: data.name || data.legalName, // Use legalName if name not provided
+          rfc: finalRfc, // Use the generated unique RFC
+          legalName: data.legalName,
+          address: data.address || 'Por definir', // Default address if not provided
+          email: data.email,
+          phone: data.phone,
+          status: 'IN_SETUP', // Siempre crear con estado "en configuración"
+          employeesCount: 0,
+          // Crear el checklist vacío por defecto
+          documentChecklist: {
+            create: {}
+          }
+        },
+        include: {
+          documentChecklist: true
         }
-      },
-      include: {
-        documentChecklist: true
-      }
+      });
+      
+      // Crear el usuario para la empresa
+      const user = await tx.user.create({
+        data: {
+          email: data.email,
+          username: '',
+          password: '',
+          firstName: '',
+          lastName: '',
+          role: 'CLIENT',
+          isActive: true,
+          companyId: company.id
+        }
+      });
+      
+      return { company, user };
     });
     
     // Enviar invitación por correo electrónico
     try {
       await InvitationService.createAndSendInvitation(
-        company.id,
-        company.email,
-        company.name
+        result.company.id,
+        result.company.email,
+        result.company.name
       );
     } catch (error) {
       console.error('Error sending invitation:', error);
@@ -183,18 +224,18 @@ export class CompanyService {
     }
     
     return {
-      id: company.id,
-      name: company.name,
-      rfc: company.rfc,
-      legalName: company.legalName,
-      address: company.address,
-      email: company.email,
-      phone: company.phone,
-      status: this.mapStatusToFrontend(company.status),
+      id: result.company.id,
+      name: result.company.name,
+      rfc: result.company.rfc,
+      legalName: result.company.legalName,
+      address: result.company.address,
+      email: result.company.email,
+      phone: result.company.phone,
+      status: this.mapStatusToFrontend(result.company.status),
       employeesCount: 0,
-      documentChecklist: company.documentChecklist,
-      createdAt: company.createdAt,
-      updatedAt: company.updatedAt
+      documentChecklist: result.company.documentChecklist,
+      createdAt: result.company.createdAt,
+      updatedAt: result.company.updatedAt
     };
   }
   
@@ -458,5 +499,225 @@ export class CompanyService {
   
   static async sendAdditionalInvitation(companyId: number, email: string) {
     return await InvitationService.sendAdditionalInvitation(companyId, email);
+  }
+  
+  static async assignOperatorToCompany(companyId: number, operatorId: number, assignedBy: number) {
+    // Verificar que la empresa existe
+    const company = await prisma.company.findUnique({
+      where: { id: companyId }
+    });
+    
+    if (!company) {
+      throw new Error('Company not found');
+    }
+    
+    // Verificar que el operador existe y tiene el rol correcto
+    const operator = await prisma.user.findUnique({
+      where: { id: operatorId }
+    });
+    
+    if (!operator) {
+      throw new Error('Operator not found');
+    }
+    
+    if (operator.role !== 'OPERATOR') {
+      throw new Error('User is not an operator');
+    }
+    
+    // Verificar si ya existe la asignación
+    const existingAssignment = await prisma.operatorCompany.findUnique({
+      where: {
+        operatorId_companyId: {
+          operatorId: operatorId,
+          companyId: companyId
+        }
+      }
+    });
+    
+    if (existingAssignment) {
+      // Si ya existe pero está inactiva, reactivarla
+      if (!existingAssignment.isActive) {
+        await prisma.operatorCompany.update({
+          where: { id: existingAssignment.id },
+          data: { 
+            isActive: true,
+            assignedAt: new Date(),
+            assignedBy: assignedBy
+          }
+        });
+      }
+      return existingAssignment;
+    }
+    
+    // Crear nueva asignación
+    const assignment = await prisma.operatorCompany.create({
+      data: {
+        operatorId: operatorId,
+        companyId: companyId,
+        assignedBy: assignedBy,
+        isActive: true
+      }
+    });
+    
+    return assignment;
+  }
+  
+  static async getCompaniesByOperator(operatorId: number) {
+    const companies = await prisma.company.findMany({
+      where: {
+        operatorCompanies: {
+          some: {
+            operatorId: operatorId,
+            isActive: true
+          }
+        }
+      },
+      include: {
+        workerDetails: {
+          select: { id: true }
+        },
+        payrolls: {
+          select: { 
+            id: true, 
+            status: true, 
+            totalNet: true,
+            createdAt: true 
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 5
+        },
+        calendars: {
+          select: { id: true, name: true, year: true }
+        },
+        documentChecklist: true,
+        operatorCompanies: {
+          where: { isActive: true },
+          include: {
+            operator: {
+              select: {
+                id: true,
+                email: true,
+                username: true,
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            workerDetails: true,
+            payrolls: true,
+            incidences: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    // Transformar datos para el frontend
+    return companies.map((company: any) => ({
+      id: company.id,
+      name: company.name,
+      rfc: company.rfc,
+      legalName: company.legalName,
+      address: company.address,
+      email: company.email,
+      phone: company.phone,
+      status: this.mapStatusToFrontend(company.status),
+      employeesCount: company._count?.workerDetails || 0,
+      payrollsCount: company._count.payrolls,
+      incidencesCount: company._count.incidences,
+      calendarsCount: company.calendars.length,
+      recentPayrolls: company.payrolls,
+      activeCalendars: company.calendars,
+      documentChecklist: company.documentChecklist,
+      operators: company.operatorCompanies.map((oc: any) => ({
+        id: oc.operator.id,
+        email: oc.operator.email,
+        username: oc.operator.username,
+        fullName: `${oc.operator.firstName || ''} ${oc.operator.lastName || ''}`.trim(),
+        assignedAt: oc.assignedAt
+      })),
+      createdAt: company.createdAt,
+      updatedAt: company.updatedAt
+    }));
+  }
+  
+  static async getCompaniesManagedByAdmin(adminId: number) {
+    // Para administradores: obtener TODAS las empresas
+    const companies = await prisma.company.findMany({
+      include: {
+        workerDetails: {
+          select: { id: true }
+        },
+        payrolls: {
+          select: { 
+            id: true, 
+            status: true, 
+            totalNet: true,
+            createdAt: true 
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 5
+        },
+        calendars: {
+          select: { id: true, name: true, year: true }
+        },
+        documentChecklist: true,
+        operatorCompanies: {
+          where: { 
+            isActive: true
+          },
+          include: {
+            operator: {
+              select: {
+                id: true,
+                email: true,
+                username: true,
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            workerDetails: true,
+            payrolls: true,
+            incidences: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    // Transformar datos para el frontend
+    return companies.map((company: any) => ({
+      id: company.id,
+      name: company.name,
+      rfc: company.rfc,
+      legalName: company.legalName,
+      address: company.address,
+      email: company.email,
+      phone: company.phone,
+      status: this.mapStatusToFrontend(company.status),
+      employeesCount: company._count?.workerDetails || 0,
+      payrollsCount: company._count.payrolls,
+      incidencesCount: company._count.incidences,
+      calendarsCount: company.calendars.length,
+      recentPayrolls: company.payrolls,
+      activeCalendars: company.calendars,
+      documentChecklist: company.documentChecklist,
+      operators: company.operatorCompanies.map((oc: any) => ({
+        id: oc.operator.id,
+        email: oc.operator.email,
+        username: oc.operator.username,
+        fullName: `${oc.operator.firstName || ''} ${oc.operator.lastName || ''}`.trim(),
+        assignedAt: oc.assignedAt
+      })),
+      createdAt: company.createdAt,
+      updatedAt: company.updatedAt
+    }));
   }
 }

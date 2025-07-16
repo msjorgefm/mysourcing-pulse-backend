@@ -10,11 +10,27 @@ export class CompanyController {
   
   static async getAllCompanies(req: AuthRequest, res: Response) {
     try {
-      const companies = await CompanyService.getAllCompanies();
+      const currentUser = req.user;
+      const userRole = currentUser?.role;
+      const userId = currentUser?.id;
+      
+      let companies;
+      
+      if (userRole === 'OPERATOR') {
+        // Si es operador, obtener solo las empresas asignadas a ese operador
+        companies = await CompanyService.getCompaniesByOperator(userId);
+      } else if (userRole === 'ADMIN') {
+        // Si es admin, obtener las empresas de los operadores que gestiona
+        companies = await CompanyService.getCompaniesManagedByAdmin(userId);
+      } else {
+        // Para otros roles, obtener todas las empresas
+        companies = await CompanyService.getAllCompanies();
+      }
       
       res.json({
         message: 'Companies retrieved successfully',
-        data: companies
+        data: companies,
+        success: true
       });
     } catch (error: any) {
       console.error('Get companies error:', error);
@@ -53,7 +69,18 @@ export class CompanyController {
         return res.status(400).json({ error: error.details[0].message });
       }
       
+      // Obtener el usuario actual y su rol
+      const currentUser = req.user;
+      const userId = currentUser?.id;
+      const userRole = currentUser?.role;
+      
+      // Crear la empresa
       const company = await CompanyService.createCompany(req.body);
+      
+      // Si el usuario es operador, asignarlo automáticamente a la empresa creada
+      if (userRole === 'OPERATOR' && userId) {
+        await CompanyService.assignOperatorToCompany(company.id, userId, userId);
+      }
       
       res.status(201).json({
         message: 'Company created successfully',

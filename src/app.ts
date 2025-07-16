@@ -35,7 +35,7 @@ import locationRoutes from './routes/locations';
 import bankRoutes from './routes/bankRoutes';
 import userRoutes from './routes/users';
 import vinculacionJefesRoutes from './routes/vinculacionJefes';
-import calendarRoutes from './routes/calendars';
+import adminRoutes from './routes/admin';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -176,6 +176,7 @@ app.use('/api/locations', locationRoutes);
 app.use('/api/banks', bankRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/vinculacion-jefes', vinculacionJefesRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Rutas de prueba (solo en desarrollo)
 if (process.env.NODE_ENV === 'development') {
