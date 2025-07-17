@@ -315,28 +315,32 @@ export class AdminController {
             isActive: true
           }
         }),
-        // Obtener TODAS las empresas para contar con/sin operador
+        // Obtener SOLO las empresas gestionadas por este admin
         prisma.company.findMany({
+          where: {
+            managedByAdminId: adminId
+          },
           include: {
             operatorCompanies: {
               where: {
                 isActive: true
+              },
+              include: {
+                operator: {
+                  select: {
+                    id: true,
+                    managedByAdminId: true
+                  }
+                }
               }
             }
           }
         }),
-        // Total de trabajadores en todas las empresas
+        // Total de trabajadores en todas las empresas del admin
         prisma.workerDetails.count({
           where: {
             company: {
-              operatorCompanies: {
-                some: {
-                  operator: {
-                    managedByAdminId: adminId
-                  },
-                  isActive: true
-                }
-              }
+              managedByAdminId: adminId
             }
           }
         }),
@@ -351,13 +355,7 @@ export class AdminController {
               {
                 role: 'CLIENT',
                 company: {
-                  operatorCompanies: {
-                    some: {
-                      operator: {
-                        managedByAdminId: adminId
-                      }
-                    }
-                  }
+                  managedByAdminId: adminId
                 }
               }
             ]
@@ -381,7 +379,7 @@ export class AdminController {
         })
       ]);
 
-      // Calcular empresas con y sin operador
+      // Contar empresas con y sin operador asignado
       const companiesWithOperator = allCompanies.filter(company => company.operatorCompanies.length > 0).length;
       const companiesWithoutOperator = allCompanies.filter(company => company.operatorCompanies.length === 0).length;
 
@@ -389,14 +387,7 @@ export class AdminController {
       const companiesByStatus = await prisma.company.groupBy({
         by: ['status'],
         where: {
-          operatorCompanies: {
-            some: {
-              operator: {
-                managedByAdminId: adminId
-              },
-              isActive: true
-            }
-          }
+          managedByAdminId: adminId
         },
         _count: {
           status: true
@@ -619,6 +610,7 @@ export class AdminController {
 
       // Obtener todas las empresas
       const allCompanies = await prisma.company.findMany({
+        where: { managedByAdminId: adminId },
         include: {
           operatorCompanies: {
             where: {
@@ -638,6 +630,7 @@ export class AdminController {
           }
         }
       });
+      console.log('all companies for admin:', allCompanies);
 
       // Filtrar para mostrar solo empresas relevantes para este admin:
       // 1. Empresas sin operador asignado
@@ -663,6 +656,8 @@ export class AdminController {
         
         return hasThisOperator || hasNoOperator;
       });
+
+      console.log('Available companies for operator:', availableCompanies);
 
       // Formatear respuesta
       const formattedCompanies = availableCompanies.map(company => ({

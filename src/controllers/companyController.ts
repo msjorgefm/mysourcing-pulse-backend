@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { CompanyService } from '../services/companyService';
 import { createCompanyValidation, updateCompanyValidation } from '../validations/companyValidation';
+import { PrismaClient } from '@prisma/client';
 
 interface AuthRequest extends Request {
   user?: any;
 }
+const prisma = new PrismaClient();
 
 export class CompanyController {
   
@@ -73,9 +75,22 @@ export class CompanyController {
       const currentUser = req.user;
       const userId = currentUser?.id;
       const userRole = currentUser?.role;
+
+      const user = await prisma.user.findFirst({ where: { id: userId}});
+      let adminId: number | undefined;
+
+      if (user) {
+        if (userRole === 'OPERATOR') {
+          adminId = user.managedByAdminId ?? undefined;
+        }
+      }
       
-      // Crear la empresa
-      const company = await CompanyService.createCompany(req.body);
+      // Determinar el admin que gestionará la empresa
+      if (userRole === 'ADMIN') {
+        adminId = userId;
+      }
+      // Crear la empresa con el admin asignado
+      const company = await CompanyService.createCompany(req.body, adminId); // adminId is now of type number | undefined
       
       // Si el usuario es operador, asignarlo automáticamente a la empresa creada
       if (userRole === 'OPERATOR' && userId) {

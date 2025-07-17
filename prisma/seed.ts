@@ -175,7 +175,8 @@ async function main() {
         email: 'admin@techcorp.mx',
         phone: '55-1234-5678',
         status: 'ACTIVE',
-        employeesCount: 45
+        employeesCount: 45,
+        managedByAdminId: adminUser.id // Vincular al admin
       },
       create: {
         name: 'TechCorp México',
@@ -185,7 +186,8 @@ async function main() {
         email: 'admin@techcorp.mx',
         phone: '55-1234-5678',
         status: 'ACTIVE',
-        employeesCount: 45
+        employeesCount: 45,
+        managedByAdminId: adminUser.id // Vincular al admin
       }
     }),
     prisma.company.upsert({
@@ -197,7 +199,8 @@ async function main() {
         email: 'contacto@retailsolutions.mx',
         phone: '55-9876-5432',
         status: 'CONFIGURED',
-        employeesCount: 120
+        employeesCount: 120,
+        managedByAdminId: adminUser.id // Vincular al admin
       },
       create: {
         name: 'Retail Solutions SA',
@@ -207,7 +210,8 @@ async function main() {
         email: 'contacto@retailsolutions.mx',
         phone: '55-9876-5432',
         status: 'CONFIGURED',
-        employeesCount: 120
+        employeesCount: 120,
+        managedByAdminId: adminUser.id // Vincular al admin
       }
     }),
     // Agregar Empresa Demo con RFC EDE2401010A1
@@ -220,7 +224,8 @@ async function main() {
         email: 'contacto@empresademo.com',
         phone: '5551234567',
         status: 'CONFIGURED',
-        employeesCount: 10
+        employeesCount: 10,
+        managedByAdminId: adminUser.id // Vincular al admin
       },
       create: {
         name: 'Empresa Demo S.A. de C.V.',
@@ -230,7 +235,8 @@ async function main() {
         email: 'contacto@empresademo.com',
         phone: '5551234567',
         status: 'CONFIGURED',
-        employeesCount: 10
+        employeesCount: 10,
+        managedByAdminId: adminUser.id // Vincular al admin
       }
     })
   ]);

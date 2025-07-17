@@ -31,6 +31,9 @@ model User {
   managedByAdmin   User?          @relation("AdminOperators", fields: [managedByAdminId], references: [id])
   managedOperators User[]         @relation("AdminOperators")
   
+  // Relación para empresas gestionadas por este admin
+  managedCompanies Company[]      @relation("AdminCompanies")
+  
   // Relaciones para OperatorCompany
   operatorCompanies OperatorCompany[] @relation("OperatorCompanies")
   assignedOperatorCompanies OperatorCompany[] @relation("AssignedOperatorCompanies")
@@ -785,6 +788,10 @@ model Company {
   phone          String?
   status         CompanyStatus @default(IN_SETUP)
   employeesCount Int           @default(0)
+
+  // Relación con el admin que gestiona esta empresa
+  managedByAdminId Int?
+  managedByAdmin   User?         @relation("AdminCompanies", fields: [managedByAdminId], references: [id])
 
   // Relaciones
   operatorCompanies OperatorCompany[] @relation("CompanyOperators")

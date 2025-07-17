@@ -43,7 +43,7 @@ router.get('/:companyId/payrolls', authenticate, async (req, res, next) => {
   }
 });
 // Solo operadores pueden crear, actualizar y eliminar empresas
-router.post('/', authorize(['OPERATOR', 'ADMIN']), async (req, res, next) => {
+router.post('/', authorize(['OPERATOR', 'ADMIN', 'CLIENT']), async (req, res, next) => {
   try {
     await CompanyController.createCompany(req, res);
   } catch (err) {

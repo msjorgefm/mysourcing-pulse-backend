@@ -144,7 +144,7 @@ export class CompanyService {
     };
   }
   
-  static async createCompany(data: CreateCompanyRequest) {
+  static async createCompany(data: CreateCompanyRequest, adminId?: number) {
     // Si el RFC es temporal o está pendiente, generar uno único
     let finalRfc = data.rfc;
     if (!data.rfc || data.rfc === 'PENDIENTE123' || data.rfc.startsWith('PENDIENTE')) {
@@ -184,6 +184,7 @@ export class CompanyService {
           phone: data.phone,
           status: 'IN_SETUP', // Siempre crear con estado "en configuración"
           employeesCount: 0,
+          managedByAdminId: adminId, // Asignar el admin que gestiona esta empresa
           // Crear el checklist vacío por defecto
           documentChecklist: {
             create: {}
@@ -235,7 +236,8 @@ export class CompanyService {
       employeesCount: 0,
       documentChecklist: result.company.documentChecklist,
       createdAt: result.company.createdAt,
-      updatedAt: result.company.updatedAt
+      updatedAt: result.company.updatedAt,
+      managedByAdminId: result.company.managedByAdminId
     };
   }
   
@@ -645,8 +647,11 @@ export class CompanyService {
   }
   
   static async getCompaniesManagedByAdmin(adminId: number) {
-    // Para administradores: obtener TODAS las empresas
+    // Para administradores: obtener empresas que gestiona directamente
     const companies = await prisma.company.findMany({
+      where: {
+        managedByAdminId: adminId
+      },
       include: {
         workerDetails: {
           select: { id: true }
