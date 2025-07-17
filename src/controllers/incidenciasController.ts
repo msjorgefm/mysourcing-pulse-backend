@@ -165,9 +165,9 @@ export class IncidenciasController {
           // if (inc.payrollCalendarId) {
           //   incidenceData.payrollCalendarId = parseInt(inc.payrollCalendarId);
           // }
-          // if (inc.periodId) {
-          //   incidenceData.periodId = inc.periodId;
-          // }
+          if (inc.periodId) {
+            incidenceData.periodId = inc.periodId;
+          }
           
           incidenciasToCreate.push(incidenceData);
         }
@@ -827,6 +827,7 @@ export class IncidenciasController {
   // Descargar plantilla de incidencias
   static async downloadTemplate(req: AuthRequest, res: Response) {
     try {
+      console.log('=== DOWNLOAD TEMPLATE START ===');
       const { companyId } = req.params;
       const { format = 'xlsx' } = req.query; // xlsx o csv
       const user = req.user;
@@ -903,24 +904,63 @@ export class IncidenciasController {
         ]
       });
       
-      // Preparar datos para la plantilla
-      const headers = [
+      // Obtener la plantilla configurada para esta empresa
+      let templateConfig = null;
+      let customIncidenceTypes: any[] = [];
+      
+      try {
+        templateConfig = await (prisma as any).companyIncidenceTemplate.findUnique({
+          where: { companyId: parseInt(companyId) }
+        });
+        
+        // Obtener los tipos de incidencia configurados para esta empresa
+        customIncidenceTypes = await (prisma as any).companyIncidenceType.findMany({
+          where: {
+            companyId: parseInt(companyId),
+            activo: true
+          },
+          orderBy: [
+            { tipo: 'asc' },
+            { codigo: 'asc' }
+          ]
+        });
+      } catch (error) {
+        console.log('Error fetching custom incidence types:', error);
+        console.log('Using default incidence types for now');
+      }
+      
+      // Preparar headers basándose en la configuración
+      let headers = [
         'ID_EMPLEADO',
         'NOMBRE', 
         'DEPARTAMENTO',
         'PUESTO',
-        'FECHA',
-        'FALTAS',
-        'RETARDOS',
-        'PERMISOS',
-        'VACACIONES',
-        'INCAPACIDADES',
-        'T.EXTRA',
-        'BONO',
-        'INCENTIVOS',
-        'PRIMA_DOMINICAL',
-        'OTROS'
+        'FECHA'
       ];
+      
+      // Si hay tipos personalizados configurados, usarlos
+      if (customIncidenceTypes && customIncidenceTypes.length > 0) {
+        console.log(`Using custom incidence types for company ${companyId}:`, customIncidenceTypes.map((t: any) => t.codigo));
+        // Agregar los tipos de incidencia configurados como columnas
+        customIncidenceTypes.forEach((type: any) => {
+          headers.push(type.codigo);
+        });
+      } else {
+        console.log(`No custom incidence types found for company ${companyId}, using default headers`);
+        // Usar los headers por defecto si no hay configuración
+        headers = headers.concat([
+          'FALTAS',
+          'RETARDOS',
+          'PERMISOS',
+          'VACACIONES',
+          'INCAPACIDADES',
+          'T.EXTRA',
+          'BONO',
+          'INCENTIVOS',
+          'PRIMA_DOMINICAL',
+          'OTROS'
+        ]);
+      }
       
       // Generar buffer según formato
       let buffer;
@@ -945,18 +985,15 @@ export class IncidenciasController {
             `"${emp.nombres}"`, // Envolver en comillas para manejar nombres con comas
             `"${emp.contractConditions?.departamento?.nombre || ''}"`,
             `"${emp.contractConditions?.puesto?.nombre || ''}"`,
-            `"${formattedDate}"`, // Fecha en formato DD/MM/YYYY entre comillas
-            '', // FALTAS
-            '', // RETARDOS
-            '', // PERMISOS
-            '', // VACACIONES
-            '', // INCAPACIDADES
-            '', // T.EXTRA
-            '', // BONO
-            '', // INCENTIVOS
-            '', // PRIMA_DOMINICAL
-            ''  // OTROS
+            `"${formattedDate}"` // Fecha en formato DD/MM/YYYY entre comillas
           ];
+          
+          // Agregar columnas vacías para cada tipo de incidencia
+          const incidenceColumnCount = headers.length - 5; // Restar las 5 columnas fijas
+          for (let i = 0; i < incidenceColumnCount; i++) {
+            row.push('');
+          }
+          
           csvRows.push(row.join(','));
         });
         
@@ -998,17 +1035,15 @@ export class IncidenciasController {
               <td>${emp.nombres}</td>
               <td>${emp.contractConditions?.departamento?.nombre || ''}</td>
               <td>${emp.contractConditions?.puesto?.nombre || ''}</td>
-              <td style="mso-number-format:'@'">${formattedDate}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td style="mso-number-format:'@'">${formattedDate}</td>`;
+          
+          // Agregar celdas vacías para cada tipo de incidencia
+          const incidenceColumnCount = headers.length - 5; // Restar las 5 columnas fijas
+          for (let i = 0; i < incidenceColumnCount; i++) {
+            htmlContent += `<td></td>`;
+          }
+          
+          htmlContent += `
             </tr>
           `;
         });
