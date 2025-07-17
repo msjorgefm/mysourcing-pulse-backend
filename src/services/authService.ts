@@ -199,13 +199,13 @@ export class AuthService {
     }
     
     // Hash de la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
     
     // Actualizar usuario
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
-        email: username, // Actualizamos el email con el username elegido
+        username: username, // Actualizamos el email con el username elegido
         password: hashedPassword,
         isActive: true,
         setupToken: null,

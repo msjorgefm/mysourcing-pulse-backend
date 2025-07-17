@@ -66,7 +66,7 @@ class EmailService {
       console.log('📧 Puerto:', config.smtp.port);
       
       // Guardar email localmente siempre
-      this.saveEmailLocally(options);
+      //this.saveEmailLocally(options);
       
       // Modo desarrollo sin transporter o si es Mailtrap con límite alcanzado
       if (!this.transporter || config.smtp.host === 'localhost') {
@@ -750,6 +750,308 @@ class EmailService {
       </html>
     `;
 
+    return await this.sendEmail({
+      to: email,
+      subject,
+      html,
+    });
+  }
+
+  async sendAdminInvitationEmail(email: string, setupToken: string): Promise<boolean> {
+    const subject = `Invitación para Administrador - MySourcing Pulse`;
+    const invitationLink = `${config.frontend.url}/setup-account?token=${setupToken}`;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invitación Administrador MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #DC2626;
+            margin: 0;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #DC2626;
+            color: white;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+          }
+          .button:hover {
+            background-color: #B91C1C;
+          }
+          .admin-info {
+            background-color: #FEE2E2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #DC2626;
+          }
+          .admin-info h3 {
+            color: #DC2626;
+            margin-top: 0;
+          }
+          .responsibilities {
+            background-color: #F3F4F6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+          }
+          .responsibilities ul {
+            margin: 10px 0;
+            padding-left: 20px;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+          }
+          .warning {
+            background-color: #FEF3C7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #F59E0B;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina - Administrador</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Bienvenido al Equipo de Administración!</h2>
+            
+            <p>Hola,</p>
+            
+            <p>Has sido invitado a formar parte del equipo de administración de <strong>MySourcing Pulse</strong>.</p>
+            
+            <div class="admin-info">
+              <h3>⚡ Rol: Administrador del Sistema</h3>
+              <p>Como administrador, tendrás acceso completo para gestionar todos los aspectos del sistema.</p>
+            </div>
+            
+            <div class="responsibilities">
+              <h3>Tus responsabilidades incluirán:</h3>
+              <ul>
+                <li>Gestionar operadores y sus permisos</li>
+                <li>Supervisar todas las empresas registradas en el sistema</li>
+                <li>Ver y administrar todos los empleados y clientes</li>
+                <li>Acceder a reportes globales del sistema</li>
+                <li>Configurar parámetros generales del sistema</li>
+                <li>Invitar a nuevos administradores</li>
+              </ul>
+            </div>
+            
+            <p>Para completar la configuración de tu cuenta de administrador, haz clic en el siguiente enlace:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Configurar Cuenta de Administrador</a>
+            </div>
+            
+            <h3>Pasos para activar tu cuenta:</h3>
+            <ol>
+              <li>Haz clic en el enlace de arriba</li>
+              <li>Crea tu nombre de usuario único</li>
+              <li>Establece una contraseña segura (mínimo 8 caracteres)</li>
+              <li>Confirma tu contraseña</li>
+              <li>¡Listo! Podrás acceder al panel de administración</li>
+            </ol>
+            
+            <div class="warning">
+              <strong>⚠️ Importante:</strong> Este enlace es válido por 24 horas. Si expira, deberás solicitar uno nuevo a otro administrador del sistema.
+            </div>
+            
+            <p><strong>Nota de seguridad:</strong> Como administrador, tendrás acceso a información sensible. Por favor, asegúrate de:</p>
+            <ul>
+              <li>Usar una contraseña fuerte y única</li>
+              <li>No compartir tus credenciales con nadie</li>
+              <li>Cerrar sesión cuando no estés usando el sistema</li>
+            </ul>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>Si no solicitaste este acceso, ignora este correo y contacta al equipo de soporte.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return await this.sendEmail({
+      to: email,
+      subject,
+      html,
+    });
+  }
+  
+  async sendOperatorInvitationEmail(
+    email: string,
+    firstName: string,
+    lastName: string,
+    invitationLink: string
+  ): Promise<boolean> {
+    const subject = 'Invitación para ser Operador en MySourcing Pulse';
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invitación MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+          }
+          .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            margin: 20px 0;
+          }
+          .button:hover {
+            background-color: #1d4ed8;
+          }
+          .highlight {
+            background-color: #e0e7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2563eb;
+          }
+          .footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+          }
+          ul {
+            padding-left: 20px;
+          }
+          li {
+            margin-bottom: 10px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina Inteligente</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Hola ${firstName} ${lastName}!</h2>
+            
+            <p>Has sido invitado para ser <strong>Operador</strong> en MySourcing Pulse.</p>
+            
+            <p>Como operador, tendrás acceso a:</p>
+            <ul>
+              <li>Gestión de empresas asignadas</li>
+              <li>Administración de empleados</li>
+              <li>Control de nóminas</li>
+              <li>Generación de reportes</li>
+              <li>Seguimiento de incidencias</li>
+            </ul>
+            
+            <div class="highlight">
+              <strong>Información importante:</strong>
+              <p>Esta invitación es válida por 7 días. Por favor, configura tu cuenta lo antes posible.</p>
+            </div>
+            
+            <p>Para configurar tu cuenta y establecer tu contraseña, haz clic en el siguiente botón:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Configurar mi cuenta</a>
+            </div>
+            
+            <p>O copia y pega este enlace en tu navegador:</p>
+            <p style="word-break: break-all; background-color: #f3f4f6; padding: 10px; border-radius: 5px;">
+              ${invitationLink}
+            </p>
+            
+            <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactar al administrador del sistema.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
     return await this.sendEmail({
       to: email,
       subject,

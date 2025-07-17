@@ -321,4 +321,35 @@ export class InvitationService {
       throw new Error('Error al enviar la invitación adicional');
     }
   }
+  
+  static async sendOperatorInvitation(email: string, firstName: string, lastName: string, token: string): Promise<boolean> {
+    try {
+      // Generar enlace de invitación
+      const invitationLink = `${config.frontend.url}/setup-account?token=${token}&role=operator`;
+      
+      // Enviar correo de invitación
+      const emailSent = await emailService.sendOperatorInvitationEmail(
+        email,
+        firstName,
+        lastName,
+        invitationLink
+      );
+      
+      if (emailSent) {
+        console.log(`✅ Operator invitation sent to ${email}`);
+      }
+      
+      // En desarrollo, mostrar el link en consola
+      if (config.env === 'development') {
+        console.log('🔗 Link de invitación para operador (desarrollo):');
+        console.log(`   ${invitationLink}`);
+        console.log('   Token expira en: 7 días');
+      }
+      
+      return emailSent;
+    } catch (error) {
+      console.error('Error sending operator invitation:', error);
+      throw error;
+    }
+  }
 }

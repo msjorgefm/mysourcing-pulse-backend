@@ -56,7 +56,7 @@ export const getOrganizationalData = async (empresaId: number) => {
       include: {
         contractConditions: {
           include: {
-            departmento: true,
+            departamento: true,
             puesto: true
           }
         },
@@ -99,7 +99,7 @@ export const getVinculacionesByCompany = async (companyId: number) => {
         include: {
           contractConditions: {
             include: {
-              departmento: true,
+              departamento: true,
               puesto: true
             }
           },
@@ -532,7 +532,7 @@ export const getEmpleadosACargo = async (vinculacionJefeId: number) => {
           nombres: true,
           apellidoPaterno: true,
           apellidoMaterno: true
-        }, include: { contractConditions: { include: { departmento: true, puesto: true } } }
+        }, include: { contractConditions: { include: { departamento: true, puesto: true } } }
       }
     }
   });

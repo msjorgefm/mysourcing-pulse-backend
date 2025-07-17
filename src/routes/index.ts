@@ -14,6 +14,7 @@ import payrollRoutes from './payrolls';
 import notificationRoutes from './notifications';
 import uploadRoutes from './upload';
 import catalogRoutes from './catalogs';
+import adminRoutes from './admin';
 import { authenticate } from '../middleware/auth';
 
 const router = Router();
@@ -31,6 +32,7 @@ router.get('/health', (req, res) => {
 router.use(authenticate);
 
 // Rutas principales
+router.use('/admin', adminRoutes);
 router.use('/companies', companyRoutes);
 router.use('/companies', companyDocumentRoutes);
 router.use('/workers', workerDetailsRoutes);

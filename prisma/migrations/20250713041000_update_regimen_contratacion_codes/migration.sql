@@ -61,8 +61,6 @@ ALTER TABLE "payroll_items" DROP COLUMN IF EXISTS "employeeId";
 
 -- Step 10: Drop columns from users table
 ALTER TABLE "users" DROP COLUMN IF EXISTS "employeeId";
-ALTER TABLE "users" DROP COLUMN IF EXISTS "firstName";
-ALTER TABLE "users" DROP COLUMN IF EXISTS "lastName";
 ALTER TABLE "users" DROP COLUMN IF EXISTS "name";
 
 -- Step 11: Drop employees table
