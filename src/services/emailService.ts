@@ -758,5 +758,20 @@ class EmailService {
   }
 }
 
-export const emailService = new EmailService();
-export const sendEmail = (options: EmailOptions) => emailService.sendEmail(options);
+// Usar el servicio básico por defecto
+const basicEmailService = new EmailService();
+
+// Intentar cargar el servicio mejorado si está disponible
+let emailService: any = basicEmailService;
+let sendEmail: any = (options: EmailOptions) => basicEmailService.sendEmail(options);
+
+try {
+  const enhanced = require('./emailServiceEnhanced');
+  emailService = enhanced.emailServiceEnhanced;
+  sendEmail = enhanced.sendEmailEnhanced;
+  console.log('✅ Servicio de email mejorado con IMAP activado');
+} catch (error) {
+  console.log('⚠️  Usando servicio de email básico (sin IMAP)');
+}
+
+export { emailService, sendEmail };

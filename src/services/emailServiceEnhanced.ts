@@ -13,6 +13,8 @@ interface EmailOptions {
 class EmailServiceEnhanced {
   private transporter: nodemailer.Transporter;
   private imapClient: ImapFlow | null = null;
+  private imapConfig: any = null;
+  private sentFolder: string | null = null;
 
   constructor() {
     // Modo desarrollo: simular envío de emails
@@ -86,11 +88,26 @@ class EmailServiceEnhanced {
       
       if (sentFolderExists) {
         console.log(`✅ Carpeta de enviados encontrada: ${sentFolderExists}`);
+        // Guardar la carpeta encontrada para usarla después
+        this.sentFolder = sentFolderExists;
       } else {
         console.log(`⚠️  No se encontró la carpeta de enviados: ${config.imap.sentFolder}`);
       }
       
+      // NO desconectar aquí - mantener la conexión para reutilizarla
       await this.imapClient.logout();
+      
+      // En lugar de mantener la conexión abierta, la abriremos cuando sea necesario
+      this.imapConfig = {
+        host: config.imap.host,
+        port: config.imap.port,
+        secure: config.imap.secure,
+        auth: {
+          user: config.imap.user,
+          pass: config.imap.pass,
+        },
+        logger: false
+      };
     } catch (error) {
       console.error('❌ Error configurando IMAP:', error);
       console.log('⚠️  Los correos se enviarán pero no se guardarán en la carpeta de enviados');
@@ -172,8 +189,16 @@ class EmailServiceEnhanced {
         }
         
         // Guardar en carpeta IMAP de enviados si está habilitado
-        if (config.imap.enabled && this.imapClient && !isMailtrap) {
+        console.log('🔍 Verificando guardado IMAP:');
+        console.log('   - IMAP habilitado:', config.imap.enabled);
+        console.log('   - Configuración IMAP existe:', !!this.imapConfig);
+        console.log('   - No es Mailtrap:', !isMailtrap);
+        
+        if (config.imap.enabled && this.imapConfig && !isMailtrap) {
+          console.log('📤 Intentando guardar en carpeta IMAP...');
           await this.saveToImapSentFolder(mailOptions, info.messageId);
+        } else if (config.imap.enabled && !this.imapConfig) {
+          console.log('⚠️  IMAP está habilitado pero no está configurado');
         }
         
         return true;
@@ -199,11 +224,39 @@ class EmailServiceEnhanced {
   }
 
   private async saveToImapSentFolder(mailOptions: any, messageId: string): Promise<void> {
-    if (!this.imapClient) return;
+    if (!this.imapConfig) {
+      console.log('⚠️  No hay configuración IMAP disponible');
+      return;
+    }
 
+    let client: ImapFlow | null = null;
+    
     try {
-      await this.imapClient.connect();
+      // Crear una nueva conexión IMAP para guardar el email
+      client = new ImapFlow(this.imapConfig);
+      await client.connect();
+      console.log('📮 Conectado a IMAP para guardar email');
       
+      // Función para codificar en quoted-printable
+      const encodeQuotedPrintable = (str: string): string => {
+        return str
+          .replace(/=/g, '=3D')
+          .replace(/\r\n|\r|\n/g, '\r\n')
+          .split('\r\n')
+          .map(line => {
+            // Si la línea es muy larga, dividirla
+            if (line.length > 76) {
+              const parts = [];
+              for (let i = 0; i < line.length; i += 75) {
+                parts.push(line.substr(i, 75));
+              }
+              return parts.join('=\r\n');
+            }
+            return line;
+          })
+          .join('\r\n');
+      };
+
       // Construir el mensaje en formato RFC822
       const messageDate = new Date().toUTCString();
       const message = [
@@ -219,37 +272,46 @@ class EmailServiceEnhanced {
         `Content-Type: text/plain; charset=utf-8`,
         `Content-Transfer-Encoding: quoted-printable`,
         ``,
-        mailOptions.text || '',
+        encodeQuotedPrintable(mailOptions.text || ''),
         ``,
         `------=_Part_0_1`,
         `Content-Type: text/html; charset=utf-8`,
         `Content-Transfer-Encoding: quoted-printable`,
         ``,
-        mailOptions.html,
+        encodeQuotedPrintable(mailOptions.html),
         ``,
         `------=_Part_0_1--`
       ].join('\r\n');
 
-      // Buscar la carpeta de enviados
-      const mailboxes = await this.imapClient.list();
-      const sentFolder = this.findSentFolder(mailboxes);
+      // Usar la carpeta de enviados que ya encontramos o buscarla de nuevo
+      const sentFolder = this.sentFolder || config.imap.sentFolder;
       
       if (sentFolder) {
         // Abrir la carpeta de enviados
-        await this.imapClient.mailboxOpen(sentFolder);
+        await client.mailboxOpen(sentFolder);
         
         // Agregar el mensaje a la carpeta
-        await this.imapClient.append(sentFolder, message, ['\\Seen']);
+        await client.append(sentFolder, message, ['\\Seen']);
         
         console.log(`✅ Email guardado en carpeta IMAP: ${sentFolder}`);
       } else {
         console.log('⚠️  No se pudo guardar en IMAP: carpeta de enviados no encontrada');
       }
       
-      await this.imapClient.logout();
+      await client.logout();
+      console.log('📮 Desconectado de IMAP');
     } catch (error) {
       console.error('⚠️  Error guardando en IMAP:', error);
       // No fallar el envío si no se puede guardar en IMAP
+    } finally {
+      // Asegurarse de cerrar la conexión si está abierta
+      if (client && client.usable) {
+        try {
+          await client.logout();
+        } catch (err) {
+          console.error('Error cerrando conexión IMAP:', err);
+        }
+      }
     }
   }
   
