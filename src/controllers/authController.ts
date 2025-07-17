@@ -1,6 +1,14 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/authService';
 import { loginValidation, registerValidation } from '../validations/authValidation';
+import { PrismaClient, UserRole } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import { InvitationService } from '../services/invitationService';
+import { UserService } from '../services/userService';
+import { emailService } from '../services/emailService';
+
+const prisma = new PrismaClient();
 
 export class AuthController {
   
@@ -109,14 +117,13 @@ export class AuthController {
       if (!token) {
         return res.status(400).json({ success: false, error: 'Token requerido' });
       }
-      
+
+      let user;
       // Primero intentar con el setupToken de User
       try {
-        const user = await AuthService.validateSetupToken(token);
+        user = await AuthService.validateSetupToken(token);
         
         // Si el usuario tiene workerDetails, obtener información adicional
-        const { PrismaClient } = await import('@prisma/client');
-        const prisma = new PrismaClient();
         
         const userWithDetails = await prisma.user.findUnique({
           where: { id: user.id },
@@ -125,7 +132,6 @@ export class AuthController {
             company: true
           }
         });
-        
         const responseData: any = {
           email: user.email,
           company: userWithDetails?.company,
@@ -133,13 +139,19 @@ export class AuthController {
             role: user.role
           }
         };
-        
         // Si es un empleado o jefe de departamento, incluir su información
         if (userWithDetails?.workerDetails && (user.role === 'EMPLOYEE' || user.role === 'DEPARTMENT_HEAD')) {
           responseData.metadata.name = `${userWithDetails.workerDetails.nombres} ${userWithDetails.workerDetails.apellidoPaterno} ${userWithDetails.workerDetails.apellidoMaterno || ''}`.trim();
         }
-        
-        res.json(responseData);
+        res.json({
+          success: true,
+          message: 'Token válido',
+          data: {
+            email: responseData.email,
+            company: responseData.company || '',
+            metadata: responseData.metadata           
+           }
+          });
         return;
       } catch (userTokenError) {
         // Si no se encuentra en User, buscar en InvitationToken
@@ -147,16 +159,32 @@ export class AuthController {
       }
       
       // Buscar en InvitationToken
-      const { InvitationService } = await import('../services/invitationService');
       const invitationDetails = await InvitationService.getInvitationDetails(token);
-      
+
       if (invitationDetails) {
+        // Si no hay metadata, buscar el usuario por email y companyId para obtener su rol
+        let metadata = invitationDetails.metadata;
+        
+        if (!metadata) {
+          const user = await prisma.user.findFirst({
+            where: {
+              email: invitationDetails.email,
+              companyId: invitationDetails.company.id
+            }
+          });
+          
+          if (user) {
+            metadata = { role: user.role };
+          }
+        }
+        
         res.json({
           success: true,
           message: 'Token válido',
           data: {
             email: invitationDetails.email,
-            name: invitationDetails.company.name
+            company: invitationDetails.company.name,
+            metadata: metadata
           }
         });
       } else {
@@ -170,7 +198,7 @@ export class AuthController {
   
   static async completeAccountSetup(req: Request, res: Response) {
     try {
-      const { token, username, password, confirmPassword } = req.body;
+      const { token, username, password, confirmPassword, firstName, lastName, phone } = req.body;
       
       // Validaciones básicas
       if (!token || !username || !password || !confirmPassword) {
@@ -185,24 +213,63 @@ export class AuthController {
         return res.status(400).json({ success: false, error: 'La contraseña debe tener al menos 8 caracteres' });
       }
       
-      // Primero intentar con el setupToken de User
+      // Primero intentar con el setupToken de User (para ADMIN y vinculaciones de jefe)
       try {
-        const result = await AuthService.completeAccountSetup(token, username, password);
-        res.json({
-          success: true,
-          message: 'Cuenta configurada exitosamente',
-          data: result
-        });
-        return;
+        const user = await AuthService.validateSetupToken(token);
+        
+        // Si es un ADMIN, necesitamos actualizar también los datos personales
+        if (user.role === 'ADMIN') {
+          // Para ADMIN, firstName y lastName son requeridos
+          if (!firstName || !lastName) {
+            return res.status(400).json({ 
+              success: false, 
+              error: 'Nombre y apellido son requeridos para administradores' 
+            });
+          }
+          
+          const hashedPassword = await bcrypt.hash(password, 12);
+          
+          // Actualizar el usuario ADMIN con todos los datos (excepto email que ya está configurado)
+          const updatedUser = await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              password: hashedPassword,
+              username:  username,
+              firstName: firstName,
+              lastName: lastName,
+              phone: phone || null,
+              isActive: true,
+              setupToken: null,
+              setupTokenExpiry: null,
+              lastLoginAt: new Date()
+            }
+          });
+          
+          // Generar tokens usando el email existente del usuario
+          const result = await AuthService.login({ email: user.email, password });
+          
+          res.json({
+            success: true,
+            message: 'Cuenta de administrador configurada exitosamente',
+            data: result
+          });
+          return;
+        } else {
+          // Para otros casos con setupToken (vinculaciones de jefe, etc.)
+          const result = await AuthService.completeAccountSetup(token, username, password);
+          res.json({
+            success: true,
+            message: 'Cuenta configurada exitosamente',
+            data: result
+          });
+          return;
+        }
       } catch (userTokenError) {
         // Si no se encuentra en User, manejar con InvitationToken
         console.log('Token no encontrado en User, procesando como InvitationToken...');
       }
       
-      // Manejar InvitationToken (para empresas nuevas)
-      const { InvitationService } = await import('../services/invitationService');
-      const { UserService } = await import('../services/userService');
-      const bcrypt = await import('bcrypt');
+      // Manejar InvitationToken (para empresas nuevas, empleados, etc.)
       
       // Validar token de invitación
       const invitationDetails = await InvitationService.getInvitationDetails(token);
@@ -210,26 +277,94 @@ export class AuthController {
         throw new Error('Token inválido o expirado');
       }
       
-      // Verificar que no exista un usuario con ese email
-      const existingUser = await UserService.getUserByEmail(username);
-      if (existingUser) {
-        throw new Error('El nombre de usuario ya está en uso');
+      // Obtener detalles completos de la invitación para verificar metadata
+      const fullInvitationDetails = await InvitationService.getFullInvitationDetails(token);
+      const metadata = (fullInvitationDetails as any)?.metadata;
+
+      // Determinar el rol basado en la metadata
+      let userRole: UserRole = UserRole.CLIENT; // Rol por defecto
+      if (metadata?.role === 'DEPARTMENT_HEAD') {
+        userRole = UserRole.DEPARTMENT_HEAD;
+      } else if (metadata?.role === 'EMPLOYEE') {
+        userRole = UserRole.EMPLOYEE;
       }
       
-      // Crear el usuario
+      let newUser: any;
       const hashedPassword = await bcrypt.hash(password, 10);
-      const { PrismaClient } = await import('@prisma/client');
-      const prisma = new PrismaClient();
       
-      const newUser = await prisma.user.create({
-        data: {
-          email: username,
-          password: hashedPassword,
-          username: invitationDetails.company.name,
-          role: 'CLIENT',
-          companyId: invitationDetails.company.id
+      // Si es employee, buscar usuario existente por employeeId y actualizar
+      if (metadata?.role === 'EMPLOYEE' && metadata?.workerDetailsId) {
+        const existingEmployee = await UserService.getUserByEmployeeId(parseInt(metadata.workerDetailsId.toString()));
+        if (existingEmployee) {
+          // Verificar si el nuevo username ya está en uso por otro usuario
+          const usernameCheck = await UserService.getUserByEmail(username);
+          if (usernameCheck && usernameCheck.id !== existingEmployee.id) {
+            throw new Error('El nombre de usuario ya está en uso');
+          }
+          
+          // Actualizar usuario existente
+          newUser = await prisma.user.update({
+            where: { id: existingEmployee.id },
+            data: {
+              email: username,
+              password: hashedPassword,
+              isActive: true,
+              lastLoginAt: new Date()
+            }
+          });
+        } else {
+          // Si no existe el usuario del empleado, crearlo
+          newUser = await prisma.user.create({
+            data: {
+              email: username,
+              password: hashedPassword,
+              username: metadata.name || username,
+              role: userRole,
+              companyId: invitationDetails.company.id,
+              workerDetailsId: parseInt(metadata.workerDetailsId.toString()),
+              isActive: true
+            }
+          });
         }
-      });
+      } else {
+        // Para otros roles (CLIENT, DEPARTMENT_HEAD), verificar si el username ya existe
+        const existingUser = await UserService.getUserByEmail(username);
+        if (existingUser) {
+          throw new Error('El nombre de usuario ya está en uso');
+        }
+        
+        // Crear usuario con los datos apropiados
+        const userData: any = {
+          username: username,
+          firstName: firstName || null,
+          lastName: lastName || null,
+          password: hashedPassword,
+          role: userRole,
+          companyId: invitationDetails.company.id,
+          phone: phone || null,
+          isActive: true
+        };
+        
+        // Si es DEPARTMENT_HEAD y tiene workerDetailsId en metadata, asociarlo
+        if (userRole === UserRole.DEPARTMENT_HEAD && metadata?.workerDetailsId) {
+          userData.workerDetailsId = parseInt(metadata.workerDetailsId.toString());
+        }
+
+        if(invitationDetails){
+          const user = await prisma.user.findFirst({
+            where: {
+              email: invitationDetails.email,
+              companyId: invitationDetails.company.id
+            }
+          });
+          if (user) {
+            newUser = await prisma.user.update({where: { id: user.id }, data: userData });
+          }else{
+            newUser = await prisma.user.create({ data: userData });
+          }
+        }
+        
+      }
       
       // Marcar el token como usado
       await InvitationService.markTokenAsUsed(token);
@@ -245,6 +380,53 @@ export class AuthController {
     } catch (error: any) {
       console.error('Error completing account setup:', error);
       res.status(400).json({ success: false, error: error.message || 'Error al configurar la cuenta' });
+    }
+  }
+
+  static async createAdminInvitation(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ success: false, error: 'Email es requerido' });
+      }
+      
+      // Verificar que no exista un usuario con ese email
+      const existingUser = await UserService.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ success: false, error: 'Ya existe un usuario con este email' });
+      }
+      
+      // Crear token de setup para el nuevo admin
+      const setupToken = crypto.randomBytes(32).toString('hex');
+      const setupTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+      
+      // Crear usuario con role ADMIN y setupToken
+      const newUser = await prisma.user.create({
+        data: {
+          email,
+          password: '', // Se establecerá cuando el admin configure su cuenta
+          role: 'ADMIN',
+          setupToken,
+          setupTokenExpiry,
+          isActive: false // Se activará cuando complete el setup
+        }
+      });
+      
+      // Enviar email de invitación
+      await emailService.sendAdminInvitationEmail(email, setupToken);
+      
+      res.json({
+        success: true,
+        message: 'Invitación de administrador enviada exitosamente',
+        data: {
+          email,
+          setupLink: `${process.env.FRONTEND_URL}/setup-account?token=${setupToken}`
+        }
+      });
+    } catch (error: any) {
+      console.error('Error creating admin invitation:', error);
+      res.status(500).json({ success: false, error: error.message || 'Error al crear invitación de administrador' });
     }
   }
 }

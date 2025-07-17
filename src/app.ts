@@ -38,6 +38,7 @@ import vinculacionJefesRoutes from './routes/vinculacionJefes';
 import calendarRoutes from './routes/calendars';
 import companyIncidenceTypesRoutes from './routes/companyIncidenceTypes';
 import companyMappingsRoutes from './routes/companyMappings';
+import adminRoutes from './routes/admin';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -180,6 +181,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/vinculacion-jefes', vinculacionJefesRoutes);
 app.use('/api/company-incidence-types', companyIncidenceTypesRoutes);
 app.use('/api/company-mappings', companyMappingsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Rutas de prueba (solo en desarrollo)
 if (process.env.NODE_ENV === 'development') {

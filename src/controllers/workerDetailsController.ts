@@ -81,7 +81,7 @@ export const workerDetailsController = {
           contractConditions: {
             include: {
               area: true,
-              departmento: true,
+              departamento: true,
               puesto: true
             }
           }
@@ -118,7 +118,7 @@ export const workerDetailsController = {
           contractConditions: {
             include: {
               area: true,
-              departmento: true,
+              departamento: true,
               puesto: true
             }
           }
@@ -155,7 +155,7 @@ export const workerDetailsController = {
           contractConditions: {
             include: {
               area: true,
-              departmento: true,
+              departamento: true,
               puesto: true
             }
           },

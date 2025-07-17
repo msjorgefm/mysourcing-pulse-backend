@@ -59,4 +59,14 @@ router.post('/setup-account/complete', async (req, res, next) => {
   }
 });
 
+// Ruta para crear invitación de administrador
+// Nota: Esta ruta es pública para permitir la creación del primer administrador
+router.post('/admin/invite', async (req, res, next) => {
+  try {
+    await AuthController.createAdminInvitation(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

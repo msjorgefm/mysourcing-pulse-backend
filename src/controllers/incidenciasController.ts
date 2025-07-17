@@ -185,11 +185,11 @@ export class IncidenciasController {
           const departmentHead = await prisma.user.findUnique({
             where: { id: user.id },
             include: {
-              workerDetails: { include: { contractConditions: { include: { departmento: true } } }}
+              workerDetails: { include: { contractConditions: { include: { departamento: true } } }}
             }
           });
           
-          const departmentName = departmentHead?.workerDetails?.contractConditions?.departmento?.nombre || 'Departamento';
+          const departmentName = departmentHead?.workerDetails?.contractConditions?.departamento?.nombre || 'Departamento';
           
           // Crear notificación para usuarios con rol CLIENT de la empresa
           await prisma.notification.create({
@@ -292,7 +292,7 @@ export class IncidenciasController {
             include: {
               contractConditions: {
                 include: {
-                  departmento: {
+                  departamento: {
                     select: {
                       nombre: true
                     }
@@ -441,7 +441,7 @@ export class IncidenciasController {
             include: { 
               contractConditions: { 
                 include: { 
-                  departmento: true,
+                  departamento: true,
                   puesto: true
                 } 
               } 
@@ -722,7 +722,7 @@ export class IncidenciasController {
             include: { 
               contractConditions: { 
                 include: { 
-                  departmento: { 
+                  departamento: { 
                     select: { nombre: true } 
                   }, 
                   puesto: { 
@@ -794,7 +794,7 @@ export class IncidenciasController {
             include: { 
               contractConditions: { 
                 include: { 
-                  departmento: { 
+                  departamento: { 
                     select: { nombre: true } 
                   }, 
                   puesto: { 
@@ -873,13 +873,13 @@ export class IncidenciasController {
           where: { id: user.id },
           include: {
             workerDetails: {
-              include: { contractConditions: { include: { departmento: true, puesto: true } } }
+              include: { contractConditions: { include: { departamento: true, puesto: true } } }
             }
           }
         });
         
-        if (departmentHead?.workerDetails?.contractConditions?.departmento) {
-          whereClause.department = departmentHead.workerDetails?.contractConditions?.departmento.nombre;
+        if (departmentHead?.workerDetails?.contractConditions?.departamento) {
+          whereClause.department = departmentHead.workerDetails?.contractConditions?.departamento.nombre;
         }
       }
       
@@ -889,7 +889,7 @@ export class IncidenciasController {
         include: { 
           contractConditions: { 
             include: { 
-              departmento: { 
+              departamento: { 
                 select: { nombre: true } 
               }, 
               puesto: { 
@@ -899,7 +899,7 @@ export class IncidenciasController {
           } 
         },
         orderBy: [
-          { contractConditions: { departmento: { nombre: 'asc' }} },
+          { contractConditions: { departamento: { nombre: 'asc' }} },
           { numeroTrabajador: 'asc' }
         ]
       });
@@ -983,7 +983,7 @@ export class IncidenciasController {
           const row = [
             emp.numeroTrabajador,
             `"${emp.nombres}"`, // Envolver en comillas para manejar nombres con comas
-            `"${emp.contractConditions?.departmento?.nombre || ''}"`,
+            `"${emp.contractConditions?.departamento?.nombre || ''}"`,
             `"${emp.contractConditions?.puesto?.nombre || ''}"`,
             `"${formattedDate}"` // Fecha en formato DD/MM/YYYY entre comillas
           ];
@@ -1033,7 +1033,7 @@ export class IncidenciasController {
             <tr>
               <td>${emp.numeroTrabajador}</td>
               <td>${emp.nombres}</td>
-              <td>${emp.contractConditions?.departmento?.nombre || ''}</td>
+              <td>${emp.contractConditions?.departamento?.nombre || ''}</td>
               <td>${emp.contractConditions?.puesto?.nombre || ''}</td>
               <td style="mso-number-format:'@'">${formattedDate}</td>`;
           

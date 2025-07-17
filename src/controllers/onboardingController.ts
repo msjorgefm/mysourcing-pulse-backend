@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { InvitationService } from '../services/invitationService';
 import { UserService } from '../services/userService';
-import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 import { UserRole } from '@prisma/client';
 
