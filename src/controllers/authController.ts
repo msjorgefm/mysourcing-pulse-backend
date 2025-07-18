@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { InvitationService } from '../services/invitationService';
 import { UserService } from '../services/userService';
-import { emailService } from '../services/emailService';
+import { emailServiceEnhanced as emailService } from '../services/emailServiceEnhanced';
 
 const prisma = new PrismaClient();
 

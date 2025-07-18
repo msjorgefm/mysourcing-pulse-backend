@@ -1,4 +1,4 @@
-import { emailService } from '../services/emailService';
+import { emailServiceEnhanced as emailService } from '../services/emailServiceEnhanced';
 import { config } from '../config';
 
 async function testEmailService() {

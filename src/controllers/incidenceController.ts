@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
-// import { validateIncidence } from '../middleware/validation';
+import { validateIncidence } from '../middleware/validation';
 import { calculateIncidenceAmount } from '../utils/calculator';
 
 const prisma = new PrismaClient();

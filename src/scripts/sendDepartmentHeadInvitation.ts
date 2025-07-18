@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { emailService } from '../services/emailService';
+import { emailServiceEnhanced as emailService } from '../services/emailServiceEnhanced';
 import { config } from '../config';
 import jwt from 'jsonwebtoken';
 
