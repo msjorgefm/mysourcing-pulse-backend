@@ -95,7 +95,11 @@ export class InvitationService {
           select: {
             id: true,
             name: true,
-            rfc: true,
+            generalInfo: {
+              select: {
+                rfc: true
+              }
+            }
           },
         },
       },

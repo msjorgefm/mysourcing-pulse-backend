@@ -164,25 +164,26 @@ async function main() {
   
   console.log('✅ Usuario administrador creado');
 
-  // Crear o actualizar empresas
+  // Primero eliminar datos relacionados para evitar conflictos de clave foránea
+  await prisma.$transaction([
+    // Eliminar en orden inverso de dependencias
+    prisma.companyWizardStep.deleteMany({}),
+    prisma.companyWizardSection.deleteMany({}),
+    prisma.companyWizard.deleteMany({}),
+    prisma.calendar.deleteMany({}),
+    prisma.payrollCalendar.deleteMany({}),
+    prisma.companyDocument.deleteMany({}),
+    prisma.companyDocumentChecklist.deleteMany({}),
+    prisma.operatorCompany.deleteMany({}),
+    prisma.user.deleteMany({ where: { role: { not: 'ADMIN' } } }),
+    prisma.company.deleteMany({})
+  ]);
+  
+  // Crear empresas
   const companies = await Promise.all([
-    prisma.company.upsert({
-      where: { rfc: 'TCM850101A1B' },
-      update: {
+    prisma.company.create({
+      data: {
         name: 'TechCorp México',
-        legalName: 'Tecnología Corporativa de México SA de CV',
-        address: 'Av. Reforma 123, Col. Centro, CDMX',
-        email: 'admin@techcorp.mx',
-        phone: '55-1234-5678',
-        status: 'ACTIVE',
-        employeesCount: 45,
-        managedByAdminId: adminUser.id // Vincular al admin
-      },
-      create: {
-        name: 'TechCorp México',
-        rfc: 'TCM850101A1B',
-        legalName: 'Tecnología Corporativa de México SA de CV',
-        address: 'Av. Reforma 123, Col. Centro, CDMX',
         email: 'admin@techcorp.mx',
         phone: '55-1234-5678',
         status: 'ACTIVE',
@@ -190,23 +191,9 @@ async function main() {
         managedByAdminId: adminUser.id // Vincular al admin
       }
     }),
-    prisma.company.upsert({
-      where: { rfc: 'RSL900215C2D' },
-      update: {
+    prisma.company.create({
+      data: {
         name: 'Retail Solutions SA',
-        legalName: 'Retail Solutions Sociedad Anónima',
-        address: 'Blvd. Avila Camacho 456, Naucalpan, EdoMex',
-        email: 'contacto@retailsolutions.mx',
-        phone: '55-9876-5432',
-        status: 'CONFIGURED',
-        employeesCount: 120,
-        managedByAdminId: adminUser.id // Vincular al admin
-      },
-      create: {
-        name: 'Retail Solutions SA',
-        rfc: 'RSL900215C2D',
-        legalName: 'Retail Solutions Sociedad Anónima',
-        address: 'Blvd. Avila Camacho 456, Naucalpan, EdoMex',
         email: 'contacto@retailsolutions.mx',
         phone: '55-9876-5432',
         status: 'CONFIGURED',
@@ -215,23 +202,9 @@ async function main() {
       }
     }),
     // Agregar Empresa Demo con RFC EDE2401010A1
-    prisma.company.upsert({
-      where: { rfc: 'EDE2401010A1' },
-      update: {
+    prisma.company.create({
+      data: {
         name: 'Empresa Demo S.A. de C.V.',
-        legalName: 'Empresa Demostrativa Sociedad Anónima de Capital Variable',
-        address: 'Av. Reforma 123, Col. Centro, CDMX',
-        email: 'contacto@empresademo.com',
-        phone: '5551234567',
-        status: 'CONFIGURED',
-        employeesCount: 10,
-        managedByAdminId: adminUser.id // Vincular al admin
-      },
-      create: {
-        name: 'Empresa Demo S.A. de C.V.',
-        rfc: 'EDE2401010A1',
-        legalName: 'Empresa Demostrativa Sociedad Anónima de Capital Variable',
-        address: 'Av. Reforma 123, Col. Centro, CDMX',
         email: 'contacto@empresademo.com',
         phone: '5551234567',
         status: 'CONFIGURED',
@@ -564,9 +537,9 @@ async function main() {
       await prisma.companyGeneralInfo.upsert({
         where: { companyId: company.id },
         update: {
-          businessName: company.legalName,
+          businessName: 'xxxx',
           commercialName: company.name,
-          rfc: company.rfc,
+          rfc: 'xxxxxxxxxxxxx',
           taxRegime: '601',
           tipoPersona: 'MORAL',
           actividadEconomica: '54',
@@ -574,9 +547,9 @@ async function main() {
         },
         create: {
           companyId: company.id,
-          businessName: company.legalName,
+          businessName: 'xxxx',
           commercialName: company.name,
-          rfc: company.rfc,
+          rfc: 'xxxxxxxxxxxxx',
           taxRegime: '601',
           tipoPersona: 'MORAL',
           actividadEconomica: '54',

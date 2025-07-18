@@ -206,8 +206,12 @@ export class UserService {
         id: true,
         name: true,
         email: true,
-        rfc: true,
-        status: true
+        status: true,
+        generalInfo: {
+          select: {
+            rfc: true
+          }
+        }
       }
     });
   }
