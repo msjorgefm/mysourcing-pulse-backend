@@ -302,7 +302,7 @@ class EmailServiceEnhanced {
 
   // Métodos específicos para cada tipo de email (se mantienen igual)
   async sendInvitationEmail(email: string, companyName: string, invitationLink: string): Promise<boolean> {
-    const subject = `Invitación para configurar tu cuenta en MySourcing Pulse`;
+    const subject = `Invitación para configurar tu cuenta en Link`;
     
     const html = `
       <!DOCTYPE html>
@@ -310,7 +310,7 @@ class EmailServiceEnhanced {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Invitación MySourcing Pulse</title>
+        <title>Invitación Link</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -370,12 +370,12 @@ class EmailServiceEnhanced {
       <body>
         <div class="container">
           <div class="header">
-            <h1>MySourcing Pulse</h1>
+            <h1>Link</h1>
             <p>Sistema de Gestión de Nómina</p>
           </div>
           
           <div class="content">
-            <h2>¡Bienvenido a MySourcing Pulse!</h2>
+            <h2>¡Bienvenido a Link!</h2>
             
             <p>Hola,</p>
             
@@ -404,7 +404,7 @@ class EmailServiceEnhanced {
           
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+            <p>&copy; ${new Date().getFullYear()} Link. Todos los derechos reservados.</p>
           </div>
         </div>
       </body>
@@ -432,7 +432,7 @@ class EmailServiceEnhanced {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Invitación MySourcing Pulse</title>
+        <title>Invitación Link</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -499,7 +499,7 @@ class EmailServiceEnhanced {
       <body>
         <div class="container">
           <div class="header">
-            <h1>MySourcing Pulse</h1>
+            <h1>Link</h1>
             <p>Sistema de Gestión de Nómina</p>
           </div>
           
@@ -544,7 +544,7 @@ class EmailServiceEnhanced {
           
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+            <p>&copy; ${new Date().getFullYear()} Link. Todos los derechos reservados.</p>
           </div>
         </div>
       </body>
@@ -683,7 +683,7 @@ class EmailServiceEnhanced {
           
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+            <p>&copy; ${new Date().getFullYear()} Link. Todos los derechos reservados.</p>
           </div>
         </div>
       </body>
@@ -714,7 +714,7 @@ class EmailServiceEnhanced {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Designación como Jefe - MySourcing Pulse</title>
+        <title>Designación como Jefe - Link</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -792,7 +792,7 @@ class EmailServiceEnhanced {
       <body>
         <div class="container">
           <div class="header">
-            <h1>MySourcing Pulse</h1>
+            <h1>Link</h1>
             <p>Sistema de Gestión de Nómina</p>
           </div>
           
@@ -846,7 +846,7 @@ class EmailServiceEnhanced {
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
             <p>Si no solicitaste este acceso o crees que es un error, contacta inmediatamente al administrador.</p>
-            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+            <p>&copy; ${new Date().getFullYear()} Link. Todos los derechos reservados.</p>
           </div>
         </div>
       </body>
@@ -861,7 +861,7 @@ class EmailServiceEnhanced {
   }
 
   async sendAdminInvitationEmail(email: string, setupToken: string): Promise<boolean> {
-    const subject = `Invitación para Administrador - MySourcing Pulse`;
+    const subject = `Invitación para Administrador - Link`;
     const invitationLink = `${config.frontend.url}/setup-account?token=${setupToken}`;
     
     const html = `
@@ -870,7 +870,7 @@ class EmailServiceEnhanced {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Invitación Administrador MySourcing Pulse</title>
+        <title>Invitación Administrador Link</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -952,7 +952,7 @@ class EmailServiceEnhanced {
       <body>
         <div class="container">
           <div class="header">
-            <h1>MySourcing Pulse</h1>
+            <h1>Link</h1>
             <p>Sistema de Gestión de Nómina - Administrador</p>
           </div>
           
@@ -961,7 +961,7 @@ class EmailServiceEnhanced {
             
             <p>Hola,</p>
             
-            <p>Has sido invitado a formar parte del equipo de administración de <strong>MySourcing Pulse</strong>.</p>
+            <p>Has sido invitado a formar parte del equipo de administración de <strong>Link</strong>.</p>
             
             <div class="admin-info">
               <h3>⚡ Rol: Administrador del Sistema</h3>
@@ -1010,7 +1010,7 @@ class EmailServiceEnhanced {
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
             <p>Si no solicitaste este acceso, ignora este correo y contacta al equipo de soporte.</p>
-            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+            <p>&copy; ${new Date().getFullYear()} Link. Todos los derechos reservados.</p>
           </div>
         </div>
       </body>
@@ -1030,7 +1030,7 @@ class EmailServiceEnhanced {
     lastName: string,
     invitationLink: string
   ): Promise<boolean> {
-    const subject = 'Invitación para ser Operador en MySourcing Pulse';
+    const subject = 'Invitación para ser Operador en Link';
     
     const html = `
       <!DOCTYPE html>
@@ -1038,7 +1038,7 @@ class EmailServiceEnhanced {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Invitación MySourcing Pulse</title>
+        <title>Invitación Link</title>
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -1109,14 +1109,14 @@ class EmailServiceEnhanced {
       <body>
         <div class="container">
           <div class="header">
-            <h1>MySourcing Pulse</h1>
+            <h1>Link</h1>
             <p>Sistema de Gestión de Nómina Inteligente</p>
           </div>
           
           <div class="content">
             <h2>¡Hola ${firstName} ${lastName}!</h2>
             
-            <p>Has sido invitado para ser <strong>Operador</strong> en MySourcing Pulse.</p>
+            <p>Has sido invitado para ser <strong>Operador</strong> en Link.</p>
             
             <p>Como operador, tendrás acceso a:</p>
             <ul>
@@ -1148,7 +1148,7 @@ class EmailServiceEnhanced {
           
           <div class="footer">
             <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+            <p>&copy; ${new Date().getFullYear()} Link. Todos los derechos reservados.</p>
           </div>
         </div>
       </body>

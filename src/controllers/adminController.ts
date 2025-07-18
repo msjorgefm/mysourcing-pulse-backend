@@ -50,8 +50,6 @@ export class AdminController {
                 select: {
                   id: true,
                   name: true,
-                  rfc: true,
-                  legalName: true,
                   status: true,
                   employeesCount: true,
                   email: true,
@@ -62,7 +60,15 @@ export class AdminController {
                       users: true,
                       workerDetails: true
                     }
-                  }
+                  },
+                  // Incluir relaciones para obtener RFC y legalName
+                  generalInfo: {
+                    select: {
+                      rfc: true,
+                      businessName: true
+                    }
+                  },
+                  companyAddress: true
                 }
               }
             }
@@ -82,11 +88,16 @@ export class AdminController {
         isActive: operator.isActive,
         lastLogin: operator.lastLoginAt,
         companiesCount: operator.operatorCompanies.length,
-        companies: operator.operatorCompanies.map(oc => ({
+        companies: operator.operatorCompanies.map((oc: any) => ({
           ...oc.company,
           assignedAt: oc.assignedAt,
           clientsCount: oc.company._count.users,
-          workersCount: oc.company._count.workerDetails
+          workersCount: oc.company._count.workerDetails,
+          rfc: oc.company.generalInfo?.rfc || null,
+          legalName: oc.company.generalInfo?.businessName || null,
+          address: oc.company.companyAddress ? 
+            `${oc.company.companyAddress.street} ${oc.company.companyAddress.exteriorNumber}, ${oc.company.companyAddress.neighborhood}, ${oc.company.companyAddress.city}` : 
+            null
         }))
       }));
 
@@ -225,8 +236,8 @@ export class AdminController {
       const response = {
         id: company.id,
         name: company.name,
-        rfc: company.rfc,
-        legalName: company.legalName,
+        rfc: company.generalInfo?.rfc || null,
+        legalName: company.generalInfo?.businessName || null,
         status: company.status,
         operator: {
           id: companyOperator.operator.id,
@@ -234,7 +245,10 @@ export class AdminController {
           fullName: `${companyOperator.operator.firstName || ''} ${companyOperator.operator.lastName || ''}`.trim()
         },
         generalInfo: company.generalInfo,
-        address: company.companyAddress,
+        address: company.companyAddress ? 
+          `${company.companyAddress.street} ${company.companyAddress.exteriorNumber}, ${company.companyAddress.neighborhood}, ${company.companyAddress.city}` : 
+          null,
+        companyAddress: company.companyAddress,
         legalRepresentative: company.legalRepresentative,
         clients: company.users.map(user => ({
           id: user.id,
@@ -508,7 +522,11 @@ export class AdminController {
           company: {
             select: {
               name: true,
-              rfc: true
+              generalInfo: {
+                select: {
+                  rfc: true
+                }
+              }
             }
           }
         }
@@ -627,7 +645,14 @@ export class AdminController {
                 }
               }
             }
-          }
+          },
+          generalInfo: {
+            select: {
+              rfc: true,
+              businessName: true
+            }
+          },
+          companyAddress: true
         }
       });
       console.log('all companies for admin:', allCompanies);
@@ -660,14 +685,17 @@ export class AdminController {
       console.log('Available companies for operator:', availableCompanies);
 
       // Formatear respuesta
-      const formattedCompanies = availableCompanies.map(company => ({
+      const formattedCompanies = availableCompanies.map((company: any) => ({
         id: company.id,
         name: company.name,
-        rfc: company.rfc,
-        legalName: company.legalName,
+        rfc: company.generalInfo?.rfc || null,
+        legalName: company.generalInfo?.businessName || null,
         status: company.status,
         email: company.email,
-        isAssignedToOperator: company.operatorCompanies.some(oc => oc.operatorId === parseInt(operatorId)),
+        address: company.companyAddress ? 
+          `${company.companyAddress.street} ${company.companyAddress.exteriorNumber}, ${company.companyAddress.neighborhood}, ${company.companyAddress.city}` : 
+          null,
+        isAssignedToOperator: company.operatorCompanies.some((oc: any) => oc.operatorId === parseInt(operatorId)),
         currentOperator: company.operatorCompanies.length > 0 ? {
           id: company.operatorCompanies[0].operator.id,
           email: company.operatorCompanies[0].operator.email,
