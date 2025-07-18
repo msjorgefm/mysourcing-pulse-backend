@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { NotificationService } from '../services/notificationService';
+import { NotificationServiceStatic as NotificationService, getNotificationService } from '../services/notificationService';
 
 interface AuthRequest extends Request {
   user?: any;
@@ -26,21 +26,56 @@ export class NotificationController {
         });
       }
 
-      const notification = await NotificationService.createNotification({
-        type,
-        title,
-        message,
-        priority,
-        companyId,
-        targetRole,
-        userId,
-        createdBy: req.user!.id
-      });
+      // Usar el servicio de notificaciones que maneja tanto la BD como Socket.IO
+      const notificationService = getNotificationService();
+      
+      // Si se especificó un userId específico, notificar al usuario
+      if (userId) {
+        await notificationService.notifyUser(userId, {
+          type,
+          title,
+          message,
+          priority,
+          data: { companyId, targetRole, createdBy: req.user!.id }
+        });
+        
+        res.status(201).json({
+          message: 'Notification created successfully',
+          data: { userId, type, title, message }
+        });
+      } 
+      // Si se especificó targetRole y companyId, notificar al rol
+      else if (targetRole && companyId) {
+        await notificationService.notifyCompanyRole(companyId, targetRole, {
+          type,
+          title,
+          message,
+          priority,
+          data: { companyId, targetRole, createdBy: req.user!.id }
+        });
+        
+        res.status(201).json({
+          message: 'Notification created successfully',
+          data: { targetRole, companyId, type, title, message }
+        });
+      } else {
+        // Si no se especifica ni userId ni targetRole, usar el método estático anterior
+        const notification = await NotificationService.createNotification({
+          type,
+          title,
+          message,
+          priority,
+          companyId,
+          targetRole,
+          userId,
+          createdBy: req.user!.id
+        });
 
-      res.status(201).json({
-        message: 'Notification created successfully',
-        data: notification
-      });
+        res.status(201).json({
+          message: 'Notification created successfully',
+          data: notification
+        });
+      }
     } catch (error: any) {
       console.error('Create notification error:', error);
       res.status(500).json({ 
@@ -53,14 +88,22 @@ export class NotificationController {
     try {
       const unreadOnly = req.query.unread === 'true';
       
+      console.log('GetNotifications - User:', req.user);
+      console.log('GetNotifications - Query:', req.query);
+      
       // Si es cliente, solo ver notificaciones de su empresa
       const companyId = req.user?.role === 'CLIENT' ? req.user.companyId : undefined;
+      
+      console.log('GetNotifications - CompanyId:', companyId);
+      console.log('GetNotifications - UserId:', req.user!.id);
       
       const notifications = await NotificationService.getNotifications(
         companyId,
         req.user!.id,
         unreadOnly
       );
+      
+      console.log('GetNotifications - Found notifications:', notifications.length);
       
       res.json({
         message: 'Notifications retrieved successfully',

@@ -20,6 +20,7 @@ import companyDocumentRoutes from './routes/companyDocumentRoutes';
 import workerDetailsRoutes from './routes/workerDetails';
 import payrollRoutes from './routes/payrolls';
 import payrollCalendarRoutes from './routes/payrollCalendars';
+import payrollPeriodRoutes from './routes/payrollPeriods';
 // import incidenceRoutes from './routes/incidences';
 import incidenciasRoutes from './routes/incidencias';
 import approvalsRoutes from './routes/approvals';
@@ -95,7 +96,7 @@ app.use('/api/', limiter);
 // Rate limiting más estricto para autenticación
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 20, // máximo 20 intentos de login por IP por ventana
+  max: 100, // aumentado temporalmente para desarrollo
   message: {
     error: 'Too many authentication attempts, please try again later.'
   }
@@ -165,6 +166,7 @@ app.use('/api/companies', companyDocumentRoutes);
 app.use('/api/workers', workerDetailsRoutes);
 app.use('/api/payrolls', payrollRoutes);
 app.use('/api/payroll-calendars', payrollCalendarRoutes);
+app.use('/api/payroll-periods', payrollPeriodRoutes);
 // app.use('/api/incidences', incidenceRoutes);
 app.use('/api', incidenciasRoutes); // Las rutas ya incluyen /companies/:id/incidencias
 app.use('/api/approvals', approvalsRoutes);
@@ -193,42 +195,87 @@ if (process.env.NODE_ENV === 'development') {
 // ================================
 
 // Middleware de autenticación para sockets
-io.use((socket, next) => {
+io.use(async (socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) {
     return next(new Error('Authentication error'));
   }
   
-  // Verificar token JWT aquí
-  // ... lógica de verificación
-  
-  next();
+  try {
+    // Verificar token JWT
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
+    
+    // Obtener usuario de la base de datos
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
+    
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      include: { company: true }
+    });
+    
+    if (!user) {
+      return next(new Error('User not found'));
+    }
+    
+    // Agregar información del usuario al socket
+    (socket as any).userId = user.id;
+    (socket as any).userRole = user.role;
+    (socket as any).companyId = user.companyId;
+    
+    next();
+  } catch (error) {
+    return next(new Error('Authentication error'));
+  }
 });
 
 // Manejo de conexiones de socket
 io.on('connection', (socket) => {
-  console.log(`Usuario conectado: ${socket.id}`);
+  const userId = (socket as any).userId;
+  const userRole = (socket as any).userRole;
+  const companyId = (socket as any).companyId;
   
-  // Unirse a room específico de empresa
-  socket.on('join-company', (companyId) => {
-    socket.join(`company-${companyId}`);
-    console.log(`Socket ${socket.id} se unió a company-${companyId}`);
-  });
+  console.log(`Usuario conectado: ${socket.id} (User: ${userId}, Role: ${userRole})`);
   
-  // Unirse a room específico de usuario
-  socket.on('join-user', (userId) => {
-    socket.join(`user-${userId}`);
-    console.log(`Socket ${socket.id} se unió a user-${userId}`);
+  // Unirse automáticamente a las salas apropiadas
+  socket.join(`user_${userId}`);
+  
+  if (companyId) {
+    socket.join(`company_${companyId}`);
+    
+    // Unirse a salas específicas por rol
+    if (userRole === 'OPERATOR') {
+      socket.join(`company_${companyId}_operators`);
+    } else if (userRole === 'CLIENT') {
+      socket.join(`company_${companyId}_clients`);
+    } else if (userRole === 'DEPARTMENT_HEAD') {
+      socket.join(`company_${companyId}_department_heads`);
+    } else if (userRole === 'EMPLOYEE') {
+      socket.join(`company_${companyId}_employees`);
+    }
+  }
+  
+  // Emitir confirmación de conexión
+  socket.emit('connected', {
+    userId,
+    userRole,
+    companyId,
+    rooms: Array.from(socket.rooms)
   });
   
   // Manejo de desconexión
   socket.on('disconnect', () => {
-    console.log(`Usuario desconectado: ${socket.id}`);
+    console.log(`Usuario desconectado: ${socket.id} (User: ${userId})`);
   });
 });
 
 // Hacer io disponible en toda la aplicación
 app.set('io', io);
+
+// Inicializar servicio de notificaciones
+import { initNotificationService } from './services/notificationService';
+initNotificationService(io);
 
 // ================================
 // MANEJO DE ERRORES

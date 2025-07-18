@@ -43,9 +43,13 @@ export const authenticate: RequestHandler = async (req: AuthRequest, res: Respon
         id: user.id,
         email: user.email,
         name: user.username || user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
         role: user.role as any,
         companyId: user.companyId || undefined,
+        companyName: user.company?.name || undefined,
         workerDetailsId: user.workerDetailsId || undefined,
+        employeeId: user.workerDetails?.id || undefined,
         isActive: user.isActive
       } as User;
       
