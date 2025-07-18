@@ -102,9 +102,10 @@ export class IncidenciasController {
         
         if (employeeId) {
           // Determinar el estado según el rol del usuario
-          const incidenceStatus = user.role === 'CLIENT' 
+          // Los operadores y clientes crean incidencias aprobadas directamente
+          const incidenceStatus = (user.role === 'CLIENT' || user.role === 'OPERATOR')
             ? IncidenceStatus.APPROVED 
-            : (user.role === 'DEPARTMENT_HEAD' || user.role === 'OPERATOR')
+            : user.role === 'DEPARTMENT_HEAD'
               ? IncidenceStatus.PENDING
               : IncidenceStatus.APPROVED;
           
@@ -191,24 +192,35 @@ export class IncidenciasController {
           
           const departmentName = departmentHead?.workerDetails?.contractConditions?.departamento?.nombre || 'Departamento';
           
-          // Crear notificación para usuarios con rol CLIENT de la empresa
-          await prisma.notification.create({
-            data: {
-              type: 'SYSTEM_ALERT',
-              title: 'Incidencias pendientes de aprobación',
-              message: `El jefe de ${departmentName} ha registrado ${created.count} incidencias que requieren tu aprobación`,
-              priority: 'HIGH',
+          // Obtener todos los usuarios CLIENT de la empresa
+          const clientUsers = await prisma.user.findMany({
+            where: {
               companyId: parseInt(companyId),
-              metadata: {
-                departmentName,
-                incidenceCount: created.count,
-                departmentHeadId: user.id,
-                departmentHeadName: user.name || 'Jefe de Departamento',
-                createdAt: new Date().toISOString(),
-                targetRole: 'CLIENT'
-              }
+              role: 'CLIENT'
             }
           });
+          
+          // Crear notificación para cada usuario CLIENT
+          for (const clientUser of clientUsers) {
+            await prisma.notification.create({
+              data: {
+                userId: clientUser.id, // ← AGREGAR ESTE CAMPO
+                type: 'SYSTEM_ALERT',
+                title: 'Incidencias pendientes de aprobación',
+                message: `El jefe de ${departmentName} ha registrado ${created.count} incidencias que requieren tu aprobación`,
+                priority: 'HIGH',
+                companyId: parseInt(companyId),
+                metadata: {
+                  departmentName,
+                  incidenceCount: created.count,
+                  departmentHeadId: user.id,
+                  departmentHeadName: user.name || 'Jefe de Departamento',
+                  createdAt: new Date().toISOString(),
+                  targetRole: 'CLIENT'
+                }
+              }
+            });
+          }
         } catch (notifError) {
           console.error('Error creando notificación:', notifError);
           // No fallar la operación principal si falla la notificación
@@ -254,7 +266,11 @@ export class IncidenciasController {
   static async getIncidenciasByCompany(req: AuthRequest, res: Response) {
     try {
       const { companyId } = req.params;
+      const { periodId } = req.query;
       const user = req.user;
+      
+      console.log('getIncidenciasByCompany - companyId:', companyId, 'periodId:', periodId, 'full query:', req.query);
+      console.log('Request URL:', req.originalUrl);
       
       // Verificar permisos
       if (user.role !== 'OPERATOR' && user.role !== 'CLIENT' && user.role !== 'DEPARTMENT_HEAD') {
@@ -277,6 +293,11 @@ export class IncidenciasController {
         companyId: parseInt(companyId)
       };
       
+      // Si se proporciona periodId, filtrar por él
+      if (periodId) {
+        whereCondition.periodId = String(periodId);
+      }
+      
       // Filtrar por rol:
       // - OPERATOR: solo ve incidencias APPROVED (para cálculo de nómina)
       // - CLIENT: ve todas las incidencias de su empresa
@@ -284,6 +305,8 @@ export class IncidenciasController {
       if (user.role === 'OPERATOR') {
         whereCondition.status = 'APPROVED';
       }
+      
+      console.log('whereCondition:', whereCondition);
       
       const incidencias = await prisma.incidence.findMany({
         where: whereCondition,
@@ -532,7 +555,8 @@ export class IncidenciasController {
           if (metadata.departmentHeadId) {
             await prisma.notification.create({
               data: {
-                type: 'SYSTEM_ALERT',
+                userId: metadata.departmentHeadId, // ← USAR EL ID DEL JEFE
+                type: 'INCIDENCE_APPROVED', // ← USAR UN TIPO QUE EXISTE
                 title: 'Incidencia Aprobada',
                 message: `Tu incidencia del empleado ${incidenceEmployee?.numeroTrabajador} - ${incidenceEmployee?.nombres} ha sido aprobada`,
                 priority: 'NORMAL',
@@ -541,7 +565,6 @@ export class IncidenciasController {
                   incidenceId: incidencia.id,
                   approvedBy: user.name,
                   approvalDate: new Date(),
-                  userId: metadata.departmentHeadId,
                   targetRole: 'DEPARTMENT_HEAD'
                 }
               }
@@ -643,7 +666,8 @@ export class IncidenciasController {
           if (metadata.departmentHeadId) {
             await prisma.notification.create({
               data: {
-                type: 'SYSTEM_ALERT',
+                userId: metadata.departmentHeadId, // ← USAR EL ID DEL JEFE
+                type: 'INCIDENCE_REJECTED', // ← USAR UN TIPO QUE EXISTE
                 title: 'Incidencia Rechazada',
                 message: `Tu incidencia del empleado ${incidenceEmployee?.numeroTrabajador} - ${incidenceEmployee?.nombres} ha sido rechazada. Motivo: ${reason}`,
                 priority: 'HIGH',
@@ -653,7 +677,6 @@ export class IncidenciasController {
                   rejectedBy: user.name,
                   rejectionDate: new Date(),
                   reason,
-                  userId: metadata.departmentHeadId,
                   targetRole: 'DEPARTMENT_HEAD'
                 }
               }

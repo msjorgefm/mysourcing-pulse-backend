@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { NotificationService } from './notificationService';
+import { PrismaClient, UserRole, NotificationType } from '@prisma/client';
+import { getNotificationService } from './notificationService';
 import { CalculationService } from './calculationService';
 
 const prisma = new PrismaClient();
@@ -289,19 +289,25 @@ export class PayrollService {
     });
     
     // Crear notificación para el cliente
-    await NotificationService.createPayrollNotification({
-      type: 'PAYROLL_PENDING_AUTHORIZATION',
+    try {
+      const notificationService = getNotificationService();
+      await notificationService.notifyCompanyRole(payroll.companyId, UserRole.CLIENT, {
+      type: NotificationType.PAYROLL_PENDING_AUTHORIZATION,
       title: 'Nueva Nómina Pendiente de Autorización',
       message: `${payroll.company.name} - ${payroll.period}`,
-      companyId: payroll.companyId,
-      payrollId: payroll.id,
-      metadata: {
+      data: {
+        payrollId: payroll.id,
         period: payroll.period,
         totalNet: Number(payroll.totalNet),
         employeeCount: payroll.employeeCount,
         companyName: payroll.company.name
-      }
+      },
+      priority: 'HIGH'
     });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      // No fallar la operación si la notificación falla
+    }
     
     // Enviar notificación en tiempo real
     if (io) {
@@ -349,24 +355,30 @@ export class PayrollService {
     });
     
     // Crear notificación para operadores
-    const notificationType = action === 'approve' ? 'PAYROLL_APPROVED' : 'PAYROLL_REJECTED';
+    const notificationType = action === 'approve' ? NotificationType.PAYROLL_APPROVED : NotificationType.PAYROLL_REJECTED;
     const notificationTitle = action === 'approve' ? 'Nómina Aprobada' : 'Nómina Rechazada';
     
-    await NotificationService.createPayrollNotification({
+    try {
+      const notificationService = getNotificationService();
+      await notificationService.notifyCompanyRole(payroll.companyId, UserRole.OPERATOR, {
       type: notificationType,
       title: notificationTitle,
       message: `${payroll.company.name} - ${payroll.period}`,
-      companyId: payroll.companyId,
-      payrollId: payroll.id,
-      metadata: {
+      data: {
+        payrollId: payroll.id,
         period: payroll.period,
         totalNet: Number(payroll.totalNet),
         employeeCount: payroll.employeeCount,
         companyName: payroll.company.name,
         action,
         comments
-      }
+      },
+      priority: action === 'reject' ? 'HIGH' : 'NORMAL'
     });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      // No fallar la operación si la notificación falla
+    }
     
     // Enviar notificación en tiempo real
     if (io) {

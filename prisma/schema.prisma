@@ -9,42 +9,53 @@ datasource db {
 }
 
 model User {
-  id                        Int                 @id @default(autoincrement())
-  email                     String              @unique
-  password                  String
-  username                  String?
-  role                      UserRole
-  isActive                  Boolean             @default(true)
-  companyId                 Int?
-  createdAt                 DateTime            @default(now())
-  updatedAt                 DateTime            @updatedAt
-  lastLoginAt               DateTime?
-  firstName                 String?
-  lastName                  String?
-  phone                     String?
-  photoUrl                  String?
-  workerDetailsId           Int?                @unique
-  setupToken                String?             @unique
-  setupTokenExpiry          DateTime?
-  managedByAdminId          Int?
-  managedCompanies          Company[]           @relation("AdminCompanies")
-  approvedIncidences        Incidence[]         @relation("IncidenceApprovedBy")
-  createdIncidences         Incidence[]         @relation("IncidenceCreatedBy")
-  assignedOperatorCompanies OperatorCompany[]   @relation("AssignedOperatorCompanies")
-  operatorCompanies         OperatorCompany[]   @relation("OperatorCompanies")
-  approvedPayrolls          Payroll[]           @relation("PayrollApprovedBy")
-  createdPayrolls           Payroll[]           @relation("PayrollCreatedBy")
-  refreshTokens             RefreshToken[]
+
+  id              Int            @id @default(autoincrement())
+  email           String         @unique
+  password        String
+  username        String?
+  firstName       String?
+  lastName        String?
+  role            UserRole
+  isActive        Boolean        @default(true)
+  companyId       Int?
+  workerDetailsId Int?           @unique
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  lastLoginAt     DateTime?
+  phone           String?
+  photoUrl        String?
+  setupToken    String?        @unique
+  setupTokenExpiry DateTime?
+  
+  // Relación para operadores asignados a un administrador
+  managedByAdminId Int?
+  managedByAdmin   User?          @relation("AdminOperators", fields: [managedByAdminId], references: [id])
+  managedOperators User[]         @relation("AdminOperators")
+  
+  // Relación para empresas gestionadas por este admin
+  managedCompanies Company[]      @relation("AdminCompanies")
+  
+  // Relaciones para OperatorCompany
+  operatorCompanies OperatorCompany[] @relation("OperatorCompanies")
+  assignedOperatorCompanies OperatorCompany[] @relation("AssignedOperatorCompanies")
+  
+  refreshTokens RefreshToken[]
+  company         Company?       @relation(fields: [companyId], references: [id])
+  workerDetails   WorkerDetails? @relation(fields: [workerDetailsId], references: [id])
+  vinculacionesJefe VinculacionJefe[]
+  createdIncidences Incidence[]    @relation("IncidenceCreatedBy")
+  approvedIncidences Incidence[]   @relation("IncidenceApprovedBy")
+  createdPayrolls Payroll[]        @relation("PayrollCreatedBy")
+  approvedPayrolls Payroll[]       @relation("PayrollApprovedBy")
+  notifications   Notification[]
+  
   requestAttachments        RequestAttachment[]
   requestComments           RequestComment[]
   requestHistory            RequestHistory[]
   assignedRequests          Request[]           @relation("RequestAssignedTo")
   createdRequests           Request[]           @relation("RequestClient")
-  company                   Company?            @relation(fields: [companyId], references: [id])
-  managedByAdmin            User?               @relation("AdminOperators", fields: [managedByAdminId], references: [id])
-  managedOperators          User[]              @relation("AdminOperators")
-  workerDetails             WorkerDetails?      @relation(fields: [workerDetailsId], references: [id])
-  vinculacionesJefe         VinculacionJefe[]
+  
 
   @@index([email, isActive])
   @@index([managedByAdminId])
@@ -101,15 +112,62 @@ model PayrollCalendar {
   payFrequency    String
   daysBeforeClose Int         @default(0)
   startDate       DateTime
-  periodNumber    Int         @default(1)
-  payNaturalDays  Boolean     @default(false)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  incidences      Incidence[]
-  company         Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  payrolls        Payroll[]
-
+  periodNumber    Int      @default(1)
+  payNaturalDays  Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  incidences       Incidence[]
+  payrolls         Payroll[]
+  periods          PayrollCalendarPeriod[]
   @@map("payroll_calendars")
+}
+
+enum PeriodStatus {
+  EN_INCIDENCIA           // Período abierto para captura de incidencias
+  EN_REVISION             // Período cerrado, en revisión por cliente
+  RECHAZADA               // Incidencias rechazadas por cliente
+  CERRADO                 // Período cerrado y aprobado
+  EN_REVISION_PRENOMINA   // Prenómina cargada, esperando aprobación del cliente
+  PRENOMINA_APROBADA      // Prenómina aprobada por el cliente
+  PRENOMINA_RECHAZADA     // Prenómina rechazada por el cliente
+  EN_REVISION_LAYOUTS     // Layouts cargados, esperando aprobación del cliente
+  LAYOUTS_APROBADOS       // Layouts aprobados por el cliente
+  LAYOUTS_RECHAZADOS      // Layouts rechazados por el cliente
+  FINALIZADO              // Período finalizado, no se muestra en la lista
+}
+
+model PayrollCalendarPeriod {
+  id              Int              @id @default(autoincrement())
+  calendarId      Int
+  calendar        PayrollCalendar  @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  number          Int              // Número del período (1, 2, 3, etc.)
+  startDate       DateTime
+  endDate         DateTime
+  paymentDate     DateTime
+  status          PeriodStatus     @default(EN_INCIDENCIA)
+  prenominaFile   String?          // Ruta del archivo de prenómina
+  layoutsFile     String?          // Ruta del archivo de layouts bancarios
+  rejectionReason String?          // Razón de rechazo si aplica
+  prenominaRejectionReason String? // Razón de rechazo de prenómina
+  closedAt        DateTime?        // Fecha de cierre del período
+  closedBy        Int?             // ID del usuario que cerró el período
+  approvedAt      DateTime?        // Fecha de aprobación
+  approvedBy      Int?             // ID del usuario que aprobó
+  prenominaApprovedAt DateTime?    // Fecha de aprobación de prenómina
+  prenominaApprovedBy Int?          // ID del usuario que aprobó la prenómina
+  prenominaRejectedAt DateTime?    // Fecha de rechazo de prenómina
+  prenominaRejectedBy Int?          // ID del usuario que rechazó la prenómina
+  layoutsRejectionReason String?   // Razón de rechazo de layouts
+  layoutsApprovedAt DateTime?      // Fecha de aprobación de layouts
+  layoutsApprovedBy Int?           // ID del usuario que aprobó los layouts
+  layoutsRejectedAt DateTime?      // Fecha de rechazo de layouts
+  layoutsRejectedBy Int?           // ID del usuario que rechazó los layouts
+  timbradoFile    String?          // Ruta del archivo ZIP con los CFDI timbrados
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([calendarId, number])
+  @@map("payroll_calendar_periods")
 }
 
 model Payroll {
@@ -214,20 +272,24 @@ model Incidence {
 
 model Notification {
   id        Int                  @id @default(autoincrement())
+  userId    Int
   type      NotificationType
   title     String
   message   String
   priority  NotificationPriority @default(NORMAL)
   read      Boolean              @default(false)
+  data      Json?
   metadata  Json?
   companyId Int?
   payrollId Int?
   createdAt DateTime             @default(now())
   readAt    DateTime?
+  user      User                 @relation(fields: [userId], references: [id])
   company   Company?             @relation(fields: [companyId], references: [id])
   payroll   Payroll?             @relation(fields: [payrollId], references: [id])
 
   @@index([companyId, read])
+  @@index([userId, read])
   @@map("notifications")
 }
 
@@ -811,6 +873,103 @@ model Company {
   @@index([status])
   @@map("companies")
 }
+
+enum CompanyStatus {
+  IN_SETUP
+  CONFIGURED
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+  ON_LEAVE
+}
+
+enum ContractType {
+  INDEFINIDO
+  TIEMPO_DETERMINADO
+  MEDIO_TIEMPO
+  CONTRATISTA
+  PRACTICANTE
+}
+
+enum PayrollStatus {
+  DRAFT
+  CALCULATED
+  PENDING_AUTHORIZATION
+  AUTHORIZED
+  PROCESSED
+  TIMBERED
+  ERROR
+}
+
+enum PayrollApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CFDIStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  ERROR
+}
+
+enum IncidenceType {
+  FALTAS
+  PERMISOS
+  VACACIONES
+  TIEMPO_EXTRA
+  BONOS
+  INCENTIVOS
+  PRIMA_DOMINICAL
+  INCAPACIDADES
+  OTROS
+}
+
+enum IncidenceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PROCESSED
+}
+
+enum NotificationType {
+  PAYROLL_PENDING_AUTHORIZATION
+  PAYROLL_APPROVED
+  PAYROLL_REJECTED
+  PAYROLL_TIMBERED
+  SYSTEM_ALERT
+  REMINDER
+  CHECKLIST_COMPLETED
+  PERIOD_STATUS_CHANGED
+  PRENOMINA_UPLOADED
+  LAYOUTS_UPLOADED
+  INCIDENCE_APPROVED
+  INCIDENCE_REJECTED
+  INCIDENCE_REVIEW_REQUEST
+  PRENOMINA_APPROVED
+  PRENOMINA_REJECTED
+  LAYOUTS_REVIEW_REQUEST
+  LAYOUTS_APPROVED
+  LAYOUTS_REJECTED
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ================================
+// WIZARD DE CONFIGURACIÓN DE EMPRESAS
+// ================================
 
 model CompanyWizard {
   id              Int                    @id @default(autoincrement())

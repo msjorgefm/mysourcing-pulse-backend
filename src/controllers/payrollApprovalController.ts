@@ -109,22 +109,33 @@ export class PayrollApprovalController {
       });
       
       // Crear notificación para el operador
-      await prisma.notification.create({
-        data: {
-          type: 'INFO' as any, // 'PAYROLL_APPROVED',
-          title: 'Nómina Aprobada',
-          message: `La nómina del período ${payroll.period} ha sido aprobada por ${user.name}`,
-          priority: 'HIGH',
-          companyId: payroll.companyId,
-          payrollId: payroll.id,
-          metadata: {
-            payrollId: payroll.id,
-            approvedBy: user.name,
-            approvalDate: new Date(),
-            userId: 1 // payroll.createdBy || 1
-          }
+      // Obtener todos los usuarios OPERATOR de la empresa para notificarles
+      const operators = await prisma.user.findMany({
+        where: {
+          role: 'OPERATOR',
+          isActive: true
         }
       });
+      
+      // Crear notificación para cada operador
+      for (const operator of operators) {
+        await prisma.notification.create({
+          data: {
+            userId: operator.id, // ← AGREGAR ESTE CAMPO A NIVEL RAÍZ
+            type: 'INFO' as any, // 'PAYROLL_APPROVED',
+            title: 'Nómina Aprobada',
+            message: `La nómina del período ${payroll.period} ha sido aprobada por ${user.name}`,
+            priority: 'HIGH',
+            companyId: payroll.companyId,
+            payrollId: payroll.id,
+            metadata: {
+              payrollId: payroll.id,
+              approvedBy: user.name,
+              approvalDate: new Date()
+            }
+          }
+        });
+      }
       
       res.json({
         success: true,
@@ -189,23 +200,34 @@ export class PayrollApprovalController {
       });
       
       // Crear notificación para el operador
-      await prisma.notification.create({
-        data: {
-          type: 'INFO' as any, // 'PAYROLL_REJECTED',
-          title: 'Nómina Rechazada',
-          message: `La nómina del período ${payroll.period} ha sido rechazada por ${user.name}. Motivo: ${reason}`,
-          priority: 'HIGH',
-          companyId: payroll.companyId,
-          payrollId: payroll.id,
-          metadata: {
-            payrollId: payroll.id,
-            rejectedBy: user.name,
-            rejectionDate: new Date(),
-            reason,
-            userId: 1 // payroll.createdBy || 1
-          }
+      // Obtener todos los usuarios OPERATOR de la empresa para notificarles
+      const operators = await prisma.user.findMany({
+        where: {
+          role: 'OPERATOR',
+          isActive: true
         }
       });
+      
+      // Crear notificación para cada operador
+      for (const operator of operators) {
+        await prisma.notification.create({
+          data: {
+            userId: operator.id, // ← AGREGAR ESTE CAMPO A NIVEL RAÍZ
+            type: 'INFO' as any, // 'PAYROLL_REJECTED',
+            title: 'Nómina Rechazada',
+            message: `La nómina del período ${payroll.period} ha sido rechazada por ${user.name}. Motivo: ${reason}`,
+            priority: 'HIGH',
+            companyId: payroll.companyId,
+            payrollId: payroll.id,
+            metadata: {
+              payrollId: payroll.id,
+              rejectedBy: user.name,
+              rejectionDate: new Date(),
+              reason
+            }
+          }
+        });
+      }
       
       res.json({
         success: true,
