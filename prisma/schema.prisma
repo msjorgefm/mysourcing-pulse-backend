@@ -47,6 +47,13 @@ model User {
   approvedIncidences Incidence[]   @relation("IncidenceApprovedBy")
   createdPayrolls Payroll[]        @relation("PayrollCreatedBy")
   approvedPayrolls Payroll[]       @relation("PayrollApprovedBy")
+  
+  // Relaciones para solicitudes
+  createdRequests   Request[]       @relation("RequestClient")
+  assignedRequests  Request[]       @relation("RequestAssignedTo")
+  requestComments   RequestComment[]
+  requestAttachments RequestAttachment[]
+  requestHistory    RequestHistory[]
 
   @@index([email, isActive])
   @@index([managedByAdminId])
@@ -810,6 +817,7 @@ model Company {
   users             User[]
   wizardProgress    WizardProgress?
   workerDetails     WorkerDetails[]
+  requests          Request[]
 
   // Wizard y configuración
   wizard CompanyWizard?
@@ -1817,4 +1825,127 @@ model VinculacionJefeEmpleado {
   @@unique([vinculacionJefeId, workerDetailsId])
   @@index([workerDetailsId])
   @@map("vinculacion_jefe_empleados")
+}
+
+// ================================
+// SISTEMA DE SOLICITUDES (REQUESTS)
+// ================================
+
+model Request {
+  id              Int            @id @default(autoincrement())
+  folio           String         @unique
+  type            RequestType
+  priority        RequestPriority
+  subject         String
+  description     String
+  dueDate         DateTime?
+  customFields    Json?
+  status          RequestStatus  @default(OPEN)
+  clientId        Int
+  clientName      String
+  companyId       Int
+  assignedToId    Int?
+  assignedToName  String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  resolvedAt      DateTime?
+  cancelledAt     DateTime?
+
+  // Relaciones
+  client          User           @relation("RequestClient", fields: [clientId], references: [id])
+  company         Company        @relation(fields: [companyId], references: [id])
+  assignedTo      User?          @relation("RequestAssignedTo", fields: [assignedToId], references: [id])
+  comments        RequestComment[]
+  attachments     RequestAttachment[]
+  history         RequestHistory[]
+
+  @@index([companyId, status])
+  @@index([clientId])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@map("requests")
+}
+
+model RequestComment {
+  id          Int          @id @default(autoincrement())
+  text        String
+  requestId   Int
+  userId      Int
+  userName    String
+  userRole    UserRole
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relaciones
+  request     Request      @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id])
+  attachments RequestAttachment[]
+
+  @@index([requestId])
+  @@map("request_comments")
+}
+
+model RequestAttachment {
+  id             Int            @id @default(autoincrement())
+  name           String
+  size           Int
+  type           String
+  url            String
+  path           String
+  requestId      Int?
+  commentId      Int?
+  uploadedById   Int
+  uploadedByName String
+  createdAt      DateTime       @default(now())
+
+  // Relaciones
+  request        Request?       @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  comment        RequestComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  uploadedBy     User           @relation(fields: [uploadedById], references: [id])
+
+  @@index([requestId])
+  @@index([commentId])
+  @@map("request_attachments")
+}
+
+model RequestHistory {
+  id        Int      @id @default(autoincrement())
+  action    String
+  details   String
+  requestId Int
+  userId    Int
+  userName  String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([requestId])
+  @@map("request_history")
+}
+
+// Enums para el sistema de solicitudes
+enum RequestType {
+  EMPLOYEE_REGISTRATION
+  EMPLOYEE_TERMINATION
+  SALARY_MODIFICATION
+  PAYROLL_CORRECTION
+  GENERAL_INQUIRY
+}
+
+enum RequestPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum RequestStatus {
+  OPEN
+  IN_PROGRESS
+  PENDING_INFO
+  RESOLVED
+  CANCELLED
 }

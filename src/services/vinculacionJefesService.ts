@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { emailService } from './emailService';
+import { emailServiceEnhanced as emailService } from './emailServiceEnhanced';
 import crypto from 'crypto';
-import { config } from '../config';
 
 const prisma = new PrismaClient();
 

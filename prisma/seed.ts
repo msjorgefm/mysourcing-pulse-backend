@@ -294,6 +294,8 @@ async function main() {
       update: {
         password: clientPassword,
         username: 'ana.rivera',
+        firstName: 'Ana',
+        lastName: 'Rivera',
         role: 'CLIENT',
         companyId: companies[0].id
       },
@@ -301,6 +303,8 @@ async function main() {
         email: 'ana@techcorp.mx',
         password: clientPassword,
         username: 'ana.rivera',
+        firstName: 'Ana',
+        lastName: 'Rivera',
         role: 'CLIENT',
         companyId: companies[0].id
       }
@@ -310,6 +314,8 @@ async function main() {
       update: {
         password: employeePassword,
         username: 'juan.perez',
+        firstName: 'Juan',
+        lastName: 'Perez',
         role: 'EMPLOYEE',
         companyId: companies[0].id
       },
@@ -317,6 +323,8 @@ async function main() {
         email: 'juan.perez@techcorp.mx',
         password: employeePassword,
         username: 'juan.perez',
+        firstName: 'Juan',
+        lastName: 'Perez',
         role: 'EMPLOYEE',
         companyId: companies[0].id
       }

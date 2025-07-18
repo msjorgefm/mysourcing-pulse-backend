@@ -19,7 +19,6 @@ class EmailServiceEnhanced {
   constructor() {
     // Modo desarrollo: simular envío de emails
     if (config.env === 'development' && (!config.smtp.user || !config.smtp.pass)) {
-      console.log('⚠️  Modo desarrollo: Los emails se simularán, no se enviarán realmente');
       this.transporter = null as any;
       return;
     }
@@ -44,21 +43,6 @@ class EmailServiceEnhanced {
       }
     });
     
-    if (isMailtrap) {
-      console.log('📧 Usando Mailtrap para captura de emails de prueba');
-      console.log('🔗 Ve tus emails en: https://mailtrap.io/inboxes');
-    }
-    
-    // Verificar la configuración SMTP
-    this.transporter.verify((error, success) => {
-      if (error) {
-        console.error('❌ Error en configuración SMTP:', error);
-        console.error('⚠️  Los emails no se podrán enviar. Verifica las credenciales SMTP.');
-      } else {
-        console.log('✅ Servidor SMTP listo para enviar correos');
-      }
-    });
-
     // Configurar IMAP si está habilitado
     if (config.imap.enabled) {
       this.setupImapClient();
@@ -82,18 +66,6 @@ class EmailServiceEnhanced {
       await this.imapClient.connect();
       console.log('✅ Conexión IMAP establecida');
       
-      // Verificar que existe la carpeta de enviados
-      const mailboxes = await this.imapClient.list();
-      const sentFolderExists = this.findSentFolder(mailboxes);
-      
-      if (sentFolderExists) {
-        console.log(`✅ Carpeta de enviados encontrada: ${sentFolderExists}`);
-        // Guardar la carpeta encontrada para usarla después
-        this.sentFolder = sentFolderExists;
-      } else {
-        console.log(`⚠️  No se encontró la carpeta de enviados: ${config.imap.sentFolder}`);
-      }
-      
       // NO desconectar aquí - mantener la conexión para reutilizarla
       await this.imapClient.logout();
       
@@ -109,8 +81,6 @@ class EmailServiceEnhanced {
         logger: false
       };
     } catch (error) {
-      console.error('❌ Error configurando IMAP:', error);
-      console.log('⚠️  Los correos se enviarán pero no se guardarán en la carpeta de enviados');
       this.imapClient = null;
     }
   }
@@ -146,27 +116,6 @@ class EmailServiceEnhanced {
     try {
       const isMailtrap = config.smtp.host.includes('mailtrap');
       
-      console.log('\n📧 === ENVIANDO EMAIL ===');
-      console.log('📧 Para:', options.to);
-      console.log('📧 Asunto:', options.subject);
-      console.log('📧 Servidor SMTP:', config.smtp.host);
-      console.log('📧 Puerto:', config.smtp.port);
-      
-      // Guardar email localmente siempre
-      this.saveEmailLocally(options);
-      
-      // Modo desarrollo sin transporter o si es Mailtrap con límite alcanzado
-      if (!this.transporter || config.smtp.host === 'localhost') {
-        console.log('🔧 MODO LOCAL - Email guardado localmente:');
-        console.log('   Para:', options.to);
-        console.log('   De:', config.smtp.from);
-        console.log('   Asunto:', options.subject);
-        console.log('   ---');
-        console.log('   📁 Email guardado en: emails-sent/');
-        console.log('   ✅ Busca el archivo HTML con el contenido completo');
-        return true;
-      }
-      
       const mailOptions = {
         from: config.smtp.from,
         to: options.to,
@@ -177,55 +126,27 @@ class EmailServiceEnhanced {
 
       try {
         const info = await this.transporter.sendMail(mailOptions);
-        console.log('✅ Email enviado exitosamente');
-        console.log('   Message ID:', info.messageId);
-        console.log('   Response:', info.response);
-        
-        if (config.smtp.host.includes('mailtrap')) {
-          console.log('\n📮 === MAILTRAP INFO ===');
-          console.log('🔗 Ve tu email en: https://mailtrap.io/inboxes');
-          console.log('📧 El email fue capturado por Mailtrap (no se envió realmente)');
-          console.log('✅ Esto es normal en desarrollo\n');
-        }
-        
-        // Guardar en carpeta IMAP de enviados si está habilitado
-        console.log('🔍 Verificando guardado IMAP:');
-        console.log('   - IMAP habilitado:', config.imap.enabled);
-        console.log('   - Configuración IMAP existe:', !!this.imapConfig);
-        console.log('   - No es Mailtrap:', !isMailtrap);
         
         if (config.imap.enabled && this.imapConfig && !isMailtrap) {
           console.log('📤 Intentando guardar en carpeta IMAP...');
           await this.saveToImapSentFolder(mailOptions, info.messageId);
-        } else if (config.imap.enabled && !this.imapConfig) {
-          console.log('⚠️  IMAP está habilitado pero no está configurado');
         }
         
         return true;
       } catch (smtpError: any) {
         // Si es error de límite de Mailtrap, continuar sin error
         if (smtpError.message && smtpError.message.includes('email limit is reached')) {
-          console.log('⚠️  Límite de Mailtrap alcanzado - Email guardado localmente');
-          console.log('📁 Revisa el archivo en: emails-sent/');
           return true;
         }
         throw smtpError;
       }
     } catch (error: any) {
-      console.error('❌ Error al enviar email:');
-      console.error('   Error:', error.message);
-      console.error('   Código:', error.code);
-      console.error('   Comando:', error.command);
-      if (error.response) {
-        console.error('   Respuesta SMTP:', error.response);
-      }
       return false;
     }
   }
 
   private async saveToImapSentFolder(mailOptions: any, messageId: string): Promise<void> {
     if (!this.imapConfig) {
-      console.log('⚠️  No hay configuración IMAP disponible');
       return;
     }
 
@@ -293,15 +214,10 @@ class EmailServiceEnhanced {
         // Agregar el mensaje a la carpeta
         await client.append(sentFolder, message, ['\\Seen']);
         
-        console.log(`✅ Email guardado en carpeta IMAP: ${sentFolder}`);
-      } else {
-        console.log('⚠️  No se pudo guardar en IMAP: carpeta de enviados no encontrada');
       }
       
       await client.logout();
-      console.log('📮 Desconectado de IMAP');
     } catch (error) {
-      console.error('⚠️  Error guardando en IMAP:', error);
       // No fallar el envío si no se puede guardar en IMAP
     } finally {
       // Asegurarse de cerrar la conexión si está abierta
@@ -368,14 +284,8 @@ class EmailServiceEnhanced {
 </html>
       `;
       
-      fs.writeFileSync(filepath, fullHtml);
-      console.log(`📁 Email guardado en: ${filename}`);
-      
-      // Si hay un link de configuración, extraerlo y mostrarlo
-      const linkMatch = options.html.match(/href="([^"]*setup[^"]*)"/);
-      if (linkMatch) {
-        console.log(`🔗 Link de configuración: ${linkMatch[1]}`);
-      }
+      fs.writeFileSync(filepath, fullHtml);      
+
     } catch (err) {
       console.error('Error guardando email localmente:', err);
     }
@@ -943,6 +853,308 @@ class EmailServiceEnhanced {
       </html>
     `;
 
+    return await this.sendEmail({
+      to: email,
+      subject,
+      html,
+    });
+  }
+
+  async sendAdminInvitationEmail(email: string, setupToken: string): Promise<boolean> {
+    const subject = `Invitación para Administrador - MySourcing Pulse`;
+    const invitationLink = `${config.frontend.url}/setup-account?token=${setupToken}`;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invitación Administrador MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #DC2626;
+            margin: 0;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #DC2626;
+            color: white;
+            padding: 14px 35px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+          }
+          .button:hover {
+            background-color: #B91C1C;
+          }
+          .admin-info {
+            background-color: #FEE2E2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #DC2626;
+          }
+          .admin-info h3 {
+            color: #DC2626;
+            margin-top: 0;
+          }
+          .responsibilities {
+            background-color: #F3F4F6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+          }
+          .responsibilities ul {
+            margin: 10px 0;
+            padding-left: 20px;
+          }
+          .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+          }
+          .warning {
+            background-color: #FEF3C7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #F59E0B;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina - Administrador</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Bienvenido al Equipo de Administración!</h2>
+            
+            <p>Hola,</p>
+            
+            <p>Has sido invitado a formar parte del equipo de administración de <strong>MySourcing Pulse</strong>.</p>
+            
+            <div class="admin-info">
+              <h3>⚡ Rol: Administrador del Sistema</h3>
+              <p>Como administrador, tendrás acceso completo para gestionar todos los aspectos del sistema.</p>
+            </div>
+            
+            <div class="responsibilities">
+              <h3>Tus responsabilidades incluirán:</h3>
+              <ul>
+                <li>Gestionar operadores y sus permisos</li>
+                <li>Supervisar todas las empresas registradas en el sistema</li>
+                <li>Ver y administrar todos los empleados y clientes</li>
+                <li>Acceder a reportes globales del sistema</li>
+                <li>Configurar parámetros generales del sistema</li>
+                <li>Invitar a nuevos administradores</li>
+              </ul>
+            </div>
+            
+            <p>Para completar la configuración de tu cuenta de administrador, haz clic en el siguiente enlace:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Configurar Cuenta de Administrador</a>
+            </div>
+            
+            <h3>Pasos para activar tu cuenta:</h3>
+            <ol>
+              <li>Haz clic en el enlace de arriba</li>
+              <li>Crea tu nombre de usuario único</li>
+              <li>Establece una contraseña segura (mínimo 8 caracteres)</li>
+              <li>Confirma tu contraseña</li>
+              <li>¡Listo! Podrás acceder al panel de administración</li>
+            </ol>
+            
+            <div class="warning">
+              <strong>⚠️ Importante:</strong> Este enlace es válido por 24 horas. Si expira, deberás solicitar uno nuevo a otro administrador del sistema.
+            </div>
+            
+            <p><strong>Nota de seguridad:</strong> Como administrador, tendrás acceso a información sensible. Por favor, asegúrate de:</p>
+            <ul>
+              <li>Usar una contraseña fuerte y única</li>
+              <li>No compartir tus credenciales con nadie</li>
+              <li>Cerrar sesión cuando no estés usando el sistema</li>
+            </ul>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>Si no solicitaste este acceso, ignora este correo y contacta al equipo de soporte.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return await this.sendEmail({
+      to: email,
+      subject,
+      html,
+    });
+  }
+  
+  async sendOperatorInvitationEmail(
+    email: string,
+    firstName: string,
+    lastName: string,
+    invitationLink: string
+  ): Promise<boolean> {
+    const subject = 'Invitación para ser Operador en MySourcing Pulse';
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Invitación MySourcing Pulse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+          }
+          .container {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+          }
+          .header h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+          }
+          .logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+          }
+          .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+          }
+          .button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            margin: 20px 0;
+          }
+          .button:hover {
+            background-color: #1d4ed8;
+          }
+          .highlight {
+            background-color: #e0e7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2563eb;
+          }
+          .footer {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+          }
+          ul {
+            padding-left: 20px;
+          }
+          li {
+            margin-bottom: 10px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>MySourcing Pulse</h1>
+            <p>Sistema de Gestión de Nómina Inteligente</p>
+          </div>
+          
+          <div class="content">
+            <h2>¡Hola ${firstName} ${lastName}!</h2>
+            
+            <p>Has sido invitado para ser <strong>Operador</strong> en MySourcing Pulse.</p>
+            
+            <p>Como operador, tendrás acceso a:</p>
+            <ul>
+              <li>Gestión de empresas asignadas</li>
+              <li>Administración de empleados</li>
+              <li>Control de nóminas</li>
+              <li>Generación de reportes</li>
+              <li>Seguimiento de incidencias</li>
+            </ul>
+            
+            <div class="highlight">
+              <strong>Información importante:</strong>
+              <p>Esta invitación es válida por 7 días. Por favor, configura tu cuenta lo antes posible.</p>
+            </div>
+            
+            <p>Para configurar tu cuenta y establecer tu contraseña, haz clic en el siguiente botón:</p>
+            
+            <div style="text-align: center;">
+              <a href="${invitationLink}" class="button">Configurar mi cuenta</a>
+            </div>
+            
+            <p>O copia y pega este enlace en tu navegador:</p>
+            <p style="word-break: break-all; background-color: #f3f4f6; padding: 10px; border-radius: 5px;">
+              ${invitationLink}
+            </p>
+            
+            <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactar al administrador del sistema.</p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            <p>&copy; 2024 MySourcing Pulse. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
     return await this.sendEmail({
       to: email,
       subject,

@@ -1,5 +1,5 @@
 import { config } from '../config';
-import { emailService } from '../services/emailService';
+import { emailServiceEnhanced as emailService } from '../services/emailServiceEnhanced';
 
 console.log('🔍 Verificando configuración de correo...\n');
 
