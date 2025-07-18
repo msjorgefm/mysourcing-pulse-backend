@@ -50,7 +50,7 @@ services:
       SMTP_PORT: 465
       SMTP_USER: system@mysourcing.com
       SMTP_PASS: 77u_drFT4%%&/Sys
-      SMTP_FROM: Pulse <noreply@mysourcing.com>
+      SMTP_FROM: Link <noreply@mysourcing.com>
     ports:
       - "3001:3001"
     depends_on:

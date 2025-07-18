@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 import { config } from '../config';
-import { emailService } from './emailService';
+import { emailServiceEnhanced as emailService } from './emailServiceEnhanced';
 
 const prisma = new PrismaClient();
 
@@ -95,7 +95,11 @@ export class InvitationService {
           select: {
             id: true,
             name: true,
-            rfc: true,
+            generalInfo: {
+              select: {
+                rfc: true
+              }
+            }
           },
         },
       },

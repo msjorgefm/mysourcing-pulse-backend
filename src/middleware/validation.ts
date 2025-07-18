@@ -274,3 +274,23 @@ export const validateGeneratePeriods = (req: Request, res: Response, next: NextF
   
   next();
 };
+
+// Middleware genérico para validar requests con Joi
+export const validateRequest = (schema: Joi.Schema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { error } = schema.validate(req.body);
+    
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: 'Errores de validación',
+        errors: error.details.map(detail => ({
+          field: detail.path.join('.'),
+          message: detail.message
+        }))
+      });
+    }
+    
+    next();
+  };
+};

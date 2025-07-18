@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
 import { translatePrismaError } from '../utils/errorTranslator';
 import { randomBytes } from 'crypto';
-import { sendEmail } from '../services/emailService';
+import { sendEmailEnhanced as sendEmail } from '../services/emailServiceEnhanced';
 import * as fs from 'fs';
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
@@ -74,7 +74,18 @@ export const workerDetailsController = {
     try {
       const workers = await prisma.workerDetails.findMany({
         include: {
-          company: true,
+          company: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              status: true,
+              employeesCount: true,
+              createdAt: true,
+              updatedAt: true
+            }
+          },
           incidences: true,
           payrollItems: true,
           user: true,
@@ -1168,15 +1179,22 @@ export const workerDetailsController = {
       // Obtener el nombre de la empresa
       const company = await prisma.company.findUnique({
         where: { id: worker.companyId },
-        select: { legalName: true }
+        select: { 
+          name: true,
+          generalInfo: {
+            select: {
+              businessName: true
+            }
+          }
+        }
       });
 
       // Usar el nuevo template de email para empleados
-      const { emailService } = await import('../services/emailService');
-      await emailService.sendEmployeePortalInvitationEmail(
+      const { emailServiceEnhanced } = await import('../services/emailServiceEnhanced');
+      await emailServiceEnhanced.sendEmployeePortalInvitationEmail(
         worker.address.correoElectronico,
         `${worker.nombres} ${worker.apellidoPaterno} ${worker.apellidoMaterno || ''}`.trim(),
-        company?.legalName || 'Tu Empresa',
+        company?.generalInfo?.businessName || company?.name || 'Tu Empresa',
         invitationUrl
       );
 

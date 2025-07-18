@@ -752,9 +752,6 @@ CREATE TABLE "company_documents" (
 CREATE TABLE "companies" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "rfc" TEXT NOT NULL,
-    "legalName" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "status" "CompanyStatus" NOT NULL DEFAULT 'IN_SETUP',
@@ -1222,9 +1219,6 @@ CREATE UNIQUE INDEX "company_document_checklist_companyId_key" ON "company_docum
 
 -- CreateIndex
 CREATE INDEX "company_documents_companyId_idx" ON "company_documents"("companyId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "companies_rfc_key" ON "companies"("rfc");
 
 -- CreateIndex
 CREATE INDEX "companies_status_idx" ON "companies"("status");

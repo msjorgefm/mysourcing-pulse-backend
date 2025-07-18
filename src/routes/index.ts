@@ -15,6 +15,7 @@ import notificationRoutes from './notifications';
 import uploadRoutes from './upload';
 import catalogRoutes from './catalogs';
 import adminRoutes from './admin';
+import requestRoutes from './requests';
 import { authenticate } from '../middleware/auth';
 
 const router = Router();
@@ -44,6 +45,7 @@ router.use('/postal-codes', postalCodeRoutes);
 router.use('/states', stateRoutes);
 router.use('/locations', locationRoutes);
 router.use('/banks', bankRoutes);
+router.use('/requests', requestRoutes);
 
 // Rutas que se montan en la raíz de /api
 router.use('/', uploadRoutes);

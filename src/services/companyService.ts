@@ -5,9 +5,6 @@ const prisma = new PrismaClient();
 
 export interface CreateCompanyRequest {
   name: string;
-  rfc: string;
-  legalName: string;
-  address: string;
   email: string;
   phone?: string;
   status?: string;
@@ -59,6 +56,38 @@ export class CompanyService {
             payrolls: true,
             incidences: true
           }
+        },
+        // Incluir datos del wizard
+        wizard: {
+          include: {
+            sectionProgress: {
+              include: {
+                steps: true
+              }
+            }
+          }
+        },
+        generalInfo: true,
+        companyAddress: true,
+        legalRepresentative: true,
+        notarialPower: true,
+        imssRegistroPatronal: true,
+        fonacot: true,
+        bank: true,
+        digitalCertificate: true,
+        areas: {
+          where: { activo: true },
+          include: {
+            departamentos: {
+              where: { activo: true }
+            }
+          }
+        },
+        departamentos: {
+          where: { activo: true }
+        },
+        puestos: {
+          where: { activo: true }
         }
       },
       orderBy: { createdAt: 'desc' }
@@ -68,9 +97,6 @@ export class CompanyService {
     return companies.map((company: any) => ({
       id: company.id,
       name: company.name,
-      rfc: company.rfc,
-      legalName: company.legalName,
-      address: company.address,
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
@@ -88,6 +114,25 @@ export class CompanyService {
         fullName: `${oc.operator.firstName || ''} ${oc.operator.lastName || ''}`.trim(),
         assignedAt: oc.assignedAt
       })),
+      // Datos del wizard
+      wizard: company.wizard,
+      generalInfo: company.generalInfo,
+      companyAddress: company.companyAddress,
+      legalRepresentative: company.legalRepresentative,
+      notarialPower: company.notarialPower,
+      imssRegistroPatronal: company.imssRegistroPatronal,
+      fonacot: company.fonacot,
+      bank: company.bank,
+      digitalCertificate: company.digitalCertificate,
+      areas: company.areas,
+      departamentos: company.departamentos,
+      puestos: company.puestos,
+      // RFC y legalName desde generalInfo si existe
+      rfc: company.generalInfo?.rfc || null,
+      legalName: company.generalInfo?.businessName || null,
+      address: company.companyAddress ? 
+        `${company.companyAddress.street} ${company.companyAddress.exteriorNumber}, ${company.companyAddress.neighborhood}, ${company.companyAddress.city}` : 
+        null,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     }));
@@ -127,9 +172,6 @@ export class CompanyService {
     return {
       id: company.id,
       name: company.name,
-      rfc: company.rfc,
-      legalName: company.legalName,
-      address: company.address,
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
@@ -145,22 +187,6 @@ export class CompanyService {
   }
   
   static async createCompany(data: CreateCompanyRequest, adminId?: number) {
-    // Si el RFC es temporal o está pendiente, generar uno único
-    let finalRfc = data.rfc;
-    if (!data.rfc || data.rfc === 'PENDIENTE123' || data.rfc.startsWith('PENDIENTE')) {
-      // Generar RFC temporal único basado en timestamp
-      const timestamp = Date.now();
-      finalRfc = `PENDIENTE${timestamp}`;
-    } else {
-      // Si se proporciona un RFC real, verificar que no exista
-      const existingCompany = await prisma.company.findUnique({
-        where: { rfc: data.rfc }
-      });
-      
-      if (existingCompany) {
-        throw new Error('RFC already exists');
-      }
-    }
     
     // Verificar si ya existe un usuario con ese email
     const existingUser = await prisma.user.findUnique({
@@ -174,22 +200,25 @@ export class CompanyService {
     // Usar una transacción para crear tanto la empresa como el usuario
     const result = await prisma.$transaction(async (tx) => {
       // Crear la empresa
+      const companyData: any = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        status: 'IN_SETUP', // Siempre crear con estado "en configuración"
+        employeesCount: 0,
+        // Crear el checklist vacío por defecto
+        documentChecklist: {
+          create: {}
+        }
+      };
+      
+      // Solo agregar managedByAdminId si adminId está definido
+      if (adminId !== undefined) {
+        companyData.managedByAdminId = adminId;
+      }
+      
       const company = await tx.company.create({
-        data: {
-          name: data.name || data.legalName, // Use legalName if name not provided
-          rfc: finalRfc, // Use the generated unique RFC
-          legalName: data.legalName,
-          address: data.address || 'Por definir', // Default address if not provided
-          email: data.email,
-          phone: data.phone,
-          status: 'IN_SETUP', // Siempre crear con estado "en configuración"
-          employeesCount: 0,
-          managedByAdminId: adminId, // Asignar el admin que gestiona esta empresa
-          // Crear el checklist vacío por defecto
-          documentChecklist: {
-            create: {}
-          }
-        },
+        data: companyData,
         include: {
           documentChecklist: true
         }
@@ -227,14 +256,11 @@ export class CompanyService {
     return {
       id: result.company.id,
       name: result.company.name,
-      rfc: result.company.rfc,
-      legalName: result.company.legalName,
-      address: result.company.address,
       email: result.company.email,
       phone: result.company.phone,
       status: this.mapStatusToFrontend(result.company.status),
       employeesCount: 0,
-      documentChecklist: result.company.documentChecklist,
+      documentChecklist: result.company.documentChecklist || null,
       createdAt: result.company.createdAt,
       updatedAt: result.company.updatedAt,
       managedByAdminId: result.company.managedByAdminId
@@ -253,16 +279,7 @@ export class CompanyService {
       throw new Error('Company not found');
     }
     
-    // Si se está actualizando el RFC, verificar que no exista
-    if (updateData.rfc && updateData.rfc !== existingCompany.rfc) {
-      const rfcExists = await prisma.company.findUnique({
-        where: { rfc: updateData.rfc }
-      });
-      
-      if (rfcExists) {
-        throw new Error('RFC already exists');
-      }
-    }
+    // No se necesita verificar RFC ya que se maneja en el wizard
     
     const company = await prisma.company.update({
       where: { id },
@@ -277,9 +294,6 @@ export class CompanyService {
     return {
       id: company.id,
       name: company.name,
-      rfc: company.rfc,
-      legalName: company.legalName,
-      address: company.address,
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
@@ -567,52 +581,81 @@ export class CompanyService {
   static async getCompaniesByOperator(operatorId: number) {
     const companies = await prisma.company.findMany({
       where: {
-        operatorCompanies: {
-          some: {
-            operatorId: operatorId,
-            isActive: true
-          }
+      operatorCompanies: {
+        some: {
+        operatorId: operatorId,
+        isActive: true
         }
+      }
       },
       include: {
-        workerDetails: {
-          select: { id: true }
+      payrolls: {
+        select: { 
+        id: true, 
+        status: true, 
+        totalNet: true,
+        createdAt: true 
         },
-        payrolls: {
-          select: { 
-            id: true, 
-            status: true, 
-            totalNet: true,
-            createdAt: true 
-          },
-          orderBy: { createdAt: 'desc' },
-          take: 5
-        },
-        calendars: {
-          select: { id: true, name: true, year: true }
-        },
-        documentChecklist: true,
-        operatorCompanies: {
-          where: { isActive: true },
-          include: {
-            operator: {
-              select: {
-                id: true,
-                email: true,
-                username: true,
-                firstName: true,
-                lastName: true
-              }
-            }
-          }
-        },
-        _count: {
+        orderBy: { createdAt: 'desc' },
+        take: 5
+      },
+      calendars: {
+        select: { id: true, name: true, year: true }
+      },
+      documentChecklist: true,
+      operatorCompanies: {
+        where: { isActive: true },
+        include: {
+        operator: {
           select: {
-            workerDetails: true,
-            payrolls: true,
-            incidences: true
+          id: true,
+          email: true,
+          username: true,
+          firstName: true,
+          lastName: true
           }
         }
+        }
+      },
+      _count: {
+        select: {
+        workerDetails: true,
+        payrolls: true,
+        incidences: true
+        }
+      },
+      // Incluir datos del wizard
+      wizard: {
+        include: {
+        sectionProgress: {
+          include: {
+          steps: true
+          }
+        }
+        }
+      },
+      generalInfo: true,
+      companyAddress: true,
+      legalRepresentative: true,
+      notarialPower: true,
+      imssRegistroPatronal: true,
+      fonacot: true,
+      bank: true,
+      digitalCertificate: true,
+      areas: {
+        where: { activo: true },
+        include: {
+        departamentos: {
+          where: { activo: true }
+        }
+        }
+      },
+      departamentos: {
+        where: { activo: true }
+      },
+      puestos: {
+        where: { activo: true }
+      }
       },
       orderBy: { createdAt: 'desc' }
     });
@@ -621,9 +664,6 @@ export class CompanyService {
     return companies.map((company: any) => ({
       id: company.id,
       name: company.name,
-      rfc: company.rfc,
-      legalName: company.legalName,
-      address: company.address,
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
@@ -641,6 +681,25 @@ export class CompanyService {
         fullName: `${oc.operator.firstName || ''} ${oc.operator.lastName || ''}`.trim(),
         assignedAt: oc.assignedAt
       })),
+      // Datos del wizard
+      wizard: company.wizard,
+      generalInfo: company.generalInfo,
+      companyAddress: company.companyAddress,
+      legalRepresentative: company.legalRepresentative,
+      notarialPower: company.notarialPower,
+      imssRegistroPatronal: company.imssRegistroPatronal,
+      fonacot: company.fonacot,
+      bank: company.bank,
+      digitalCertificate: company.digitalCertificate,
+      areas: company.areas,
+      departamentos: company.departamentos,
+      puestos: company.puestos,
+      // RFC y legalName desde generalInfo si existe
+      rfc: company.generalInfo?.rfc || null,
+      legalName: company.generalInfo?.businessName || null,
+      address: company.companyAddress ? 
+        `${company.companyAddress.street} ${company.companyAddress.exteriorNumber}, ${company.companyAddress.neighborhood}, ${company.companyAddress.city}` : 
+        null,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     }));
@@ -692,6 +751,38 @@ export class CompanyService {
             payrolls: true,
             incidences: true
           }
+        },
+        // Incluir datos del wizard
+        wizard: {
+          include: {
+            sectionProgress: {
+              include: {
+                steps: true
+              }
+            }
+          }
+        },
+        generalInfo: true,
+        companyAddress: true,
+        legalRepresentative: true,
+        notarialPower: true,
+        imssRegistroPatronal: true,
+        fonacot: true,
+        bank: true,
+        digitalCertificate: true,
+        areas: {
+          where: { activo: true },
+          include: {
+            departamentos: {
+              where: { activo: true }
+            }
+          }
+        },
+        departamentos: {
+          where: { activo: true }
+        },
+        puestos: {
+          where: { activo: true }
         }
       },
       orderBy: { createdAt: 'desc' }
@@ -701,9 +792,6 @@ export class CompanyService {
     return companies.map((company: any) => ({
       id: company.id,
       name: company.name,
-      rfc: company.rfc,
-      legalName: company.legalName,
-      address: company.address,
       email: company.email,
       phone: company.phone,
       status: this.mapStatusToFrontend(company.status),
@@ -721,6 +809,25 @@ export class CompanyService {
         fullName: `${oc.operator.firstName || ''} ${oc.operator.lastName || ''}`.trim(),
         assignedAt: oc.assignedAt
       })),
+      // Datos del wizard
+      wizard: company.wizard,
+      generalInfo: company.generalInfo,
+      companyAddress: company.companyAddress,
+      legalRepresentative: company.legalRepresentative,
+      notarialPower: company.notarialPower,
+      imssRegistroPatronal: company.imssRegistroPatronal,
+      fonacot: company.fonacot,
+      bank: company.bank,
+      digitalCertificate: company.digitalCertificate,
+      areas: company.areas,
+      departamentos: company.departamentos,
+      puestos: company.puestos,
+      // RFC y legalName desde generalInfo si existe
+      rfc: company.generalInfo?.rfc || null,
+      legalName: company.generalInfo?.businessName || null,
+      address: company.companyAddress ? 
+        `${company.companyAddress.street} ${company.companyAddress.exteriorNumber}, ${company.companyAddress.neighborhood}, ${company.companyAddress.city}` : 
+        null,
       createdAt: company.createdAt,
       updatedAt: company.updatedAt
     }));

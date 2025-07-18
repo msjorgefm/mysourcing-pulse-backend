@@ -36,7 +36,15 @@ export class PayrollService {
       where,
       include: {
         company: {
-          select: { id: true, name: true, rfc: true }
+          select: { 
+            id: true, 
+            name: true,
+            generalInfo: {
+              select: {
+                rfc: true
+              }
+            }
+          }
         },
         // Calendar relationship removed as it doesn't exist in schema
         _count: {
@@ -71,7 +79,13 @@ export class PayrollService {
   static async getPayrollById(id: number, includeDetails: boolean = false) {
     const include: any = {
       company: {
-        select: { id: true, name: true, rfc: true }
+        select: { 
+          id: true, 
+          name: true,
+          generalInfo: {
+            select: { rfc: true }
+          }
+        }
       },
       // Calendar relationship removed
       incidences: {
